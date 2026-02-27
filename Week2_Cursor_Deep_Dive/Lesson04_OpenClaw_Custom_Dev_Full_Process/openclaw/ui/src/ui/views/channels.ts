@@ -1,41 +1,12 @@
 import { html, nothing } from "lit";
 import { formatRelativeTimestamp } from "../format.ts";
-import type {
-  ChannelAccountSnapshot,
-  ChannelUiMetaEntry,
-  ChannelsStatusSnapshot,
-  DiscordStatus,
-  GoogleChatStatus,
-  IMessageStatus,
-  NostrProfile,
-  NostrStatus,
-  SignalStatus,
-  SlackStatus,
-  TelegramStatus,
-  WhatsAppStatus,
-} from "../types.ts";
+import type { ChannelAccountSnapshot, ChannelsStatusSnapshot } from "../types.ts";
 import { renderChannelConfigSection } from "./channels.config.ts";
-import { renderDiscordCard } from "./channels.discord.ts";
-import { renderGoogleChatCard } from "./channels.googlechat.ts";
-import { renderIMessageCard } from "./channels.imessage.ts";
-import { renderNostrCard } from "./channels.nostr.ts";
+import { renderFeishuCard } from "./channels.feishu.ts";
 import { channelEnabled, renderChannelAccountCount } from "./channels.shared.ts";
-import { renderSignalCard } from "./channels.signal.ts";
-import { renderSlackCard } from "./channels.slack.ts";
-import { renderTelegramCard } from "./channels.telegram.ts";
 import type { ChannelKey, ChannelsChannelData, ChannelsProps } from "./channels.types.ts";
-import { renderWhatsAppCard } from "./channels.whatsapp.ts";
 
 export function renderChannels(props: ChannelsProps) {
-  const channels = props.snapshot?.channels as Record<string, unknown> | null;
-  const whatsapp = (channels?.whatsapp ?? undefined) as WhatsAppStatus | undefined;
-  const telegram = (channels?.telegram ?? undefined) as TelegramStatus | undefined;
-  const discord = (channels?.discord ?? null) as DiscordStatus | null;
-  const googlechat = (channels?.googlechat ?? null) as GoogleChatStatus | null;
-  const slack = (channels?.slack ?? null) as SlackStatus | null;
-  const signal = (channels?.signal ?? null) as SignalStatus | null;
-  const imessage = (channels?.imessage ?? null) as IMessageStatus | null;
-  const nostr = (channels?.nostr ?? null) as NostrStatus | null;
   const channelOrder = resolveChannelOrder(props.snapshot);
   const orderedChannels = channelOrder
     .map((key, index) => ({
@@ -54,14 +25,6 @@ export function renderChannels(props: ChannelsProps) {
     <section class="grid grid-cols-2">
       ${orderedChannels.map((channel) =>
         renderChannel(channel.key, props, {
-          whatsapp,
-          telegram,
-          discord,
-          googlechat,
-          slack,
-          signal,
-          imessage,
-          nostr,
           channelAccounts: props.snapshot?.channelAccounts ?? null,
         }),
       )}
@@ -96,82 +59,18 @@ function resolveChannelOrder(snapshot: ChannelsStatusSnapshot | null): ChannelKe
   if (snapshot?.channelOrder?.length) {
     return snapshot.channelOrder;
   }
-  return ["whatsapp", "telegram", "discord", "googlechat", "slack", "signal", "imessage", "nostr"];
+  return ["feishu"];
 }
 
 function renderChannel(key: ChannelKey, props: ChannelsProps, data: ChannelsChannelData) {
   const accountCountLabel = renderChannelAccountCount(key, data.channelAccounts);
   switch (key) {
-    case "whatsapp":
-      return renderWhatsAppCard({
+    case "feishu":
+      return renderFeishuCard({
         props,
-        whatsapp: data.whatsapp,
+        feishuAccounts: data.channelAccounts?.feishu ?? [],
         accountCountLabel,
       });
-    case "telegram":
-      return renderTelegramCard({
-        props,
-        telegram: data.telegram,
-        telegramAccounts: data.channelAccounts?.telegram ?? [],
-        accountCountLabel,
-      });
-    case "discord":
-      return renderDiscordCard({
-        props,
-        discord: data.discord,
-        accountCountLabel,
-      });
-    case "googlechat":
-      return renderGoogleChatCard({
-        props,
-        googleChat: data.googlechat,
-        accountCountLabel,
-      });
-    case "slack":
-      return renderSlackCard({
-        props,
-        slack: data.slack,
-        accountCountLabel,
-      });
-    case "signal":
-      return renderSignalCard({
-        props,
-        signal: data.signal,
-        accountCountLabel,
-      });
-    case "imessage":
-      return renderIMessageCard({
-        props,
-        imessage: data.imessage,
-        accountCountLabel,
-      });
-    case "nostr": {
-      const nostrAccounts = data.channelAccounts?.nostr ?? [];
-      const primaryAccount = nostrAccounts[0];
-      const accountId = primaryAccount?.accountId ?? "default";
-      const profile =
-        (primaryAccount as { profile?: NostrProfile | null } | undefined)?.profile ?? null;
-      const showForm =
-        props.nostrProfileAccountId === accountId ? props.nostrProfileFormState : null;
-      const profileFormCallbacks = showForm
-        ? {
-            onFieldChange: props.onNostrProfileFieldChange,
-            onSave: props.onNostrProfileSave,
-            onImport: props.onNostrProfileImport,
-            onCancel: props.onNostrProfileCancel,
-            onToggleAdvanced: props.onNostrProfileToggleAdvanced,
-          }
-        : null;
-      return renderNostrCard({
-        props,
-        nostr: data.nostr,
-        nostrAccounts,
-        accountCountLabel,
-        profileFormState: showForm,
-        profileFormCallbacks,
-        onEditProfile: () => props.onNostrProfileEdit(accountId, profile),
-      });
-    }
     default:
       return renderGenericChannelCard(key, props, data.channelAccounts ?? {});
   }
@@ -235,18 +134,14 @@ function renderGenericChannelCard(
   `;
 }
 
-function resolveChannelMetaMap(
-  snapshot: ChannelsStatusSnapshot | null,
-): Record<string, ChannelUiMetaEntry> {
-  if (!snapshot?.channelMeta?.length) {
-    return {};
-  }
-  return Object.fromEntries(snapshot.channelMeta.map((entry) => [entry.id, entry]));
-}
-
 function resolveChannelLabel(snapshot: ChannelsStatusSnapshot | null, key: string): string {
-  const meta = resolveChannelMetaMap(snapshot)[key];
-  return meta?.label ?? snapshot?.channelLabels?.[key] ?? key;
+  if (snapshot?.channelMeta?.length) {
+    const meta = snapshot.channelMeta.find((entry) => entry.id === key);
+    if (meta?.label) {
+      return meta.label;
+    }
+  }
+  return snapshot?.channelLabels?.[key] ?? key;
 }
 
 const RECENT_ACTIVITY_THRESHOLD_MS = 10 * 60 * 1000; // 10 minutes
@@ -262,7 +157,6 @@ function deriveRunningStatus(account: ChannelAccountSnapshot): "Yes" | "No" | "A
   if (account.running) {
     return "Yes";
   }
-  // If we have recent inbound activity, the channel is effectively running
   if (hasRecentActivity(account)) {
     return "Active";
   }
@@ -276,7 +170,6 @@ function deriveConnectedStatus(account: ChannelAccountSnapshot): "Yes" | "No" | 
   if (account.connected === false) {
     return "No";
   }
-  // If connected is null/undefined but we have recent activity, show as active
   if (hasRecentActivity(account)) {
     return "Active";
   }

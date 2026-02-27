@@ -12,6 +12,7 @@ import { loadAgentSkills } from "./controllers/agent-skills.ts";
 import { loadAgents, loadToolsCatalog } from "./controllers/agents.ts";
 import { loadChannels } from "./controllers/channels.ts";
 import { loadConfig, loadConfigSchema } from "./controllers/config.ts";
+import { syncModelsFromConfig } from "./controllers/models.ts";
 import {
   loadCronJobs,
   loadCronModelSuggestions,
@@ -199,6 +200,9 @@ export async function refreshActiveTab(host: SettingsHost) {
   if (host.tab === "cron") {
     await loadCron(host);
   }
+  if (host.tab === "polymarket") {
+    await loadCron(host);
+  }
   if (host.tab === "skills") {
     await loadSkills(host as unknown as OpenClawApp);
   }
@@ -237,6 +241,11 @@ export async function refreshActiveTab(host: SettingsHost) {
       host as unknown as Parameters<typeof scheduleChatScroll>[0],
       !host.chatHasAutoScrolled,
     );
+  }
+  if (host.tab === "models") {
+    await loadConfigSchema(host as unknown as OpenClawApp);
+    await loadConfig(host as unknown as OpenClawApp);
+    syncModelsFromConfig(host as unknown as Parameters<typeof syncModelsFromConfig>[0]);
   }
   if (host.tab === "config") {
     await loadConfigSchema(host as unknown as OpenClawApp);

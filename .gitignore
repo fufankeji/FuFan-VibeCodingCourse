@@ -57,3 +57,10 @@ Desktop.ini
 .env
 .env.local
 .env.*.local
+
+# OpenClaw specific ignorances
+.serena/
+.clawhub/
+out/
+dist/
+build/

@@ -86,6 +86,7 @@ const FeishuToolsConfigSchema = z
     drive: z.boolean().optional(), // Cloud storage operations (default: true)
     perm: z.boolean().optional(), // Permission management (default: false, sensitive)
     scopes: z.boolean().optional(), // App scopes diagnostic (default: true)
+    search: z.boolean().optional(), // Web search via Tavily API (default: true)
   })
   .strict()
   .optional();

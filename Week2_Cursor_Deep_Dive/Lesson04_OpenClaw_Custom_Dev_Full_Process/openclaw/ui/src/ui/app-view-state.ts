@@ -130,6 +130,12 @@ export type AppViewState = {
   nostrProfileFormState: NostrProfileFormState | null;
   nostrProfileAccountId: string | null;
   configFormDirty: boolean;
+  modelsProviderKey: string;
+  modelsProviderBaseURL: string;
+  modelsProviderApiKey: string;
+  modelsProviderModels: string;
+  modelsDefaultModel: string;
+  modelsSaving: boolean;
   presenceLoading: boolean;
   presenceEntries: PresenceEntry[];
   presenceError: string | null;

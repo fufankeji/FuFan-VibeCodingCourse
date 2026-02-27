@@ -39,6 +39,16 @@ import {
 } from "./controllers/cron.ts";
 import { loadDebug, callDebugMethod } from "./controllers/debug.ts";
 import {
+  loadModelsConfig,
+  saveProviderConfig,
+  saveDefaultModel,
+  removeProvider,
+  editProvider,
+  getConfiguredProviders,
+  getAvailableModels,
+  type ModelsPageState,
+} from "./controllers/models.ts";
+import {
   approveDevicePairing,
   loadDevices,
   rejectDevicePairing,
@@ -70,11 +80,13 @@ import { renderChannels } from "./views/channels.ts";
 import { renderChat } from "./views/chat.ts";
 import { renderConfig } from "./views/config.ts";
 import { renderCron } from "./views/cron.ts";
+import { renderPolymarket } from "./views/polymarket.ts";
 import { renderDebug } from "./views/debug.ts";
 import { renderExecApprovalPrompt } from "./views/exec-approval.ts";
 import { renderGatewayUrlConfirmation } from "./views/gateway-url-confirmation.ts";
 import { renderInstances } from "./views/instances.ts";
 import { renderLogs } from "./views/logs.ts";
+import { renderModels } from "./views/models.ts";
 import { renderNodes } from "./views/nodes.ts";
 import { renderOverview } from "./views/overview.ts";
 import { renderSessions } from "./views/sessions.ts";
@@ -366,33 +378,16 @@ export function renderApp(state: AppViewState) {
                 snapshot: state.channelsSnapshot,
                 lastError: state.channelsError,
                 lastSuccessAt: state.channelsLastSuccess,
-                whatsappMessage: state.whatsappLoginMessage,
-                whatsappQrDataUrl: state.whatsappLoginQrDataUrl,
-                whatsappConnected: state.whatsappLoginConnected,
-                whatsappBusy: state.whatsappBusy,
                 configSchema: state.configSchema,
                 configSchemaLoading: state.configSchemaLoading,
                 configForm: state.configForm,
                 configUiHints: state.configUiHints,
                 configSaving: state.configSaving,
                 configFormDirty: state.configFormDirty,
-                nostrProfileFormState: state.nostrProfileFormState,
-                nostrProfileAccountId: state.nostrProfileAccountId,
                 onRefresh: (probe) => loadChannels(state, probe),
-                onWhatsAppStart: (force) => state.handleWhatsAppStart(force),
-                onWhatsAppWait: () => state.handleWhatsAppWait(),
-                onWhatsAppLogout: () => state.handleWhatsAppLogout(),
                 onConfigPatch: (path, value) => updateConfigFormValue(state, path, value),
                 onConfigSave: () => state.handleChannelConfigSave(),
                 onConfigReload: () => state.handleChannelConfigReload(),
-                onNostrProfileEdit: (accountId, profile) =>
-                  state.handleNostrProfileEdit(accountId, profile),
-                onNostrProfileCancel: () => state.handleNostrProfileCancel(),
-                onNostrProfileFieldChange: (field, value) =>
-                  state.handleNostrProfileFieldChange(field, value),
-                onNostrProfileSave: () => state.handleNostrProfileSave(),
-                onNostrProfileImport: () => state.handleNostrProfileImport(),
-                onNostrProfileToggleAdvanced: () => state.handleNostrProfileToggleAdvanced(),
               })
             : nothing
         }
@@ -506,6 +501,26 @@ export function renderApp(state: AppViewState) {
                   }
                   await loadCronRuns(state, state.cronRunsJobId);
                 },
+              })
+            : nothing
+        }
+
+        ${
+          state.tab === "polymarket"
+            ? renderPolymarket({
+                loading: state.cronLoading,
+                error: state.cronError,
+                busy: state.cronBusy,
+                status: state.cronStatus,
+                jobs: state.cronJobs,
+                runs: state.cronRuns,
+                runsTotal: state.cronRunsTotal,
+                runsHasMore: state.cronRunsHasMore,
+                runsLoadingMore: state.cronRunsLoadingMore,
+                onRefresh: () => state.loadCron(),
+                onToggle: (job, enabled) => state.handleCronToggle(job.id, enabled),
+                onRun: (job) => state.handleCronRun(job.id),
+                onLoadMoreRuns: () => loadMoreCronRuns(state),
               })
             : nothing
         }
@@ -1047,6 +1062,36 @@ export function renderApp(state: AppViewState) {
                 onSplitRatioChange: (ratio: number) => state.handleSplitRatioChange(ratio),
                 assistantName: state.assistantName,
                 assistantAvatar: state.assistantAvatar,
+              })
+            : nothing
+        }
+
+        ${
+          state.tab === "models"
+            ? renderModels({
+                loading: state.configLoading,
+                saving: state.modelsSaving,
+                connected: state.connected,
+                lastError: state.lastError,
+                providerKey: state.modelsProviderKey,
+                providerBaseURL: state.modelsProviderBaseURL,
+                providerApiKey: state.modelsProviderApiKey,
+                providerModels: state.modelsProviderModels,
+                defaultModel: state.modelsDefaultModel,
+                configuredProviders: getConfiguredProviders(state as unknown as ModelsPageState),
+                availableModels: getAvailableModels(state as unknown as ModelsPageState),
+                onProviderKeyChange: (v) => (state.modelsProviderKey = v),
+                onProviderBaseURLChange: (v) => (state.modelsProviderBaseURL = v),
+                onProviderApiKeyChange: (v) => (state.modelsProviderApiKey = v),
+                onProviderModelsChange: (v) => (state.modelsProviderModels = v),
+                onSaveProvider: () => saveProviderConfig(state as unknown as ModelsPageState),
+                onSetDefaultModel: (modelId) =>
+                  saveDefaultModel(state as unknown as ModelsPageState, modelId),
+                onEditProvider: (key) =>
+                  editProvider(state as unknown as ModelsPageState, key),
+                onRemoveProvider: (key) =>
+                  removeProvider(state as unknown as ModelsPageState, key),
+                onReload: () => loadModelsConfig(state as unknown as ModelsPageState),
               })
             : nothing
         }
