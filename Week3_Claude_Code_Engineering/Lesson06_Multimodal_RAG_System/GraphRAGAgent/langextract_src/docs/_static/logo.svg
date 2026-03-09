@@ -1,0 +1,21 @@
+<!-- langextract‑logo.svg  – 128×128 px display size, scalable thanks to viewBox -->
+<svg viewBox="0 0 655 655" width="128" height="128"
+     xmlns="http://www.w3.org/2000/svg">
+
+  <!-- LOGO -->
+  <rect width="655" height="655" fill="white"/>
+  <rect x="25" y="24" width="418" height="392" rx="44" fill="#DADCE0"/>
+  <path d="M47 112.5H420" stroke="#5F6368" stroke-width="8" stroke-linecap="round"/>
+  <path d="M47 175.5H420" stroke="#5F6368" stroke-width="8" stroke-linecap="round"/>
+  <path d="M47 242.5H420" stroke="#5F6368" stroke-width="8" stroke-linecap="round"/>
+  <path d="M47 321.5H420" stroke="#5F6368" stroke-width="8" stroke-linecap="round"/>
+  <rect x="201" y="92" width="180" height="40" rx="20" fill="#FDE293" stroke="#5F6368" stroke-width="8"/>
+  <rect x="93" y="155" width="237" height="40" rx="20" fill="#AECBFA" stroke="#5F6368" stroke-width="8"/>
+  <rect x="184" y="222" width="180" height="40" rx="20" fill="white" stroke="#5F6368" stroke-width="8"/>
+  <rect x="62" y="301" width="180" height="40" rx="20" fill="#F6AEA9" stroke="#5F6368" stroke-width="8"/>
+  <rect x="211" y="238" width="418" height="392" rx="44" fill="#3C4043"/>
+  <rect x="318" y="310" width="178" height="38" rx="19" fill="#FDE293" stroke="#FDE293" stroke-width="6"/>
+  <rect x="318" y="380" width="235" height="38" rx="19" fill="#AECBFA" stroke="#AECBFA" stroke-width="6"/>
+  <rect x="318" y="450" width="178" height="38" rx="19" fill="white" stroke="white" stroke-width="6"/>
+  <rect x="318" y="520" width="178" height="38" rx="19" fill="#F6AEA9" stroke="#F6AEA9" stroke-width="6"/>
+</svg>

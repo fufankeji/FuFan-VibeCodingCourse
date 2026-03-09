@@ -1,0 +1,402 @@
+[
+  {
+    "id": "node_0",
+    "name": "GraphRAG",
+    "type": "TECHNOLOGY",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 0,
+    "char_end": 8,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_1",
+    "name": "Knowledge Graph Enhanced RAG System",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 10,
+    "char_end": 45,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_2",
+    "name": "retrieval-augmented generation",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 86,
+    "char_end": 116,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_3",
+    "name": "knowledge graphs",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 172,
+    "char_end": 188,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_4",
+    "name": "large language models",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 194,
+    "char_end": 215,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_5",
+    "name": "question answering",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 262,
+    "char_end": 280,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_6",
+    "name": "document collections",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 294,
+    "char_end": 314,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_7",
+    "name": "RAG systems",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 335,
+    "char_end": 346,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_8",
+    "name": "vector similarity search",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 367,
+    "char_end": 391,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_9",
+    "name": "hierarchical knowledge graph",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 415,
+    "char_end": 443,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_10",
+    "name": "multi-hop reasoning",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 476,
+    "char_end": 495,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_11",
+    "name": "global summarization",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 500,
+    "char_end": 520,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_12",
+    "name": "GraphRAG pipeline",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 564,
+    "char_end": 581,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_13",
+    "name": "Document Parsing",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 618,
+    "char_end": 634,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_14",
+    "name": "MinerU",
+    "type": "TECHNOLOGY",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 703,
+    "char_end": 709,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_15",
+    "name": "Entity Extraction",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 715,
+    "char_end": 732,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_16",
+    "name": "LLMs",
+    "type": "TECHNOLOGY",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 788,
+    "char_end": 792,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_17",
+    "name": "NLP models",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 808,
+    "char_end": 818,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_18",
+    "name": "LangExtract",
+    "type": "TECHNOLOGY",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 827,
+    "char_end": 838,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_19",
+    "name": "Graph Construction",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 844,
+    "char_end": 862,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_20",
+    "name": "knowledge graph",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 913,
+    "char_end": 928,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_21",
+    "name": "community detection",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 934,
+    "char_end": 953,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_22",
+    "name": "Indexing",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 959,
+    "char_end": 967,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_23",
+    "name": "vector embeddings",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 975,
+    "char_end": 992,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_24",
+    "name": "graph indices",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 997,
+    "char_end": 1010,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_25",
+    "name": "hybrid retrieval",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1025,
+    "char_end": 1041,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_26",
+    "name": "Query Processing",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1047,
+    "char_end": 1063,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_27",
+    "name": "graph traversal",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1113,
+    "char_end": 1128,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_28",
+    "name": "LLM generation",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1143,
+    "char_end": 1157,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_29",
+    "name": "GraphRAG",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1214,
+    "char_end": 1222,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_30",
+    "name": "RAG approaches",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1240,
+    "char_end": 1254,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_31",
+    "name": "NarrativeQA benchmark dataset",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1296,
+    "char_end": 1325,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_32",
+    "name": "Naive RAG",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1401,
+    "char_end": 1410,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_33",
+    "name": "HyDE RAG",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1443,
+    "char_end": 1451,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_34",
+    "name": "GraphRAG (Local)",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1484,
+    "char_end": 1500,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_35",
+    "name": "GraphRAG (Global)",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1533,
+    "char_end": 1550,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_36",
+    "name": "traditional RAG approaches",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1648,
+    "char_end": 1674,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_37",
+    "name": "hierarchical summarization",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1799,
+    "char_end": 1825,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_38",
+    "name": "local and global question answering capabilities",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 1839,
+    "char_end": 1887,
+    "confidence": "match_exact",
+    "page": 0
+  },
+  {
+    "id": "node_39",
+    "name": "naive RAG baselines",
+    "type": "CONCEPT",
+    "source_doc": "8a719db4-2b50-405b-826d-7bb27b224fa0",
+    "char_start": 2082,
+    "char_end": 2101,
+    "confidence": "match_exact",
+    "page": 0
+  }
+]
