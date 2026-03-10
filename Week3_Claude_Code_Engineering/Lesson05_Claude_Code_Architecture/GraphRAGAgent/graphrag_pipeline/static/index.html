@@ -1,0 +1,840 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GraphRAG Knowledge Graph Visualizer</title>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<style>
+  /* ── Reset & Base ── */
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background: #0f1117;
+    color: #e0e0e0;
+    height: 100vh;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 24px;
+    background: #161b22;
+    border-bottom: 1px solid #30363d;
+    height: 56px;
+  }
+  .header h1 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #f0f6fc;
+  }
+  .header h1 span { color: #58a6ff; }
+  .header-actions { display: flex; gap: 10px; align-items: center; }
+  .btn {
+    padding: 6px 16px;
+    border-radius: 6px;
+    border: 1px solid #30363d;
+    background: #21262d;
+    color: #c9d1d9;
+    font-size: 13px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .btn:hover { background: #30363d; border-color: #8b949e; }
+  .btn-primary { background: #238636; border-color: #238636; color: #fff; }
+  .btn-primary:hover { background: #2ea043; }
+
+  /* ── Main Layout ── */
+  .main {
+    display: flex;
+    height: calc(100vh - 56px - 40px);
+  }
+
+  /* ── Left Panel ── */
+  .panel {
+    width: 340px;
+    min-width: 340px;
+    background: #161b22;
+    border-right: 1px solid #30363d;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .panel-section {
+    padding: 16px;
+    border-bottom: 1px solid #30363d;
+  }
+  .panel-section h3 {
+    font-size: 13px;
+    font-weight: 600;
+    color: #8b949e;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  /* Stats */
+  .stats-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .stat-card {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .stat-value {
+    font-size: 24px;
+    font-weight: 700;
+    color: #f0f6fc;
+  }
+  .stat-label {
+    font-size: 11px;
+    color: #8b949e;
+    margin-top: 2px;
+  }
+
+  /* Type distribution */
+  .type-bar {
+    display: flex;
+    height: 6px;
+    border-radius: 3px;
+    overflow: hidden;
+    margin-top: 10px;
+    background: #21262d;
+  }
+
+  /* Filters */
+  .filter-group { display: flex; flex-direction: column; gap: 6px; }
+  .filter-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  .filter-item input[type="checkbox"] {
+    accent-color: #58a6ff;
+    width: 16px;
+    height: 16px;
+  }
+  .filter-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .filter-count {
+    margin-left: auto;
+    color: #8b949e;
+    font-size: 12px;
+  }
+
+  /* Search */
+  .search-box {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background: #0d1117;
+    color: #c9d1d9;
+    font-size: 13px;
+    outline: none;
+  }
+  .search-box:focus { border-color: #58a6ff; }
+  .search-box::placeholder { color: #484f58; }
+
+  /* Entity list */
+  .entity-list-wrapper {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 0 16px 16px;
+  }
+  .entity-list {
+    flex: 1;
+    overflow-y: auto;
+    margin-top: 8px;
+  }
+  .entity-list::-webkit-scrollbar { width: 6px; }
+  .entity-list::-webkit-scrollbar-track { background: transparent; }
+  .entity-list::-webkit-scrollbar-thumb { background: #30363d; border-radius: 3px; }
+  .entity-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    font-size: 13px;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .entity-row:hover { background: #21262d; }
+  .entity-row.active { background: #1f6feb33; }
+  .entity-name { flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .entity-type-badge {
+    font-size: 10px;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-weight: 600;
+    white-space: nowrap;
+  }
+
+  /* ── Graph Area ── */
+  .graph-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+  .graph-container svg {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  .tooltip {
+    position: absolute;
+    background: #1c2128;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 13px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 100;
+    max-width: 280px;
+  }
+  .tooltip.visible { opacity: 1; }
+  .tooltip-name { font-weight: 600; color: #f0f6fc; margin-bottom: 4px; }
+  .tooltip-row { color: #8b949e; font-size: 12px; }
+  .tooltip-row span { color: #c9d1d9; }
+
+  /* Legend */
+  .legend {
+    position: absolute;
+    bottom: 16px;
+    right: 16px;
+    background: #161b22ee;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 10px 14px;
+    font-size: 12px;
+  }
+  .legend-item { display: flex; align-items: center; gap: 6px; margin: 3px 0; }
+
+  /* ── Footer / Status Bar ── */
+  .footer {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    background: #161b22;
+    border-top: 1px solid #30363d;
+    font-size: 12px;
+    color: #8b949e;
+    gap: 16px;
+  }
+  .progress-bar-container {
+    flex: 1;
+    height: 4px;
+    background: #21262d;
+    border-radius: 2px;
+    overflow: hidden;
+    display: none;
+  }
+  .progress-bar-container.active { display: block; }
+  .progress-bar {
+    height: 100%;
+    background: #58a6ff;
+    border-radius: 2px;
+    transition: width 0.5s;
+    width: 0%;
+  }
+  .progress-bar.indeterminate {
+    width: 30%;
+    animation: indeterminate 1.5s ease-in-out infinite;
+  }
+  @keyframes indeterminate {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(400%); }
+  }
+
+  /* ── Upload Modal ── */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.6);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 200;
+  }
+  .modal-overlay.visible { display: flex; }
+  .modal {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 32px;
+    width: 420px;
+    text-align: center;
+  }
+  .modal h2 { font-size: 18px; margin-bottom: 8px; color: #f0f6fc; }
+  .modal p { font-size: 13px; color: #8b949e; margin-bottom: 20px; }
+  .drop-zone {
+    border: 2px dashed #30363d;
+    border-radius: 8px;
+    padding: 40px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .drop-zone:hover, .drop-zone.dragover {
+    border-color: #58a6ff;
+    background: #58a6ff10;
+  }
+  .drop-zone-icon { font-size: 40px; margin-bottom: 8px; }
+  .drop-zone-text { font-size: 14px; color: #c9d1d9; }
+  .drop-zone-hint { font-size: 12px; color: #484f58; margin-top: 4px; }
+  .file-input { display: none; }
+
+  /* ── Empty State ── */
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    color: #484f58;
+  }
+  .empty-state-icon { font-size: 64px; margin-bottom: 16px; }
+  .empty-state-text { font-size: 16px; color: #8b949e; }
+  .empty-state-hint { font-size: 13px; margin-top: 8px; }
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<div class="header">
+  <h1><span>GraphRAG</span> Knowledge Graph Visualizer</h1>
+  <div class="header-actions">
+    <button class="btn" id="btnDemo" onclick="loadDemo()">Demo Data</button>
+    <button class="btn btn-primary" id="btnUpload" onclick="showUploadModal()">Upload PDF</button>
+  </div>
+</div>
+
+<!-- ── Main ── -->
+<div class="main">
+  <!-- Left Panel -->
+  <div class="panel" id="panel">
+    <!-- Stats -->
+    <div class="panel-section">
+      <h3>Overview</h3>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-value" id="statNodes">-</div>
+          <div class="stat-label">Nodes</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statEdges">-</div>
+          <div class="stat-label">Edges</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statTypes">-</div>
+          <div class="stat-label">Types</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value" id="statPages">-</div>
+          <div class="stat-label">Pages</div>
+        </div>
+      </div>
+      <div class="type-bar" id="typeBar"></div>
+    </div>
+
+    <!-- Filters -->
+    <div class="panel-section">
+      <h3>Filter by Type</h3>
+      <div class="filter-group" id="filterGroup"></div>
+    </div>
+
+    <!-- Search + Entity List -->
+    <div class="panel-section" style="padding-bottom: 8px;">
+      <h3>Entities</h3>
+      <input type="text" class="search-box" id="searchBox" placeholder="Search entities..." oninput="filterEntities()">
+    </div>
+    <div class="entity-list-wrapper">
+      <div class="entity-list" id="entityList"></div>
+    </div>
+  </div>
+
+  <!-- Graph Area -->
+  <div class="graph-container" id="graphContainer">
+    <div class="empty-state" id="emptyState">
+      <div class="empty-state-icon">&#x1F578;</div>
+      <div class="empty-state-text">No knowledge graph loaded</div>
+      <div class="empty-state-hint">Click "Demo Data" or upload a PDF to get started</div>
+    </div>
+    <svg id="graphSvg" style="display:none;"></svg>
+    <div class="tooltip" id="tooltip"></div>
+    <div class="legend" id="legend" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ── Footer ── -->
+<div class="footer">
+  <span id="statusText">Ready</span>
+  <div class="progress-bar-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+</div>
+
+<!-- ── Upload Modal ── -->
+<div class="modal-overlay" id="uploadModal">
+  <div class="modal">
+    <h2>Upload PDF Document</h2>
+    <p>Upload a PDF to parse, extract entities, and build a knowledge graph.</p>
+    <div class="drop-zone" id="dropZone" onclick="document.getElementById('fileInput').click()">
+      <div class="drop-zone-icon">&#x1F4C4;</div>
+      <div class="drop-zone-text">Drop PDF here or click to browse</div>
+      <div class="drop-zone-hint">Supports .pdf files</div>
+    </div>
+    <input type="file" class="file-input" id="fileInput" accept=".pdf" onchange="handleFileSelect(event)">
+    <br>
+    <button class="btn" onclick="hideUploadModal()" style="margin-top: 12px;">Cancel</button>
+  </div>
+</div>
+
+<script>
+// ─────────────────────────────────────────────────────────────
+// State
+// ─────────────────────────────────────────────────────────────
+const TYPE_COLORS = {
+  TECHNOLOGY:   '#f97316',
+  CONCEPT:      '#3b82f6',
+  PERSON:       '#a855f7',
+  ORGANIZATION: '#22c55e',
+  LOCATION:     '#ef4444',
+};
+
+let currentData = null;   // { nodes, edges, stats, extractions }
+let activeFilters = new Set(Object.keys(TYPE_COLORS));
+let selectedNodeId = null;
+let simulation = null;
+
+// ─────────────────────────────────────────────────────────────
+// Demo / API
+// ─────────────────────────────────────────────────────────────
+async function loadDemo() {
+  setStatus('Loading demo data...');
+  showProgress(true);
+  try {
+    const resp = await fetch('/api/demo');
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    currentData = data;
+    renderAll();
+    setStatus(`Demo loaded: ${data.stats.nodes} nodes, ${data.stats.edges} edges`);
+  } catch (e) {
+    setStatus('Error: ' + e.message);
+  }
+  showProgress(false);
+}
+
+function showUploadModal() {
+  document.getElementById('uploadModal').classList.add('visible');
+}
+function hideUploadModal() {
+  document.getElementById('uploadModal').classList.remove('visible');
+}
+
+// Drag & drop
+const dropZone = document.getElementById('dropZone');
+dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('dragover'); });
+dropZone.addEventListener('dragleave', () => dropZone.classList.remove('dragover'));
+dropZone.addEventListener('drop', e => {
+  e.preventDefault();
+  dropZone.classList.remove('dragover');
+  if (e.dataTransfer.files.length > 0) uploadFile(e.dataTransfer.files[0]);
+});
+
+function handleFileSelect(e) {
+  if (e.target.files.length > 0) uploadFile(e.target.files[0]);
+}
+
+async function uploadFile(file) {
+  if (!file.name.toLowerCase().endsWith('.pdf')) {
+    alert('Please select a PDF file.');
+    return;
+  }
+  hideUploadModal();
+  setStatus(`Uploading ${file.name}...`);
+  showProgress(true, true);
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  try {
+    const resp = await fetch('/api/upload', { method: 'POST', body: formData });
+    const data = await resp.json();
+    if (data.error) throw new Error(data.error);
+    pollJob(data.job_id);
+  } catch (e) {
+    setStatus('Upload failed: ' + e.message);
+    showProgress(false);
+  }
+}
+
+async function pollJob(jobId) {
+  const poll = async () => {
+    try {
+      const resp = await fetch(`/api/status/${jobId}`);
+      const data = await resp.json();
+
+      if (data.status === 'done') {
+        // Fetch full result
+        const resultResp = await fetch(`/api/result/${jobId}`);
+        currentData = await resultResp.json();
+        renderAll();
+        setStatus(`Complete: ${currentData.stats.nodes} nodes, ${currentData.stats.edges} edges (${currentData.stats.elapsed_seconds}s)`);
+        showProgress(false);
+        return;
+      }
+
+      if (data.status === 'failed') {
+        setStatus('Pipeline failed: ' + (data.error || 'Unknown error'));
+        showProgress(false);
+        return;
+      }
+
+      setStatus(data.stage || 'Processing...');
+      setTimeout(poll, 2000);
+    } catch (e) {
+      setStatus('Connection error: ' + e.message);
+      showProgress(false);
+    }
+  };
+  poll();
+}
+
+// ─────────────────────────────────────────────────────────────
+// UI Helpers
+// ─────────────────────────────────────────────────────────────
+function setStatus(text) {
+  document.getElementById('statusText').textContent = text;
+}
+
+function showProgress(show, indeterminate = false) {
+  const container = document.getElementById('progressContainer');
+  const bar = document.getElementById('progressBar');
+  container.classList.toggle('active', show);
+  bar.classList.toggle('indeterminate', indeterminate);
+  if (!show) bar.style.width = '0%';
+}
+
+// ─────────────────────────────────────────────────────────────
+// Render everything
+// ─────────────────────────────────────────────────────────────
+function renderAll() {
+  if (!currentData) return;
+  renderStats();
+  renderFilters();
+  renderEntityList();
+  renderGraph();
+  renderLegend();
+}
+
+function renderStats() {
+  const s = currentData.stats;
+  document.getElementById('statNodes').textContent = s.nodes;
+  document.getElementById('statEdges').textContent = s.edges;
+  document.getElementById('statTypes').textContent = Object.keys(s.type_counts).length;
+  document.getElementById('statPages').textContent = s.pages || new Set(currentData.nodes.map(n => n.page)).size;
+
+  // Type distribution bar
+  const bar = document.getElementById('typeBar');
+  bar.innerHTML = '';
+  const total = s.nodes;
+  for (const [type, count] of Object.entries(s.type_counts)) {
+    const seg = document.createElement('div');
+    seg.style.width = (count / total * 100) + '%';
+    seg.style.background = TYPE_COLORS[type] || '#666';
+    seg.title = `${type}: ${count}`;
+    bar.appendChild(seg);
+  }
+}
+
+function renderFilters() {
+  const group = document.getElementById('filterGroup');
+  group.innerHTML = '';
+  const tc = currentData.stats.type_counts;
+  for (const type of Object.keys(TYPE_COLORS)) {
+    const count = tc[type] || 0;
+    if (count === 0) continue;
+    const item = document.createElement('label');
+    item.className = 'filter-item';
+    item.innerHTML = `
+      <input type="checkbox" ${activeFilters.has(type) ? 'checked' : ''} data-type="${type}" onchange="toggleFilter('${type}', this.checked)">
+      <span class="filter-dot" style="background:${TYPE_COLORS[type]}"></span>
+      ${type}
+      <span class="filter-count">${count}</span>
+    `;
+    group.appendChild(item);
+  }
+}
+
+function toggleFilter(type, checked) {
+  if (checked) activeFilters.add(type); else activeFilters.delete(type);
+  renderEntityList();
+  renderGraph();
+}
+
+function filterEntities() {
+  renderEntityList();
+}
+
+function renderEntityList() {
+  const list = document.getElementById('entityList');
+  const query = document.getElementById('searchBox').value.toLowerCase();
+  list.innerHTML = '';
+
+  const filtered = currentData.nodes.filter(n =>
+    activeFilters.has(n.type) &&
+    (query === '' || n.name.toLowerCase().includes(query))
+  );
+
+  for (const node of filtered) {
+    const row = document.createElement('div');
+    row.className = 'entity-row' + (selectedNodeId === node.id ? ' active' : '');
+    row.onclick = () => selectNode(node.id);
+    row.innerHTML = `
+      <span class="filter-dot" style="background:${TYPE_COLORS[node.type] || '#666'}"></span>
+      <span class="entity-name" title="${node.name}">${node.name}</span>
+      <span class="entity-type-badge" style="background:${TYPE_COLORS[node.type] || '#666'}22; color:${TYPE_COLORS[node.type] || '#666'}">${node.type}</span>
+    `;
+    list.appendChild(row);
+  }
+}
+
+function selectNode(nodeId) {
+  selectedNodeId = selectedNodeId === nodeId ? null : nodeId;
+  renderEntityList();
+  highlightNode(nodeId);
+}
+
+// ─────────────────────────────────────────────────────────────
+// D3.js Force Graph
+// ─────────────────────────────────────────────────────────────
+function renderGraph() {
+  const svg = d3.select('#graphSvg');
+  svg.selectAll('*').remove();
+
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('graphSvg').style.display = 'block';
+  document.getElementById('legend').style.display = 'block';
+
+  const container = document.getElementById('graphContainer');
+  const width = container.clientWidth;
+  const height = container.clientHeight;
+
+  // Filter nodes and edges
+  const visibleNodes = currentData.nodes.filter(n => activeFilters.has(n.type));
+  const visibleIds = new Set(visibleNodes.map(n => n.id));
+  const visibleEdges = currentData.edges.filter(e => visibleIds.has(e.source) && visibleIds.has(e.target));
+
+  // Compute degree for node sizing
+  const degree = {};
+  for (const e of visibleEdges) {
+    degree[e.source] = (degree[e.source] || 0) + 1;
+    degree[e.target] = (degree[e.target] || 0) + 1;
+  }
+  const maxDegree = Math.max(...Object.values(degree), 1);
+
+  // Prepare data copies for D3
+  const nodes = visibleNodes.map(n => ({
+    ...n,
+    degree: degree[n.id] || 0,
+    radius: 5 + 15 * Math.sqrt((degree[n.id] || 0) / maxDegree),
+  }));
+  const links = visibleEdges.map(e => ({ source: e.source, target: e.target, page: e.page }));
+
+  // SVG groups
+  const g = svg.append('g');
+
+  // Zoom
+  const zoom = d3.zoom()
+    .scaleExtent([0.1, 5])
+    .on('zoom', (event) => g.attr('transform', event.transform));
+  svg.call(zoom);
+
+  // Links
+  const linkGroup = g.append('g');
+  const link = linkGroup.selectAll('line')
+    .data(links)
+    .join('line')
+    .attr('stroke', '#30363d')
+    .attr('stroke-width', 0.5)
+    .attr('stroke-opacity', 0.4);
+
+  // Nodes
+  const nodeGroup = g.append('g');
+  const node = nodeGroup.selectAll('circle')
+    .data(nodes, d => d.id)
+    .join('circle')
+    .attr('r', d => d.radius)
+    .attr('fill', d => TYPE_COLORS[d.type] || '#666')
+    .attr('stroke', '#0d1117')
+    .attr('stroke-width', 1.5)
+    .attr('cursor', 'pointer')
+    .call(d3.drag()
+      .on('start', dragstarted)
+      .on('drag', dragged)
+      .on('end', dragended));
+
+  // Labels (only for larger nodes)
+  const label = g.append('g')
+    .selectAll('text')
+    .data(nodes.filter(n => n.radius > 10))
+    .join('text')
+    .text(d => d.name.length > 20 ? d.name.slice(0, 18) + '...' : d.name)
+    .attr('font-size', 10)
+    .attr('fill', '#c9d1d9')
+    .attr('text-anchor', 'middle')
+    .attr('dy', d => d.radius + 14)
+    .attr('pointer-events', 'none');
+
+  // Tooltip
+  const tooltip = document.getElementById('tooltip');
+
+  node.on('mouseover', (event, d) => {
+    tooltip.innerHTML = `
+      <div class="tooltip-name">${d.name}</div>
+      <div class="tooltip-row">Type: <span>${d.type}</span></div>
+      <div class="tooltip-row">Confidence: <span>${d.confidence}</span></div>
+      <div class="tooltip-row">Page: <span>${d.page}</span></div>
+      <div class="tooltip-row">Connections: <span>${d.degree}</span></div>
+    `;
+    tooltip.classList.add('visible');
+  });
+
+  node.on('mousemove', (event) => {
+    const rect = container.getBoundingClientRect();
+    tooltip.style.left = (event.clientX - rect.left + 15) + 'px';
+    tooltip.style.top = (event.clientY - rect.top - 10) + 'px';
+  });
+
+  node.on('mouseout', () => {
+    tooltip.classList.remove('visible');
+  });
+
+  node.on('click', (event, d) => {
+    event.stopPropagation();
+    selectNode(d.id);
+  });
+
+  svg.on('click', () => {
+    selectedNodeId = null;
+    renderEntityList();
+    resetHighlight();
+  });
+
+  // Simulation
+  if (simulation) simulation.stop();
+
+  simulation = d3.forceSimulation(nodes)
+    .force('link', d3.forceLink(links).id(d => d.id).distance(60))
+    .force('charge', d3.forceManyBody().strength(-120))
+    .force('center', d3.forceCenter(width / 2, height / 2))
+    .force('collision', d3.forceCollide().radius(d => d.radius + 2))
+    .on('tick', () => {
+      link
+        .attr('x1', d => d.source.x)
+        .attr('y1', d => d.source.y)
+        .attr('x2', d => d.target.x)
+        .attr('y2', d => d.target.y);
+      node
+        .attr('cx', d => d.x)
+        .attr('cy', d => d.y);
+      label
+        .attr('x', d => d.x)
+        .attr('y', d => d.y);
+    });
+
+  // Store references for highlighting
+  window._graphRefs = { node, link, links, nodes };
+
+  function dragstarted(event, d) {
+    if (!event.active) simulation.alphaTarget(0.3).restart();
+    d.fx = d.x; d.fy = d.y;
+  }
+  function dragged(event, d) {
+    d.fx = event.x; d.fy = event.y;
+  }
+  function dragended(event, d) {
+    if (!event.active) simulation.alphaTarget(0);
+    d.fx = null; d.fy = null;
+  }
+}
+
+function highlightNode(nodeId) {
+  if (!window._graphRefs) return;
+  const { node, link, links } = window._graphRefs;
+
+  if (!selectedNodeId) { resetHighlight(); return; }
+
+  // Find neighbors
+  const neighbors = new Set();
+  neighbors.add(nodeId);
+  for (const l of links) {
+    const src = typeof l.source === 'object' ? l.source.id : l.source;
+    const tgt = typeof l.target === 'object' ? l.target.id : l.target;
+    if (src === nodeId) neighbors.add(tgt);
+    if (tgt === nodeId) neighbors.add(src);
+  }
+
+  node.attr('opacity', d => neighbors.has(d.id) ? 1 : 0.15);
+  link.attr('stroke-opacity', d => {
+    const src = typeof d.source === 'object' ? d.source.id : d.source;
+    const tgt = typeof d.target === 'object' ? d.target.id : d.target;
+    return (src === nodeId || tgt === nodeId) ? 0.6 : 0.05;
+  });
+}
+
+function resetHighlight() {
+  if (!window._graphRefs) return;
+  const { node, link } = window._graphRefs;
+  node.attr('opacity', 1);
+  link.attr('stroke-opacity', 0.4);
+}
+
+function renderLegend() {
+  const legend = document.getElementById('legend');
+  const tc = currentData.stats.type_counts;
+  legend.innerHTML = '';
+  for (const [type, color] of Object.entries(TYPE_COLORS)) {
+    if (!tc[type]) continue;
+    const item = document.createElement('div');
+    item.className = 'legend-item';
+    item.innerHTML = `<span class="filter-dot" style="background:${color}"></span>${type}`;
+    legend.appendChild(item);
+  }
+}
+
+// ─────────────────────────────────────────────────────────────
+// Auto-load demo on page load
+// ─────────────────────────────────────────────────────────────
+window.addEventListener('load', () => {
+  loadDemo();
+});
+
+// Handle resize
+window.addEventListener('resize', () => {
+  if (currentData) renderGraph();
+});
+</script>
+</body>
+</html>
