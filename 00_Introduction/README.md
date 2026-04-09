@@ -127,7 +127,7 @@ Before moving to Week 1, ensure the following are completed:
 
 ## Next Step
 
-After completing environment setup, proceed to **[Week1: AI Programming Fundamentals](../Week1_AI_Programming_Fundamentals/)** to start learning Vibe Coding!
+After completing environment setup, proceed to **[Stage 1: AI Programming Fundamentals](../Stage1_AI_Programming_Fundamentals/)** to start learning Vibe Coding!
 
 ---
 

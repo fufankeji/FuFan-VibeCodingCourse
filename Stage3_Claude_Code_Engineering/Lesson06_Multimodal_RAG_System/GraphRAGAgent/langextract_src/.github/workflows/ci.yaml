@@ -1,0 +1,431 @@
+# Copyright 2025 Google LLC.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
+name: CI
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+  pull_request_target:
+    types: [labeled]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  format-check:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+          persist-credentials: false
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install format tools
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Check formatting
+        id: format-check
+        env:
+          GITHUB_TOKEN: ""
+        run: |
+          set -euo pipefail
+          pyink --check --diff .
+          isort --check-only --diff .
+
+      - name: Check import structure
+        id: import-check
+        env:
+          GITHUB_TOKEN: ""
+        run: |
+          set -euo pipefail
+          lint-imports --config pyproject.toml
+
+      - name: Comment on PR if formatting fails
+        if: failure() && steps.format-check.outcome == 'failure'
+        uses: actions/github-script@v7
+        continue-on-error: true
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ **Formatting Check Failed**\n\nYour PR has formatting issues. Please run the following command locally and push the changes:\n\n```bash\n./autoformat.sh\n```\n\nThis will automatically fix all formatting issues using pyink (Google\'s Python formatter) and isort.'
+            }).catch(err => {
+              console.log('Comment posting failed:', err.message);
+            });
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+          pip install -e ".[dev,test]"
+
+      - name: Run unit tests and linting
+        run: |
+          PY_VERSION=$(echo "${{ matrix.python-version }}" | tr -d '.')
+          # Format check is handled by separate job for better isolation
+          tox -e py${PY_VERSION},lint-src,lint-tests
+
+  live-api-tests:
+    needs: test
+    runs-on: ubuntu-latest
+    if: |
+      github.event_name == 'push' ||
+      (github.event_name == 'pull_request' &&
+       github.event.pull_request.head.repo.full_name == github.repository)
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+          pip install -e ".[dev,test]"
+
+      - name: Run live API tests
+        env:
+          GITHUB_TOKEN: ""
+        run: |
+          set -euo pipefail
+          if [[ -z '${{ secrets.GEMINI_API_KEY }}' && -z '${{ secrets.OPENAI_API_KEY }}' ]]; then
+            echo "::notice::Live API tests skipped - API keys not configured"
+            exit 0
+          fi
+          GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
+          LANGEXTRACT_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
+          OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+          tox -e live-api
+
+  plugin-integration-test:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Detect provider-related changes
+        id: provider-changes
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            langextract/providers/**
+            langextract/factory.py
+            langextract/inference.py
+            tests/provider_plugin_test.py
+            pyproject.toml
+            .github/workflows/ci.yaml
+
+      - name: Skip if no provider changes
+        if: steps.provider-changes.outputs.any_changed == 'false'
+        run: |
+          echo "No provider-related changes detected – skipping plugin integration test."
+          exit 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+
+      - name: Run plugin smoke test
+        run: tox -e plugin-smoke
+
+      - name: Run plugin integration test
+        run: tox -e plugin-integration
+
+  ollama-integration-test:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'pull_request'
+    permissions:
+      contents: read
+      pull-requests: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+
+      - name: Detect file changes
+        id: changes
+        uses: tj-actions/changed-files@v46
+        with:
+          files: |
+            langextract/inference.py
+            examples/ollama/**
+            tests/test_ollama_integration.py
+            .github/workflows/ci.yaml
+
+      - name: Skip if no Ollama changes
+        if: steps.changes.outputs.any_changed == 'false'
+        run: |
+          echo "No Ollama-related changes detected – skipping job."
+          exit 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Launch Ollama container
+        run: |
+          docker run -d --name ollama \
+            -p 127.0.0.1:11434:11434 \
+            -v ollama:/root/.ollama \
+            ollama/ollama:0.5.4
+          for i in {1..20}; do
+            curl -fs http://localhost:11434/api/version && break
+            sleep 3
+          done
+
+      - name: Pull gemma2 model
+        run: docker exec ollama ollama pull gemma2:2b || true
+
+      - name: Install tox
+        run: |
+          python -m pip install --upgrade pip
+          pip install tox
+
+      - name: Run Ollama integration tests
+        run: tox -e ollama-integration
+
+  test-fork-pr:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    environment:
+      name: live-keys
+    # Triggered when a maintainer adds 'ready-to-merge' label to fork PRs only
+    if: |
+      github.event_name == 'pull_request_target' &&
+      github.event.action == 'labeled' &&
+      github.event.label.name == 'ready-to-merge' &&
+      github.event.pull_request.head.repo.full_name != github.repository
+
+    permissions:
+      contents: read
+      issues: write
+
+    steps:
+      - name: Check if user is maintainer
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { data: permission } = await github.rest.repos.getCollaboratorPermissionLevel({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              username: context.actor
+            });
+
+            const isMaintainer = ['admin', 'maintain'].includes(permission.permission);
+            if (!isMaintainer) {
+              throw new Error(`User ${context.actor} does not have maintainer permissions.`);
+            }
+
+      - name: Pin commit SHA for security
+        id: sha-pin
+        run: |
+          SHA_TO_TEST="${{ github.event.pull_request.head.sha }}"
+          echo "SHA_TO_TEST=${SHA_TO_TEST}" >> $GITHUB_OUTPUT
+          echo "::notice title=Security::Pinned commit SHA for testing: ${SHA_TO_TEST}"
+
+      - name: Checkout base repo
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Fetch and verify exact PR commit
+        run: |
+          set -euo pipefail
+          EXPECTED_SHA="${STEPS_SHA_PIN_OUTPUTS_SHA_TO_TEST}"
+          echo "Fetching exact commit: $EXPECTED_SHA"
+
+          # Fetch the specific commit SHA
+          git fetch --no-tags --prune --no-recurse-submodules origin "$EXPECTED_SHA" || {
+            echo "::error::Failed to fetch PR commit $EXPECTED_SHA. The commit may have been deleted."
+            exit 1
+          }
+
+          git checkout -b pr-to-test "$EXPECTED_SHA"
+
+          # Verify checkout
+          ACTUAL_SHA="$(git rev-parse HEAD)"
+          if [ "$ACTUAL_SHA" != "$EXPECTED_SHA" ]; then
+            echo "::error::SHA verification failed! Expected $EXPECTED_SHA but got $ACTUAL_SHA"
+            exit 1
+          fi
+
+          echo "::notice title=Security::Successfully verified commit SHA: $ACTUAL_SHA"
+        env:
+          STEPS_SHA_PIN_OUTPUTS_SHA_TO_TEST: ${{ steps.sha-pin.outputs.SHA_TO_TEST }}
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install format tools
+        run: |
+          python -m pip install --upgrade pip
+          # Install formatter tools with pinned versions
+          pip install pyink==24.3.0 isort==5.13.2 lint-imports==0.3.1
+
+      - name: Validate PR formatting
+        run: |
+          set -euo pipefail
+          echo "Validating code formatting..."
+          pyink --check --diff . || {
+            echo "::error::Code formatting (pyink) does not meet project standards. Please run ./autoformat.sh locally and push the changes."
+            exit 1
+          }
+          isort --check-only --diff . || {
+            echo "::error::Import sorting (isort) does not meet project standards. Please run ./autoformat.sh locally and push the changes."
+            exit 1
+          }
+
+      - name: Checkout main branch
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Merge verified PR commit
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          SHA_TO_MERGE="${STEPS_SHA_PIN_OUTPUTS_SHA_TO_TEST}"
+          echo "Merging verified commit: $SHA_TO_MERGE"
+
+          git fetch --no-tags --prune --no-recurse-submodules origin "$SHA_TO_MERGE"
+          git merge --no-ff --no-edit "$SHA_TO_MERGE" || {
+            echo "::error::Failed to merge commit $SHA_TO_MERGE"
+            exit 1
+          }
+
+          echo "::notice title=Security::Successfully merged verified commit"
+        env:
+          STEPS_SHA_PIN_OUTPUTS_SHA_TO_TEST: ${{ steps.sha-pin.outputs.SHA_TO_TEST }}
+
+      - name: Add status comment
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: 'Preparing to run live API tests (pending environment approval and API key availability)...'
+            });
+
+      - name: Run live API tests
+        env:
+          GITHUB_TOKEN: ""
+        run: |
+          set -euo pipefail
+          if [[ -z '${{ secrets.GEMINI_API_KEY }}' && -z '${{ secrets.OPENAI_API_KEY }}' ]]; then
+            echo "::notice::Live API tests skipped - API keys not configured"
+            exit 0
+          fi
+          python -m pip install --upgrade pip
+          pip install tox
+          pip install -e ".[dev,test]"
+          GEMINI_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
+          LANGEXTRACT_API_KEY="${{ secrets.GEMINI_API_KEY }}" \
+          OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}" \
+          tox -e live-api
+
+      - name: Report success
+        if: success()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '✅ Live API tests passed! All endpoints are working correctly.'
+            });
+
+      - name: Report failure
+        if: failure()
+        uses: actions/github-script@v7
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.payload.pull_request.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '❌ Live API tests failed. Please check the workflow logs for details.'
+            });

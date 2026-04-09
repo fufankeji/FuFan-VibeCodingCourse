@@ -1,22 +1,26 @@
 <div align="center">
-  <img src="./images/course_banner.png" width="400" alt="Vibe Coding AI全栈开发实战">
+  <img src="./images/course_cover.png" width="600" alt="Vibe Coding AI编程实战课">
   <p>
     <a href="./README.md">English</a> | <a href="./README_CN.md">中文</a>
   </p>
 </div>
 
-<h1 align="center">《Vibe Coding AI全栈开发实战》</h1>
+<h1 align="center">《Vibe Coding AI编程实战课》</h1>
 
 <p align="center">
-  <b>2026 · AI编程首发特训营</b><br>
-  从零深度实战 Cursor & Claude Code | 孵化 AI 时代"一人抵一队"超级个体
+  <b>爆款课程 · 全新升级</b><br>
+  从零深度实战 Cursor + Claude Code + OpenCode | 孵化 AI 时代超级个体
 </p>
+
+<div align="center">
+  <img src="./images/course_detail.png" width="400" alt="课程详情">
+</div>
 
 ---
 
 ## 🎯 学习路径指南
 
-> ⚠️ **重要提示**：请务必先完成**导学**部分，再开始 Week 1 的学习！
+> ⚠️ **重要提示**：请务必先完成**导学**部分，再开始阶段一的学习！
 
 <div align="center">
   <img src="./images/learning_path.png" width="90%" alt="学习路径">
@@ -42,22 +46,22 @@
 - Cursor 已安装并登录
 - Git 已安装，GitHub Token 已配置
 
-### 第二步：按周学习
+### 第二步：按阶段学习
 
 <div align="center">
 
-| 周次 | 主题 | 链接 |
+| 阶段 | 主题 | 链接 |
 |:---:|:---:|:---:|
-| Week 1 | AI编程范式与快速上手 | [开始学习 →](./Week1_AI_Programming_Fundamentals/) |
-| Week 2 | Cursor AI IDE深入实践 | [开始学习 →](./Week2_Cursor_Deep_Dive/) |
-| Week 3 | Claude Code工程实战 | [开始学习 →](./Week3_Claude_Code_Engineering/) |
-| Week 4 | 企业级进阶实战 | [开始学习 →](./Week4_Enterprise_Practice/) |
+| 阶段一 | AI编程范式与快速上手 | [开始学习 →](./Stage1_AI_Programming_Fundamentals/) |
+| 阶段二 | Cursor AI IDE深入实践 | [开始学习 →](./Stage2_Cursor_Deep_Dive/) |
+| 阶段三 | Claude Code工程实战 | [开始学习 →](./Stage3_Claude_Code_Engineering/) |
+| 阶段四 | 企业级进阶实战 | [开始学习 →](./Stage4_Enterprise_Practice/) |
 
 </div>
 
-### Week 4 最新更新
+### 阶段四 最新更新
 
-- **[Lesson 07：文档审核 Agent](./Week4_Enterprise_Practice/Lesson07_Document_Review_Agent/)** 已上线。
+- **[Lesson 07：文档审核 Agent](./Stage4_Enterprise_Practice/Lesson07_Document_Review_Agent/)** 已上线。
 - 包含完整项目代码目录 `AgentTeamProject` 与课程资料目录 `CourseWare`。
 
 ---
@@ -89,13 +93,13 @@
 <td width="50%" align="center">
 <h3>项目一：智能数据分析助理</h3>
 <img src="./images/project_01_data_assistant.png" width="100%">
-<p><b>Week 1</b> · Text-to-SQL 数据分析助手</p>
+<p><b>阶段一</b> · Text-to-SQL 数据分析助手</p>
 <p><code>Cursor</code> <code>React</code> <code>FastAPI</code> <code>SQLite</code></p>
 </td>
 <td width="50%" align="center">
 <h3>项目二：ClawdBot 多模态 Agent</h3>
 <img src="./images/project_02_doubao_clone.png" width="100%">
-<p><b>Week 2</b> · 前后端数据流闭环</p>
+<p><b>阶段二</b> · 前后端数据流闭环</p>
 <p><code>Cursor</code> <code>React</code> <code>FastAPI</code> <code>WebSocket</code></p>
 </td>
 </tr>
@@ -103,13 +107,13 @@
 <td width="50%" align="center">
 <h3>项目三：多模态 RAG 知识库</h3>
 <img src="./images/project_03_multimodal_rag.png" width="100%">
-<p><b>Week 3</b> · 端到端私有知识库系统</p>
+<p><b>阶段三</b> · 端到端私有知识库系统</p>
 <p><code>Claude Code</code> <code>React</code> <code>LangChain</code> <code>FastAPI</code></p>
 </td>
 <td width="50%" align="center">
 <h3>项目四：智能文档审核 Agent</h3>
 <img src="./images/project_04_doc_review_agent.png" width="100%">
-<p><b>Week 4</b> · 商业级可部署系统</p>
+<p><b>阶段四</b> · 商业级可部署系统</p>
 <p><code>Claude Code</code> <code>React</code> <code>LangChain</code> <code>Docker</code></p>
 </td>
 </tr>
@@ -124,10 +128,10 @@
 | 阶段 | 主题 | 课时 | 项目实战 |
 |:---:|:---:|:---:|:---:|
 | **导学** | 环境配置与工具准备 | 4 | - |
-| **Week 1** | AI编程范式与快速上手 | 2 | 智能数据分析助理 |
-| **Week 2** | Cursor AI IDE深入实践 | 3 | ClawdBot |
-| **Week 3** | Claude Code工程实战 | 2 | 多模态RAG知识库 |
-| **Week 4** | 企业级进阶实战 | 1 | 智能文档审核Agent |
+| **阶段一** | AI编程范式与快速上手 | 2 | 智能数据分析助理 |
+| **阶段二** | Cursor AI IDE深入实践 | 3 | ClawdBot |
+| **阶段三** | Claude Code工程实战 | 2 | 多模态RAG知识库 |
+| **阶段四** | 企业级进阶实战 | 1 | 智能文档审核Agent |
 
 </div>
 
@@ -156,7 +160,7 @@
 
 ```bash
 # 1. 克隆本仓库
-git clone https://github.com/fufankeji/VibeCodingCourse_v1.git
+git clone https://github.com/fufankeji/FuFan-VibeCodingCourse.git
 
 # 2. 从导学开始
 cd VibeCodingCourse/00_Introduction
@@ -184,8 +188,8 @@ MIT License
 ---
 
 <p align="center">
-  <b>《Vibe Coding AI全栈开发实战》</b><br>
-  重塑AI时代编程竞争力 · 孵化AI时代超级个体<br>
+  <b>《Vibe Coding AI编程实战课》</b><br>
+  第一期爆款好评 · 新一期全面升级<br>
   <br>
   <b>主讲老师：木羽老师</b>
 </p>

@@ -1,2 +1,0 @@
-钉钉：https://github.com/soimy/openclaw-channel-dingtalk/tree/main
-        https://github.com/BytePioneer-AI/openclaw-china

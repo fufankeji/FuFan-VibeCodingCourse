@@ -1,22 +1,26 @@
 <div align="center">
-  <img src="./images/course_banner.png" width="400" alt="Vibe Coding AI Full-Stack Development Bootcamp">
+  <img src="./images/course_cover.png" width="600" alt="Vibe Coding AI Programming Practice Course">
   <p>
     <a href="./README.md">English</a> | <a href="./README_CN.md">中文</a>
   </p>
 </div>
 
-<h1 align="center">Vibe Coding: AI Full-Stack Development Bootcamp</h1>
+<h1 align="center">Vibe Coding: AI Programming Practice Course</h1>
 
 <p align="center">
-  <b>2026 · AI Programming Pioneer Training Camp</b><br>
-  Master Cursor & Claude Code from scratch | Become an AI-era "one-person army"
+  <b>Hit Course · Fully Upgraded</b><br>
+  Master Cursor + Claude Code + OpenCode from scratch | Become an AI-era super individual
 </p>
+
+<div align="center">
+  <img src="./images/course_detail.png" width="400" alt="Course Details">
+</div>
 
 ---
 
 ## 🎯 How to Learn This Course
 
-> ⚠️ **Important**: Complete the **Introduction** section before starting Week 1!
+> ⚠️ **Important**: Complete the **Introduction** section before starting Stage 1!
 
 <div align="center">
   <img src="./images/learning_path.png" width="90%" alt="Learning Path">
@@ -42,22 +46,22 @@
 - Cursor installed and logged in
 - Git installed with GitHub Token configured
 
-### Step 2: Follow Weekly Schedule
+### Step 2: Follow the Stages
 
 <div align="center">
 
-| Week | Topic | Link |
+| Stage | Topic | Link |
 |:---:|:---:|:---:|
-| Week 1 | AI Programming Fundamentals | [Start →](./Week1_AI_Programming_Fundamentals/) |
-| Week 2 | Cursor AI IDE Deep Dive | [Start →](./Week2_Cursor_Deep_Dive/) |
-| Week 3 | Claude Code Engineering | [Start →](./Week3_Claude_Code_Engineering/) |
-| Week 4 | Enterprise Practice | [Start →](./Week4_Enterprise_Practice/) |
+| Stage 1 | AI Programming Fundamentals | [Start →](./Stage1_AI_Programming_Fundamentals/) |
+| Stage 2 | Cursor AI IDE Deep Dive | [Start →](./Stage2_Cursor_Deep_Dive/) |
+| Stage 3 | Claude Code Engineering | [Start →](./Stage3_Claude_Code_Engineering/) |
+| Stage 4 | Enterprise Practice | [Start →](./Stage4_Enterprise_Practice/) |
 
 </div>
 
-### Week 4 Latest Update
+### Stage 4 Latest Update
 
-- **[Lesson 07: Document Review Agent](./Week4_Enterprise_Practice/Lesson07_Document_Review_Agent/)** is now available.
+- **[Lesson 07: Document Review Agent](./Stage4_Enterprise_Practice/Lesson07_Document_Review_Agent/)** is now available.
 - Includes complete project code in `AgentTeamProject` and teaching materials in `CourseWare`.
 
 ---
@@ -89,13 +93,13 @@
 <td width="50%" align="center">
 <h3>Project 1: Smart Data Analysis Assistant</h3>
 <img src="./images/project_01_data_assistant.png" width="100%">
-<p><b>Week 1</b> · Text-to-SQL Data Analysis</p>
+<p><b>Stage 1</b> · Text-to-SQL Data Analysis</p>
 <p><code>Cursor</code> <code>React</code> <code>FastAPI</code> <code>SQLite</code></p>
 </td>
 <td width="50%" align="center">
 <h3>Project 2: ClawdBot Multimodal Agent</h3>
 <img src="./images/project_02_doubao_clone.png" width="100%">
-<p><b>Week 2</b> · Frontend-Backend Data Flow</p>
+<p><b>Stage 2</b> · Frontend-Backend Data Flow</p>
 <p><code>Cursor</code> <code>React</code> <code>FastAPI</code> <code>WebSocket</code></p>
 </td>
 </tr>
@@ -103,13 +107,13 @@
 <td width="50%" align="center">
 <h3>Project 3: Multimodal RAG Knowledge Base</h3>
 <img src="./images/project_03_multimodal_rag.png" width="100%">
-<p><b>Week 3</b> · End-to-End Private Knowledge Base</p>
+<p><b>Stage 3</b> · End-to-End Private Knowledge Base</p>
 <p><code>Claude Code</code> <code>React</code> <code>LangChain</code> <code>FastAPI</code></p>
 </td>
 <td width="50%" align="center">
 <h3>Project 4: Document Review Agent</h3>
 <img src="./images/project_04_doc_review_agent.png" width="100%">
-<p><b>Week 4</b> · Production-Ready Deployable System</p>
+<p><b>Stage 4</b> · Production-Ready Deployable System</p>
 <p><code>Claude Code</code> <code>React</code> <code>LangChain</code> <code>Docker</code></p>
 </td>
 </tr>
@@ -124,10 +128,10 @@
 | Phase | Topic | Lessons | Project |
 |:---:|:---:|:---:|:---:|
 | **Intro** | Environment Setup | 4 | - |
-| **Week 1** | AI Programming Fundamentals | 2 | Smart Data Assistant |
-| **Week 2** | Cursor AI IDE Deep Dive | 3 | ClawdBot |
-| **Week 3** | Claude Code Engineering | 2 | Multimodal RAG System |
-| **Week 4** | Enterprise Practice | 1 | Document Review Agent |
+| **Stage 1** | AI Programming Fundamentals | 2 | Smart Data Assistant |
+| **Stage 2** | Cursor AI IDE Deep Dive | 3 | ClawdBot |
+| **Stage 3** | Claude Code Engineering | 2 | Multimodal RAG System |
+| **Stage 4** | Enterprise Practice | 1 | Document Review Agent |
 
 </div>
 
@@ -156,7 +160,7 @@
 
 ```bash
 # 1. Clone this repository
-git clone https://github.com/fufankeji/VibeCodingCourse_v1.git
+git clone https://github.com/fufankeji/FuFan-VibeCodingCourse.git
 
 # 2. Start with Introduction
 cd VibeCodingCourse/00_Introduction
@@ -184,8 +188,8 @@ Interested in the course? Scan to connect with our teaching assistant for more r
 ---
 
 <p align="center">
-  <b>Vibe Coding: AI Full-Stack Development Bootcamp</b><br>
-  Reshape programming competitiveness in the AI era<br>
+  <b>Vibe Coding: AI Programming Practice Course</b><br>
+  Hit Course from Season 1 · Fully Upgraded for Season 2<br>
   <br>
   <b>Instructor: Teacher Muyu (木羽老师)</b>
 </p>

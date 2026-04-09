@@ -1,0 +1,131 @@
+{
+  "batch_id": "batch_60b10a4c10",
+  "total": 1,
+  "completed": 1,
+  "failed": 0,
+  "status": "done",
+  "created_at": "2026-03-05T12:39:38.356076+00:00",
+  "results": [
+    {
+      "query_id": "q_20429d3fa4",
+      "question": "test question",
+      "answer": "Based on my exploration of the knowledge graph, I can see this is a comprehensive system focused on **Multimodal GraphRAG (Retrieval-Augmented Generation)** technology. Here's what I found:\n\n## Knowledge Graph Overview\n\nThe graph contains **68 nodes** and **1101 edges** with three entity types:\n- **CONCEPT** (36 entities): Core concepts like \"Multimodal GraphRAG System\", \"intelligent document parsing\", \"knowledge graph construction\", \"semantic search\", etc.\n- **TECHNOLOGY** (30 entities): Technologies like \"LangExtract\", \"MinerU\", \"PDF\", \"DOCX\", \"OpenAI\", \"Gemini\", etc.\n- **LOCATION** (2 entities): \"Chinese\" and \"English\" (likely referring to language support)\n\n## Central Components\n\nThe most central nodes in the graph are:\n1. **[TECHNOLOGY] LangExtract** (centrality=0.716)\n2. **[CONCEPT] semantic search** (centrality=0.716) \n3. **[CONCEPT] Multimodal GraphRAG System** (centrality=0.627)\n4. **[CONCEPT] intelligent document parsing** (centrality=0.627)\n5. **[CONCEPT] knowledge graph construction** (centrality=0.627)\n\n## Key System Components\n\nFrom the entities I found, this appears to be a **document processing and knowledge graph system** that:\n\n1. **Document Processing**: Supports multiple file formats (PDF, DOCX, PPTX, image files, PNG, JPG, HTML, Markdown)\n2. **AI Integration**: Uses LLM backends like OpenAI, Gemini, and Ollama\n3. **Parsing Technology**: Leverages MinerU and LangExtract for intelligent document parsing\n4. **Knowledge Graph Construction**: Builds structured knowledge graphs with node types (Person, Organization, Location, Event, Concept) and edge types (RELATED_TO, BELONGS_TO, CAUSED_BY, LOCATED_IN)\n5. **Retrieval System**: Implements hybrid search combining vector similarity and graph traversal\n\n## Use Cases\n\nThe system appears designed for:\n- **Semantic search** and **question answering** over documents\n- **Structured information extraction** from multimodal documents\n- **Knowledge graph construction** from unstructured data\n- **Intelligent document parsing** with character-level position anchoring\n\nThis is a sophisticated multimodal GraphRAG system that combines document parsing, knowledge graph construction, and AI-powered retrieval for enhanced information access and question answering capabilities.",
+      "tool_calls": [
+        {
+          "step": 1,
+          "tool_name": "describe_graph",
+          "tool_input": "{}",
+          "tool_output": "Knowledge Graph Overview:\n  Nodes: 68\n  Edges: 1101\n  Entity types: {'CONCEPT': 36, 'TECHNOLOGY': 30, 'LOCATION': 2}\n  Top 5 central nodes:\n    [TECHNOLOGY] LangExtract (centrality=0.716)\n    [CONCEPT] semantic search (centrality=0.716)\n    [CONCEPT] Multimodal GraphRAG System (centrality=0.627)\n    [CONCEPT] intelligent document parsing (centrality=0.627)\n    [CONCEPT] knowledge graph construction (centrality=0.627)"
+        },
+        {
+          "step": 2,
+          "tool_name": "search_entities",
+          "tool_input": "{'query': 'test'}",
+          "tool_output": "No entities found matching 'test'. Sample: Multimodal GraphRAG System, intelligent document parsing, knowledge graph construction, MinerU, LangExtract, graph database, PDF, DOCX"
+        },
+        {
+          "step": 3,
+          "tool_name": "search_entities",
+          "tool_input": "{'query': 'AI'}",
+          "tool_output": "Found 1 entity(ies) matching 'AI':\n  [TECHNOLOGY] \"OpenAI\" (confidence=match_exact, page=1, id=tech_openai_21)"
+        },
+        {
+          "step": 4,
+          "tool_name": "get_entities_by_type",
+          "tool_input": "{'entity_type': 'TECHNOLOGY'}",
+          "tool_output": "Found 30 TECHNOLOGY entities:\n  \"MinerU\" (page=1, id=tech_mineru_3)\n  \"LangExtract\" (page=1, id=tech_langextract_4)\n  \"PDF\" (page=1, id=tech_pdf_6)\n  \"DOCX\" (page=1, id=tech_docx_7)\n  \"PPTX\" (page=1, id=tech_pptx_8)\n  \"image files\" (page=1, id=tech_imagefiles_9)\n  \"MinerU Cloud API\" (page=1, id=tech_mineruclouda_12)\n  \"PNG\" (page=1, id=tech_png_13)\n  \"JPG\" (page=1, id=tech_jpg_14)\n  \"HTML\" (page=1, id=tech_html_15)\n  \"Markdown\" (page=1, id=tech_markdown_16)\n  \"LLM backends\" (page=1, id=tech_llmbackends_19)\n  \"Gemini\" (page=1, id=tech_gemini_20)\n  \"OpenAI\" (page=1, id=tech_openai_21)\n  \"Ollama\" (page=1, id=tech_ollama_22)\n  \"MinerU API\" (page=2, id=tech_mineruapi_45)\n  \"MinerU parsing service\" (page=3, id=tech_mineruparsin_49)\n  \"MINERU_API_TOKEN\" (page=3, id=tech_mineru_api_t_50)\n  \"MINERU_USER_UID\" (page=3, id=tech_mineru_user__52)\n  \"MINERU_BASE_URL\" (page=3, id=tech_mineru_base__54)\n  \"MINERU_MODEL_VERSION\" (page=3, id=tech_mineru_model_55)\n  \"pipeline\" (page=3, id=tech_pipeline_56)\n  \"vlm\" (page=3, id=tech_vlm_57)\n  \"MinerU-HTML\" (page=3, id=tech_mineru-html_58)\n  \"MINERU_LANGUAGE\" (page=3, id=tech_mineru_langu_59)\n  \"MINERU_IS_OCR\" (page=3, id=tech_mineru_is_oc_62)\n  \"text PDF\" (page=3, id=tech_textpdf_63)\n  \"scanned PDF\" (page=3, id=tech_scannedpdf_64)\n  \"MINERU_ENABLE_FORMULA\" (page=3, id=tech_mineru_enabl_65)\n  \"MINERU_ENABLE_TABLE\" (page=3, id=tech_mineru_enabl_66)"
+        },
+        {
+          "step": 5,
+          "tool_name": "get_entities_by_type",
+          "tool_input": "{'entity_type': 'CONCEPT'}",
+          "tool_output": "Found 36 CONCEPT entities:\n  \"Multimodal GraphRAG System\" (page=1, id=conc_multimodalgr_0)\n  \"intelligent document parsing\" (page=1, id=conc_intelligentd_1)\n  \"knowledge graph construction\" (page=1, id=conc_knowledgegra_2)\n  \"graph database\" (page=1, id=conc_graphdatabas_5)\n  \"semantic search\" (page=1, id=conc_semanticsear_10)\n  \"question answering\" (page=1, id=conc_questionansw_11)\n  \"structured information extraction\" (page=1, id=conc_structuredin_17)\n  \"few-shot prompting\" (page=1, id=conc_few-shotprom_18)\n  \"character-level position anchoring\" (page=1, id=conc_character-le_23)\n  \"Knowledge Graph Module\" (page=1, id=conc_knowledgegra_24)\n  \"Node types\" (page=1, id=conc_nodetypes_25)\n  \"Person\" (page=1, id=conc_person_26)\n  \"Organization\" (page=1, id=conc_organization_27)\n  \"Location\" (page=1, id=conc_location_28)\n  \"Event\" (page=1, id=conc_event_29)\n  \"Concept\" (page=1, id=conc_concept_30)\n  \"Edge types\" (page=1, id=conc_edgetypes_31)\n  \"RELATED_TO\" (page=1, id=conc_related_to_32)\n  \"BELONGS_TO\" (page=1, id=conc_belongs_to_33)\n  \"CAUSED_BY\" (page=1, id=conc_caused_by_34)\n  \"LOCATED_IN\" (page=1, id=conc_located_in_35)\n  \"Retrieval Module\" (page=1, id=conc_retrievalmod_36)\n  \"retrieval layer\" (page=1, id=conc_retrievallay_37)\n  \"hybrid search\" (page=1, id=conc_hybridsearch_38)\n  \"vector similarity\" (page=1, id=conc_vectorsimila_39)\n  \"graph traversal\" (page=1, id=conc_graphtravers_40)\n  \"relevance score\" (page=1, id=conc_relevancesco_41)\n  \"source document references\" (page=1, id=conc_sourcedocume_42)\n  \"Data Pipeline\" (page=2, id=conc_datapipeline_43)\n  \"Document Ingestion\" (page=2, id=conc_documentinge_44)\n  ... and 6 more"
+        },
+        {
+          "step": 6,
+          "tool_name": "get_entities_by_type",
+          "tool_input": "{'entity_type': 'LOCATION'}",
+          "tool_output": "Found 2 LOCATION entities:\n  \"Chinese\" (page=3, id=loca_chinese_60)\n  \"English\" (page=3, id=loca_english_61)"
+        },
+        {
+          "step": 7,
+          "tool_name": "get_neighbors",
+          "tool_input": "{'entity_name': 'LangExtract', 'hops': 1}",
+          "tool_output": "Neighbors of 'LangExtract' [TECHNOLOGY] within 1 hop(s):\n\n  Hop 1 — 48 related entities:\n    [CONCEPT] Multimodal GraphRAG System\n    [CONCEPT] intelligent document parsing\n    [CONCEPT] knowledge graph construction\n    [TECHNOLOGY] MinerU\n    [CONCEPT] graph database\n    [TECHNOLOGY] PDF\n    [TECHNOLOGY] DOCX\n    [TECHNOLOGY] PPTX\n    [TECHNOLOGY] image files\n    [CONCEPT] semantic search\n    [CONCEPT] question answering\n    [TECHNOLOGY] MinerU Cloud API\n    [TECHNOLOGY] PNG\n    [TECHNOLOGY] JPG\n    [TECHNOLOGY] HTML\n    [TECHNOLOGY] Markdown\n    [CONCEPT] structured information extraction\n    [CONCEPT] few-shot prompting\n    [TECHNOLOGY] LLM backends\n    [TECHNOLOGY] Gemini\n    ... and 28 more\n\n  Total related entities: 48"
+        },
+        {
+          "step": 8,
+          "tool_name": "get_neighbors",
+          "tool_input": "{'entity_name': 'Multimodal GraphRAG System', 'hops': 1}",
+          "tool_output": "Neighbors of 'Multimodal GraphRAG System' [CONCEPT] within 1 hop(s):\n\n  Hop 1 — 42 related entities:\n    [CONCEPT] intelligent document parsing\n    [CONCEPT] knowledge graph construction\n    [TECHNOLOGY] MinerU\n    [TECHNOLOGY] LangExtract\n    [CONCEPT] graph database\n    [TECHNOLOGY] PDF\n    [TECHNOLOGY] DOCX\n    [TECHNOLOGY] PPTX\n    [TECHNOLOGY] image files\n    [CONCEPT] semantic search\n    [CONCEPT] question answering\n    [TECHNOLOGY] MinerU Cloud API\n    [TECHNOLOGY] PNG\n    [TECHNOLOGY] JPG\n    [TECHNOLOGY] HTML\n    [TECHNOLOGY] Markdown\n    [CONCEPT] structured information extraction\n    [CONCEPT] few-shot prompting\n    [TECHNOLOGY] LLM backends\n    [TECHNOLOGY] Gemini\n    ... and 22 more\n\n  Total related entities: 42"
+        }
+      ],
+      "cited_nodes": [
+        "conc_retrievalmod_36",
+        "tech_mineruclouda_12",
+        "tech_pipeline_56",
+        "conc_located_in_35",
+        "tech_langextract_4",
+        "tech_imagefiles_9",
+        "tech_mineru_langu_59",
+        "tech_mineru_enabl_66",
+        "tech_pdf_6",
+        "conc_few-shotprom_18",
+        "tech_mineru_user__52",
+        "tech_mineruparsin_49",
+        "conc_caused_by_34",
+        "conc_relevancesco_41",
+        "conc_location_28",
+        "loca_english_61",
+        "conc_structuredin_17",
+        "tech_mineru_api_t_50",
+        "tech_mineru_3",
+        "tech_pptx_8",
+        "conc_datapipeline_43",
+        "conc_vectorsimila_39",
+        "tech_mineru_model_55",
+        "conc_person_26",
+        "conc_character-le_23",
+        "tech_vlm_57",
+        "tech_png_13",
+        "tech_mineru_base__54",
+        "conc_belongs_to_33",
+        "conc_intelligentd_1",
+        "tech_mineru-html_58",
+        "tech_jpg_14",
+        "conc_graphdatabas_5",
+        "loca_chinese_60",
+        "tech_mineru_enabl_65",
+        "tech_llmbackends_19",
+        "conc_multimodalgr_0",
+        "tech_mineru_is_oc_62",
+        "conc_hybridsearch_38",
+        "conc_graphtravers_40",
+        "tech_gemini_20",
+        "conc_questionansw_11",
+        "conc_documentinge_44",
+        "tech_textpdf_63",
+        "conc_knowledgegra_2",
+        "conc_knowledgegra_24",
+        "conc_related_to_32",
+        "tech_mineruapi_45",
+        "conc_edgetypes_31",
+        "tech_docx_7",
+        "tech_scannedpdf_64",
+        "conc_concept_30",
+        "conc_retrievallay_37",
+        "tech_ollama_22",
+        "conc_nodetypes_25",
+        "conc_organization_27",
+        "conc_sourcedocume_42",
+        "conc_event_29",
+        "conc_semanticsear_10",
+        "tech_openai_21",
+        "tech_html_15",
+        "tech_markdown_16"
+      ],
+      "elapsed_seconds": 64.58,
+      "created_at": "2026-03-05T12:40:42.938768+00:00"
+    }
+  ]
+}

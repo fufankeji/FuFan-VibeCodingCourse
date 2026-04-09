@@ -1,0 +1,86 @@
+from typing import Optional
+
+from fastapi import APIRouter, Depends, Header, UploadFile, File, Query
+from sqlalchemy.orm import Session
+
+from app.core.errors import APIError
+from app.database import get_db
+from app.models.contract import Contract
+from app.models.session import ReviewSession
+from app.schemas.contract import ContractListResponse, ContractResponse, UploadResponse
+from app.services import upload_service
+
+router = APIRouter()
+
+
+@router.post("/upload", response_model=UploadResponse, status_code=201)
+async def upload_contract(
+    file: UploadFile = File(...),
+    x_user_id: str = Header(default="anonymous", alias="X-User-ID"),
+    db: Session = Depends(get_db),
+):
+    return await upload_service.handle_upload(file, db, user_id=x_user_id)
+
+
+@router.get("", response_model=ContractListResponse)
+def list_contracts(
+    cursor: Optional[str] = Query(default=None, description="游标分页，传入上一页最后一条 contract id"),
+    limit: int = Query(default=20, ge=1, le=100),
+    state: Optional[str] = Query(default=None, description="按 session state 筛选"),
+    db: Session = Depends(get_db),
+):
+    # If state filter is given, we need to join with sessions
+    if state:
+        from sqlalchemy import and_
+        query = (
+            db.query(Contract)
+            .join(ReviewSession, ReviewSession.contract_id == Contract.id)
+            .filter(ReviewSession.state == state)
+            .order_by(Contract.created_at.desc())
+        )
+    else:
+        query = db.query(Contract).order_by(Contract.created_at.desc())
+
+    if cursor:
+        anchor = db.query(Contract).filter(Contract.id == cursor).first()
+        if anchor:
+            query = query.filter(Contract.created_at < anchor.created_at)
+
+    # Count total before pagination
+    total = query.count()
+
+    items = query.limit(limit + 1).all()
+    has_more = len(items) > limit
+    if has_more:
+        items = items[:limit]
+
+    next_cursor = items[-1].id if has_more and items else None
+
+    # Join session info for each contract
+    result_items = []
+    for c in items:
+        resp = ContractResponse.model_validate(c)
+        session = db.query(ReviewSession).filter(ReviewSession.contract_id == c.id).order_by(ReviewSession.created_at.desc()).first()
+        if session:
+            resp.session_id = session.id
+            resp.session_state = session.state
+        result_items.append(resp)
+
+    return ContractListResponse(
+        items=result_items,
+        total=total,
+        next_cursor=next_cursor,
+    )
+
+
+@router.get("/{contract_id}", response_model=ContractResponse)
+def get_contract(contract_id: str, db: Session = Depends(get_db)):
+    contract = db.query(Contract).filter(Contract.id == contract_id).first()
+    if not contract:
+        raise APIError.not_found("Contract")
+    resp = ContractResponse.model_validate(contract)
+    session = db.query(ReviewSession).filter(ReviewSession.contract_id == contract_id).order_by(ReviewSession.created_at.desc()).first()
+    if session:
+        resp.session_id = session.id
+        resp.session_state = session.state
+    return resp

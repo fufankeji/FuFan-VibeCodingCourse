@@ -1,0 +1,175 @@
+---
+description: "Linear 任务管理和 Git 工作流规范。当用户提到：创建项目、创建任务、新建任务、开始做、做XXX、完成了、搞定、取消任务、列出任务、待办、进度、提交代码、推送、创建分支、同步到Linear 等操作时应用此规则。"
+alwaysApply: false
+---
+
+# AI 驱动开发工作流规范
+
+## 一、项目配置
+
+```yaml
+project:
+  name: "电商管理平台"          # 当前项目名称
+  team: "TES"            # Linear 团队名（Key: VB）
+  repo: "https://github.com/fufankeji/TEST.git"                      # GitHub 仓库地址
+```
+
+> Issue 前缀（如 VB）由 Linear 团队 Key 决定
+> 修改方式：Linear → Team Settings → Identifier
+
+---
+
+## 二、核心工作流
+
+### 2.1 触发词映射
+
+| 自然语言命令 | AI 执行 |
+|--------|---------|
+| "创建项目 XXX" | 创建 Linear Project + 拆分 Issues |
+| "新建任务 XXX" | 创建 Linear Issue |
+| "开始做 `<ID>`" | Issue → In Progress，告知分支名 |
+| "开始做 XXX" / "做 XXX" | 查询 Linear 匹配任务 → In Progress |
+| "完成了" / "搞定" | 当前任务 Issue → Done，生成 commit message |
+| "取消 `<ID>`" | Issue → Canceled |
+| "列出任务" / "待办" / "进度" | 显示任务列表和完成度 |
+| "提交代码" / "推送" | git add + commit + push |
+| "创建分支 `<ID>`" | git checkout -b feature/`<ID>`-xxx |
+| "同步到 Linear" / "根据 plan 创建任务" | 读取 Plan MD 文件，创建 Linear Project + Issues |
+
+> `<ID>` = Issue 标识符，如 `VB-10`、`AUTH-5`
+> 当用户用任务描述而非 ID 时，AI 需先查询 Linear 找到匹配的 Issue
+
+---
+
+## 三、Git 规范
+
+### 3.1 分支命名
+
+```
+<type>/<issue-id>-<description>
+
+类型：feature | fix | hotfix | docs | refactor
+示例：feature/VB-10-user-login
+```
+
+### 3.2 Commit Message
+
+```
+<type>(<scope>): <description> <issue-id>
+
+类型：feat | fix | docs | style | refactor | perf | test | chore
+示例：feat(auth): 实现用户登录 VB-10
+```
+
+---
+
+## 四、AI 行为规范
+
+### 开始任务时
+
+**情况1：用户提供 Issue ID（如 "开始做 AUTH-1"）**
+1. 调用 `update_issue` → In Progress
+2. 输出任务详情 + 推荐分支名
+3. 询问是否创建分支
+
+**情况2：用户用描述开始（如 "开始做用户登录" / "做 Phase 1"）**
+1. 调用 `list_issues` 查询当前项目的任务
+2. 匹配任务标题/描述，找到对应 Issue
+3. 如有多个匹配，列出选项让用户确认
+4. 确认后调用 `update_issue` → In Progress
+5. **记录当前任务 ID**（用于后续"完成了"更新）
+6. 输出任务详情 + 推荐分支名
+
+**示例：**
+```
+用户：做用户登录
+AI：找到匹配任务 AUTH-1「[用户] 实现登录功能」，已标记为进行中。
+    推荐分支：feature/AUTH-1-user-login
+    是否创建分支？
+```
+
+### 完成任务时
+1. 检查是否有**当前正在进行的任务**
+   - 如有，直接更新该任务
+   - 如无，询问用户要完成哪个任务
+2. 调用 `update_issue` → Done
+3. 生成规范 commit message（包含 Issue ID）
+4. 询问是否提交推送
+5. 清除当前任务记录
+
+**示例：**
+```
+用户：完成了
+AI：（检测到当前任务 AUTH-1）
+    AUTH-1「用户登录」已标记完成
+    推荐 commit message:
+       feat(auth): 实现用户登录功能 AUTH-1
+    是否提交推送？
+```
+
+### 查看进度时
+1. 调用 `list_issues` 获取任务
+2. 计算完成百分比
+3. 格式化输出任务表格
+
+### Plan 模式同步时
+当用户说"同步到 Linear"、"根据 plan 创建任务"或提供 Plan MD 文件时：
+
+1. **读取 Plan 文件**
+   - 识别项目名称（通常是一级标题）
+   - 提取功能模块/任务列表（通常是列表项或二级标题）
+
+2. **解析任务**
+   - 从 `- [ ]` 或 `- ` 开头的行提取任务
+   - 识别优先级标记（如：高、中、低 或 P0、P1、P2）
+   - 识别模块分类（如：[用户]、[订单]）
+
+3. **创建 Linear 内容**
+   - 调用 `create_project` 创建项目
+   - 调用 `create_issue` 为每个任务创建 Issue
+   - 设置优先级和标签
+   - **设置初始状态为 `Todo`**（非 Backlog）
+
+4. **输出结果**
+   ```
+   已根据 Plan 创建项目：XXX
+   
+   创建的任务：
+   | ID | 任务 | 优先级 |
+   |----|------|--------|
+   | TES-1 | 任务1 | High |
+   | TES-2 | 任务2 | Medium |
+   ...
+   ```
+
+### Plan 文件推荐格式
+
+```markdown
+# 项目名称
+
+## 功能模块
+
+### 模块A
+- [ ] 任务1（优先级：高）
+- [ ] 任务2（优先级：中）
+
+### 模块B  
+- [ ] 任务3（优先级：高）
+- [ ] 任务4（优先级：低）
+```
+
+---
+
+## 五、Issue 规范
+
+### 标题格式
+```
+[模块] 动作描述
+示例：[用户] 实现登录功能
+```
+
+### 优先级
+- Urgent (1): 立即处理
+- High (2): 当天完成
+- Medium (3): 本周完成
+- Low (4): 有空再做

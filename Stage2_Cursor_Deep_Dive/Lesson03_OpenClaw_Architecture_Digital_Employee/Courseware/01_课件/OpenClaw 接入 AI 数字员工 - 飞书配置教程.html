@@ -1,0 +1,687 @@
+﻿<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OpenClaw架构解析与AI数字员工开发指南</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Source+Code+Pro:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #faf8f5;
+            color: #3d3d3d;
+            line-height: 1.7;
+            font-size: 15px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(212, 165, 116, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, rgba(180, 140, 100, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 70% 80%, rgba(200, 160, 120, 0.12) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+            25% {
+                transform: translate(20px, -30px) scale(1.05);
+                opacity: 0.8;
+            }
+            50% {
+                transform: translate(-10px, 20px) scale(0.98);
+                opacity: 1;
+            }
+            75% {
+                transform: translate(-20px, -10px) scale(1.02);
+                opacity: 0.9;
+            }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(212, 165, 116, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) { left: 10%; animation-delay: 0s; animation-duration: 20s; }
+        .particle:nth-child(2) { left: 20%; animation-delay: 2s; animation-duration: 18s; }
+        .particle:nth-child(3) { left: 30%; animation-delay: 4s; animation-duration: 22s; }
+        .particle:nth-child(4) { left: 40%; animation-delay: 1s; animation-duration: 16s; }
+        .particle:nth-child(5) { left: 50%; animation-delay: 3s; animation-duration: 24s; }
+        .particle:nth-child(6) { left: 60%; animation-delay: 5s; animation-duration: 19s; }
+        .particle:nth-child(7) { left: 70%; animation-delay: 2s; animation-duration: 21s; }
+        .particle:nth-child(8) { left: 80%; animation-delay: 4s; animation-duration: 17s; }
+        .particle:nth-child(9) { left: 90%; animation-delay: 1s; animation-duration: 23s; }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) scale(1);
+            }
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) scale(1);
+            }
+            100% {
+                transform: translateY(0vh) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .notebook {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .notebook-header {
+            background: linear-gradient(135deg, #e8d5b7 0%, #f0e6d3 50%, #d4a574 100%);
+            color: #5c4a32;
+            padding: 40px 40px;
+            text-align: center;
+        }
+
+        .notebook-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .notebook-header .subtitle {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .cell {
+            border-bottom: 1px solid #e8e8e8;
+            padding: 20px 40px;
+        }
+
+        .cell:last-child {
+            border-bottom: none;
+        }
+
+        .cell h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #333;
+            margin: 10px 0 20px;
+            text-align: center;
+        }
+
+        .cell h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .cell h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #555;
+            margin: 25px 0 12px;
+        }
+
+        .cell p {
+            margin: 12px 0;
+            text-align: justify;
+            text-indent: 2em;
+        }
+
+        .cell p.no-indent {
+            text-indent: 0;
+        }
+
+        .cell ul, .cell ol {
+            margin: 12px 0 12px 2em;
+            padding-left: 20px;
+        }
+
+        .cell li {
+            margin: 6px 0;
+        }
+
+        .cell strong {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .highlight {
+            color: #d63031;
+            font-weight: 500;
+        }
+
+        .cell a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .cell a:hover {
+            text-decoration: underline;
+        }
+
+        .cell code {
+            font-family: 'Source Code Pro', Consolas, Monaco, monospace;
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #e83e8c;
+        }
+
+        .cell .code-block {
+            position: relative;
+            margin: 16px 0;
+        }
+
+        .cell pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 16px 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0;
+            font-family: 'Source Code Pro', Consolas, Monaco, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .cell pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #888;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: #27ae60;
+            color: white;
+        }
+
+        .cell .img-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .cell img {
+            max-width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: zoom-in;
+            transition: transform 0.2s ease;
+        }
+
+        .cell img:hover {
+            transform: scale(1.02);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            cursor: zoom-out;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #d4a574;
+        }
+
+        .cell table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            font-size: 0.95em;
+        }
+
+        .cell th, .cell td {
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .cell th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .cell td:last-child {
+            text-align: left;
+        }
+
+        .cell tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .cell tr:hover {
+            background: #e8f4f8;
+        }
+
+        .cell blockquote {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .cell blockquote p {
+            text-indent: 0;
+            margin: 0;
+        }
+
+        .table-title {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin: 20px 0 10px;
+            color: #333;
+        }
+
+        .toc {
+            background: #faf8f5;
+            border-radius: 8px;
+            padding: 20px 30px;
+            margin: 0;
+            border: 1px solid #e8e0d5;
+        }
+
+        .toc-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #5c4a32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin: 8px 0;
+        }
+
+        .toc-list a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: block;
+            padding: 4px 0;
+        }
+
+        .toc-list a:hover {
+            color: #d4a574;
+            padding-left: 8px;
+        }
+
+        .toc-list .toc-h3 {
+            padding-left: 20px;
+            font-size: 0.9rem;
+        }
+
+        .notebook-footer {
+            background: #f8f9fa;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .copyright {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .cell {
+                padding: 15px 20px;
+            }
+            .cell img {
+                max-width: 100%;
+            }
+            .notebook-header {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="notebook">
+        <header class="notebook-header">
+            <h1>《Vibe Coding AI全栈开发实战》</h1>
+            <p class="subtitle">OpenClaw 架构解析与 AI 数字员工开发指南</p>
+        </header>
+
+        <main>
+            <div class="cell">
+                <h1>【实战】OpenClaw 接入 AI 数字员工 - 飞书配置教程</h1>
+            </div>
+
+            <div class="cell">
+                <div class="toc">
+                    <div class="toc-title">📑 目录</div>
+                    <ul class="toc-list">
+                        <li><a href="#section1">1. 安装飞书插件与创建应用</a></li>
+                        <li><a href="#section1-1" class="toc-h3">1.1 进入飞书开发者控制台</a></li>
+                        <li><a href="#section1-2" class="toc-h3">1.2 创建机器人</a></li>
+                        <li><a href="#section2">2. 机器人权限配置</a></li>
+                        <li><a href="#section3">3. 发布申请</a></li>
+                        <li><a href="#section4">4. 事件与回调设置（长连接）</a></li>
+                        <li><a href="#section5">5. 事件订阅配置清单</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="cell">
+                <p>本课件对应你的实操文档 <strong>《OpenClaw 接入 AI 数字员工 - 飞书配置教程》</strong>，按照实际配置顺序组织为可直接授课的页面。完成本课后，你将具备从飞书应用创建、权限勾选、发布到 OpenClaw 网关接入的完整能力。</p>
+                <p><span class="highlight">建议边看边操作：</span>每完成一个小节就切到飞书后台和终端进行配置，避免集中操作时遗漏关键选项。</p>
+            </div>
+
+            <div class="cell">
+                <h2 id="section1">1. 安装飞书插件与创建应用</h2>
+            </div>
+
+            <div class="cell">
+                <h3 id="section1-1">1.1 进入飞书开发者控制台</h3>
+                <p>打开飞书开发者控制台：<a href="https://open.feishu.cn" target="_blank">https://open.feishu.cn</a>，按页面提示创建并初始化应用。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203141957595.png" alt="飞书开发者控制台步骤图1">
+                </div>
+                <p class="no-indent">&emsp;&emsp;先进入开发者后台首页，点击创建企业自建应用，进入应用初始化流程。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203142103526.png" alt="飞书开发者控制台步骤图2">
+                </div>
+                <p class="no-indent">&emsp;&emsp;在应用基础信息页补全应用名称、描述和可见范围，保存后进入下一步配置。</p>
+            </div>
+
+            <div class="cell">
+                <h3 id="section1-2">1.2 创建机器人</h3>
+                <p>在应用后台创建机器人，并完成基础信息配置。此步骤会决定后续群聊接入和消息交互能力。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203142144208.png" alt="创建机器人步骤图1">
+                </div>
+                <p class="no-indent">&emsp;&emsp;进入机器人能力配置入口，先启用机器人功能。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203142253796.png" alt="创建机器人步骤图2">
+                </div>
+                <p class="no-indent">&emsp;&emsp;配置机器人头像、名称和简介，确保群成员能明确识别这是业务机器人。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203142347433.png" alt="创建机器人步骤图3">
+                </div>
+                <p class="no-indent">&emsp;&emsp;确认机器人消息相关选项开启，然后保存设置。</p>
+            </div>
+
+            <div class="cell">
+                <h2 id="section2">2. 机器人权限配置</h2>
+            </div>
+
+            <div class="cell">
+                <p>进入权限管理页，按截图逐项勾选必需权限。权限缺失是消息无法收发、群事件无法触发的最常见原因。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203142432115.png" alt="权限配置图1">
+                </div>
+                <p class="no-indent">&emsp;&emsp;先打开权限管理页面，进入可申请权限列表。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203142443730.png" alt="权限配置图2">
+                </div>
+                <p class="no-indent">&emsp;&emsp;勾选机器人收发消息相关权限，这是接收用户输入的前提。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203143029442.png" alt="权限配置图3">
+                </div>
+                <p class="no-indent">&emsp;&emsp;继续勾选会话、群组成员等事件权限，用于感知机器人进群/退群。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203143113775.png" alt="权限配置图4">
+                </div>
+                <p class="no-indent">&emsp;&emsp;检查已选权限是否完整，避免后续回调事件缺失。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203143156064.png" alt="权限配置图5">
+                </div>
+                <p class="no-indent">&emsp;&emsp;保存权限配置并准备提交审核。</p>
+            </div>
+
+            <div class="cell">
+                <h2 id="section3">3. 发布申请</h2>
+            </div>
+
+            <div class="cell">
+                <p class="no-indent"><strong>步骤一：提交发布申请</strong></p>
+                <p>权限配置完成后，提交应用发布申请，等待审批通过后再进行联调。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203143228348.png" alt="提交发布申请图1">
+                </div>
+                <p class="no-indent">&emsp;&emsp;在发布管理中填写发布信息，发起版本发布申请。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203143617275.png" alt="提交发布申请图2">
+                </div>
+                <p class="no-indent">&emsp;&emsp;确认审核状态为已通过或可用后，再继续 OpenClaw 对接。</p>
+
+            </div>
+
+            <div class="cell">
+                <h2 id="section4">4. 事件与回调设置（长连接）</h2>
+            </div>
+
+            <div class="cell">
+                <p>在飞书开放平台应用后台，进入 <strong>事件与回调</strong> 页面，将 <strong>事件配置方式</strong> 设为 <strong>使用长连接接收事件</strong>。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203143723124.png" alt="事件与回调配置图">
+                </div>
+                <p class="no-indent">&emsp;&emsp;切换为长连接模式后，飞书事件会通过 WebSocket 推送给 OpenClaw。</p>
+            </div>
+
+            <div class="cell">
+                <h2 id="section5">5. 事件订阅配置清单</h2>
+            </div>
+
+            <div class="cell">
+                <p class="no-indent"><strong>添加事件订阅</strong>，勾选以下事件：</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>事件</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>im.message.receive_v1</code></td>
+                            <td>接收消息（必需）</td>
+                        </tr>
+                        <tr>
+                            <td><code>im.message.message_read_v1</code></td>
+                            <td>消息已读回执</td>
+                        </tr>
+                        <tr>
+                            <td><code>im.chat.member.bot.added_v1</code></td>
+                            <td>机器人进群</td>
+                        </tr>
+                        <tr>
+                            <td><code>im.chat.member.bot.deleted_v1</code></td>
+                            <td>机器人被移出群</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203144131880.png" alt="事件订阅图1">
+                </div>
+                <p class="no-indent">&emsp;&emsp;先点击“添加事件订阅”，进入事件勾选界面。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203144323912.png" alt="事件订阅图2">
+                </div>
+                <p class="no-indent">&emsp;&emsp;勾选消息接收与消息已读事件，保证基础对话能力可用。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203144428232.png" alt="事件订阅图3">
+                </div>
+                <p class="no-indent">&emsp;&emsp;勾选机器人进群和移出群事件，用于同步群内状态变化。</p>
+                <div class="img-container">
+                    <img src="https://pictes.oss-cn-beijing.aliyuncs.com/LLM/image-20260203145653430.png" alt="事件订阅图4">
+                </div>
+                <p class="no-indent">&emsp;&emsp;保存订阅配置，确认事件列表显示为已启用状态。</p>
+            </div>
+        </main>
+
+        <footer class="notebook-footer">
+            <p class="copyright">《Vibe Coding AI全栈开发实战》· OpenClaw 实战课件</p>
+        </footer>
+    </div>
+
+    <div class="modal" id="imageModal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="">
+    </div>
+
+    <script>
+        document.querySelectorAll('.cell img').forEach(img => {
+            img.addEventListener('click', function() {
+                const modal = document.getElementById('imageModal');
+                const modalImg = document.getElementById('modalImage');
+                modal.classList.add('active');
+                modalImg.src = this.src;
+            });
+        });
+
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+
+        document.getElementById('imageModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '已复制 ✓';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.textContent = '复制';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
+

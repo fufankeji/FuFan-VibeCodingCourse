@@ -1,0 +1,14 @@
+{
+  "batch_id": "batch_cca198743f",
+  "total": 1,
+  "completed": 0,
+  "failed": 1,
+  "status": "done",
+  "created_at": "2026-03-05T12:02:04.293111+00:00",
+  "results": [
+    {
+      "question": "test question",
+      "error": "cannot import name 'create_react_agent' from 'langchain.agents' (F:\\GraphRAGAgent\\backend\\.venv\\Lib\\site-packages\\langchain\\agents\\__init__.py)"
+    }
+  ]
+}

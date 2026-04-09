@@ -1,0 +1,2496 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>导学3：Claude Code部署配置教程</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600;700&family=Source+Code+Pro:wght@400;500&family=Noto+Sans+SC:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Noto Sans SC', 'Source Sans Pro', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #faf8f5;
+            color: #3d3d3d;
+            line-height: 1.7;
+            font-size: 15px;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(ellipse 80% 50% at 20% 40%, rgba(212, 165, 116, 0.15) 0%, transparent 50%),
+                radial-gradient(ellipse 60% 40% at 80% 20%, rgba(180, 140, 100, 0.1) 0%, transparent 50%),
+                radial-gradient(ellipse 50% 60% at 70% 80%, rgba(200, 160, 120, 0.12) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        @keyframes bgFloat {
+
+            0%,
+            100% {
+                transform: translate(0, 0) scale(1);
+                opacity: 1;
+            }
+
+            25% {
+                transform: translate(20px, -30px) scale(1.05);
+                opacity: 0.8;
+            }
+
+            50% {
+                transform: translate(-10px, 20px) scale(0.98);
+                opacity: 1;
+            }
+
+            75% {
+                transform: translate(-20px, -10px) scale(1.02);
+                opacity: 0.9;
+            }
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: rgba(212, 165, 116, 0.3);
+            border-radius: 50%;
+            animation: float 15s infinite ease-in-out;
+        }
+
+        .particle:nth-child(1) {
+            left: 10%;
+            animation-delay: 0s;
+            animation-duration: 20s;
+        }
+
+        .particle:nth-child(2) {
+            left: 20%;
+            animation-delay: 2s;
+            animation-duration: 18s;
+        }
+
+        .particle:nth-child(3) {
+            left: 30%;
+            animation-delay: 4s;
+            animation-duration: 22s;
+        }
+
+        .particle:nth-child(4) {
+            left: 40%;
+            animation-delay: 1s;
+            animation-duration: 16s;
+        }
+
+        .particle:nth-child(5) {
+            left: 50%;
+            animation-delay: 3s;
+            animation-duration: 24s;
+        }
+
+        .particle:nth-child(6) {
+            left: 60%;
+            animation-delay: 5s;
+            animation-duration: 19s;
+        }
+
+        .particle:nth-child(7) {
+            left: 70%;
+            animation-delay: 2s;
+            animation-duration: 21s;
+        }
+
+        .particle:nth-child(8) {
+            left: 80%;
+            animation-delay: 4s;
+            animation-duration: 17s;
+        }
+
+        .particle:nth-child(9) {
+            left: 90%;
+            animation-delay: 1s;
+            animation-duration: 23s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(100vh) scale(0);
+                opacity: 0;
+            }
+
+            10% {
+                opacity: 1;
+                transform: translateY(90vh) scale(1);
+            }
+
+            90% {
+                opacity: 1;
+                transform: translateY(10vh) scale(1);
+            }
+
+            100% {
+                transform: translateY(0vh) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .notebook {
+            max-width: 960px;
+            margin: 0 auto;
+            background: #ffffff;
+            min-height: 100vh;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.06);
+        }
+
+        .notebook-header {
+            background: linear-gradient(135deg, #e8d5b7 0%, #f0e6d3 50%, #d4a574 100%);
+            color: #5c4a32;
+            padding: 40px 40px;
+            text-align: center;
+        }
+
+        .notebook-header h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .notebook-header .subtitle {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .cell {
+            border-bottom: 1px solid #e8e8e8;
+            padding: 20px 40px;
+        }
+
+        .cell:last-child {
+            border-bottom: none;
+        }
+
+        .cell h1 {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #333;
+            margin: 10px 0 20px;
+            text-align: center;
+        }
+
+        .cell h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+            margin: 30px 0 15px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #667eea;
+        }
+
+        .cell h3 {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #555;
+            margin: 25px 0 12px;
+        }
+
+        .cell p {
+            margin: 12px 0;
+            text-align: justify;
+            text-indent: 2em;
+        }
+
+        .cell p.no-indent {
+            text-indent: 0;
+        }
+
+        .cell ul,
+        .cell ol {
+            margin: 12px 0 12px 2em;
+            padding-left: 20px;
+        }
+
+        .cell li {
+            margin: 6px 0;
+        }
+
+        .cell strong {
+            font-weight: 600;
+            color: #333;
+        }
+
+        .highlight {
+            color: #d63031;
+            font-weight: 500;
+        }
+
+        .cell a {
+            color: #667eea;
+            text-decoration: none;
+        }
+
+        .cell a:hover {
+            text-decoration: underline;
+        }
+
+        .cell code {
+            font-family: 'Source Code Pro', Consolas, Monaco, monospace;
+            background: #f1f3f5;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 0.9em;
+            color: #e83e8c;
+        }
+
+        .cell .code-block {
+            position: relative;
+            margin: 16px 0;
+        }
+
+        .cell pre {
+            background: #282c34;
+            color: #abb2bf;
+            padding: 16px 20px;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0;
+            font-family: 'Source Code Pro', Consolas, Monaco, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+        }
+
+        .cell pre code {
+            background: none;
+            padding: 0;
+            color: inherit;
+        }
+
+        .copy-btn {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #888;
+            padding: 6px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Source Sans Pro', sans-serif;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: #fff;
+        }
+
+        .copy-btn.copied {
+            background: #27ae60;
+            color: white;
+        }
+
+        .cell .img-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .cell img {
+            max-width: 80%;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            cursor: zoom-in;
+            transition: transform 0.2s ease;
+        }
+
+        .cell img:hover {
+            transform: scale(1.02);
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            cursor: zoom-out;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 8px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            font-weight: 300;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .modal-close:hover {
+            color: #d4a574;
+        }
+
+        .cell table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px auto;
+            font-size: 0.95em;
+        }
+
+        .cell th,
+        .cell td {
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+
+        .cell th {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .cell td:last-child {
+            text-align: left;
+        }
+
+        .cell tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        .cell tr:hover {
+            background: #e8f4f8;
+        }
+
+        .cell blockquote {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 6px 6px 0;
+        }
+
+        .cell blockquote p {
+            text-indent: 0;
+            margin: 0;
+        }
+
+        .table-title {
+            text-align: center;
+            font-weight: 600;
+            font-size: 1.05rem;
+            margin: 20px 0 10px;
+            color: #333;
+        }
+
+        .toc {
+            background: #faf8f5;
+            border-radius: 8px;
+            padding: 20px 30px;
+            margin: 0;
+            border: 1px solid #e8e0d5;
+        }
+
+        .toc-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: #5c4a32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toc-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .toc-list li {
+            margin: 8px 0;
+        }
+
+        .toc-list a {
+            color: #666;
+            text-decoration: none;
+            font-size: 0.95rem;
+            transition: all 0.2s;
+            display: block;
+            padding: 4px 0;
+        }
+
+        .toc-list a:hover {
+            color: #d4a574;
+            padding-left: 8px;
+        }
+
+        .toc-list .toc-h3 {
+            padding-left: 20px;
+            font-size: 0.9rem;
+        }
+
+        .notebook-footer {
+            background: #f8f9fa;
+            padding: 30px 40px;
+            text-align: center;
+            border-top: 1px solid #e8e8e8;
+        }
+
+        .nav-links {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .nav-links a {
+            color: #667eea;
+            text-decoration: none;
+            padding: 10px 20px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            transition: all 0.2s;
+        }
+
+        .nav-links a:hover {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .copyright {
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        .status-yes {
+            color: #27ae60;
+        }
+
+        .status-no {
+            color: #e74c3c;
+        }
+
+        .status-warn {
+            color: #f39c12;
+        }
+
+        /* Quick Nav - Learning Paths */
+        .quick-nav {
+            background: linear-gradient(135deg, #f8f6f3 0%, #f0ece6 100%);
+            border-radius: 10px;
+            padding: 24px 28px;
+            margin: 0;
+            border: 1px solid #e8e0d5;
+        }
+
+        .quick-nav-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 6px;
+            color: #5c4a32;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .quick-nav-subtitle {
+            font-size: 0.88rem;
+            color: #999;
+            margin-bottom: 18px;
+        }
+
+        .path-cards {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .path-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px 20px;
+            border: 1px solid #e8e0d5;
+            transition: all 0.25s ease;
+            cursor: default;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .path-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            border-radius: 4px 0 0 4px;
+        }
+
+        .path-card.path-a::before {
+            background: #667eea;
+        }
+
+        .path-card.path-b::before {
+            background: #e17055;
+        }
+
+        .path-card.path-c::before {
+            background: #00b894;
+        }
+
+        .path-card:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+        }
+
+        .path-card-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .path-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .path-a .path-icon {
+            background: rgba(102, 126, 234, 0.12);
+        }
+
+        .path-b .path-icon {
+            background: rgba(225, 112, 85, 0.12);
+        }
+
+        .path-c .path-icon {
+            background: rgba(0, 184, 148, 0.12);
+        }
+
+        .path-card-title {
+            font-weight: 600;
+            font-size: 0.98rem;
+            color: #333;
+        }
+
+        .path-card-desc {
+            font-size: 0.86rem;
+            color: #888;
+            margin-left: 46px;
+            margin-top: -4px;
+            margin-bottom: 12px;
+        }
+
+        .path-steps {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            margin-left: 46px;
+            flex-wrap: wrap;
+            row-gap: 8px;
+        }
+
+        .path-step {
+            background: #f8f9fa;
+            border: 1px solid #e8e8e8;
+            border-radius: 6px;
+            padding: 5px 12px;
+            font-size: 0.82rem;
+            color: #555;
+            white-space: nowrap;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .path-step:hover {
+            background: #667eea;
+            color: #fff;
+            border-color: #667eea;
+            text-decoration: none;
+        }
+
+        .path-arrow {
+            color: #ccc;
+            font-size: 14px;
+            margin: 0 6px;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 768px) {
+            .cell {
+                padding: 15px 20px;
+            }
+
+            .cell img {
+                max-width: 100%;
+            }
+
+            .notebook-header {
+                padding: 20px;
+            }
+
+            .path-steps {
+                margin-left: 0;
+            }
+
+            .path-card-desc {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="particles">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="notebook">
+        <header class="notebook-header">
+            <h1>《Vibe Coding AI全栈开发实战》</h1>
+            <p class="subtitle">开发环境配置前置准备 · 导学第四课</p>
+        </header>
+
+        <main>
+            <!-- Title -->
+            <div class="cell">
+                <h1>Claude Code 本地部署与配置教程</h1>
+            </div>
+
+            <!-- TOC -->
+            <div class="cell">
+                <div class="toc">
+                    <div class="toc-title">📑 目录</div>
+                    <ul class="toc-list">
+                        <li><a href="#section1">1. 什么是 Claude Code</a></li>
+                        <li><a href="#section1-1" class="toc-h3">1.1 产品定位与核心理念</a></li>
+                        <li><a href="#section1-2" class="toc-h3">1.2 三层核心架构：模型、工具与环境的协同</a></li>
+                        <li><a href="#section1-3" class="toc-h3">1.3 代理循环（Agentic Loop）</a></li>
+                        <li><a href="#section1-4" class="toc-h3">1.4 核心功能矩阵</a></li>
+                        <li><a href="#section1-5" class="toc-h3">1.5 关键特性与高级概念</a></li>
+                        <li><a href="#section1-6" class="toc-h3">1.6 安全与权限模型</a></li>
+                        <li><a href="#section1-7" class="toc-h3">1.7 运行环境与使用方式</a></li>
+                        <li><a href="#section2">2. Claude Code 与 Cursor、Codex 的区别与联系</a></li>
+                        <li><a href="#section2-2" class="toc-h3">2.2 架构与工作流差异深度分析</a></li>
+                        <li><a href="#section2-3" class="toc-h3">2.3 核心效能与性能基准对比</a></li>
+                        <li><a href="#section2-4" class="toc-h3">2.4 联系与互补关系</a></li>
+                        <li><a href="#section3">3. 多平台安装配置教程</a></li>
+                        <li><a href="#section3-1" class="toc-h3">3.1 系统要求总览</a></li>
+                        <li><a href="#section3-2" class="toc-h3">3.2 Windows 安装配置</a></li>
+                        <li><a href="#section3-3" class="toc-h3">3.3 Linux 安装配置</a></li>
+                        <li><a href="#section3-4" class="toc-h3">3.4 macOS 安装配置</a></li>
+                        <li><a href="#section4">4. 账户注册与登录认证</a></li>
+                        <li><a href="#section4-1" class="toc-h3">4.1 方式一：官方订阅（推荐）</a></li>
+                        <li><a href="#section4-2" class="toc-h3">4.2 方式二：通过 CC-Switch 管理 API Key 接入</a></li>
+                        <li><a href="#section5">5. 基本命令速查</a></li>
+                        <li><a href="#section6">6. 在 Cursor 中使用 Claude Code 插件</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Quick Nav: Learning Paths -->
+            <div class="cell">
+                <div class="quick-nav">
+                    <div class="quick-nav-title">🧭 快速导航：找到你的学习路径</div>
+                    <div class="quick-nav-subtitle">根据你的需求，选择对应路径，按顺序学习即可 —— 不必从头到尾读完全篇</div>
+                    <div class="path-cards">
+
+                        <!-- 路径 A -->
+                        <div class="path-card path-a">
+                            <div class="path-card-header">
+                                <div class="path-icon">🔑</div>
+                                <div class="path-card-title">路径 A：使用 Claude 官方订阅（海外支付可用）</div>
+                            </div>
+                            <div class="path-card-desc">已有 VPN + 海外信用卡，想直接使用 Anthropic 官方 Claude 模型</div>
+                            <div class="path-steps">
+                                <a class="path-step" href="#section3">3. 安装配置</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section4-1">4.1 官方订阅登录</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section5">5. 命令速查</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section6">6. Cursor 插件（可选）</a>
+                            </div>
+                        </div>
+
+                        <!-- 路径 B -->
+                        <div class="path-card path-b">
+                            <div class="path-card-header">
+                                <div class="path-icon">🇨🇳</div>
+                                <div class="path-card-title">路径 B：使用国内模型（无需 VPN，推荐国内用户）</div>
+                            </div>
+                            <div class="path-card-desc">通过 CC-Switch 接入 MiniMax / DeepSeek 等国内大模型，免代理、低成本</div>
+                            <div class="path-steps">
+                                <a class="path-step" href="#section3">3. 安装配置</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section4-2">4.2 CC-Switch 接入</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section5">5. 命令速查</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section6">6. Cursor 插件（可选）</a>
+                            </div>
+                        </div>
+
+                        <!-- 路径 C -->
+                        <div class="path-card path-c">
+                            <div class="path-card-header">
+                                <div class="path-icon">📖</div>
+                                <div class="path-card-title">路径 C：完整学习（推荐首次接触 Claude Code）</div>
+                            </div>
+                            <div class="path-card-desc">从零开始全面了解 Claude Code 的定位、架构与生态，再进入实操安装</div>
+                            <div class="path-steps">
+                                <a class="path-step" href="#section1">1. 认知建构</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section2">2. 竞品对比</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section3">3. 安装配置</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section4">4. 登录认证</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section5">5. 命令速查</a>
+                                <span class="path-arrow">→</span>
+                                <a class="path-step" href="#section6">6. Cursor 插件</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <!-- Intro Cell 1 -->
+            <div class="cell">
+                <p>今天我们聚焦的是 Anthropic 官方推出的重量级终端智能体——<code>Claude Code</code>。在软件工程的发展历程中，AI
+                    辅助编程工具经历了三次代际跨越：从最早的<strong>代码补全（Autocomplete）</strong>，到对话式助手（Chat Assistant），再到如今以
+                    <code>Claude Code</code> 为代表的<strong>自主智能体（Agentic
+                        Coder）</strong>。这一转变的核心在于，工具不再仅仅是开发者思维的延伸，而是成为了具备<strong>环境感知、任务规划、工具调用与结果验证</strong>能力的「数字同事」。<code>Claude Code</code>
+                    的诞生，标志着 AI 编程工具从 UI 辅助层深入到了<strong>操作系统的执行层</strong>——它不是嵌在 IDE
+                    里的插件，而是一个能直接访问文件系统、运行终端命令、集成版本控制的完整工作流环境。根据 2026 年初的行业数据，Claude Code 在发布后仅六个月内便实现了 <strong>10
+                        亿美元的年化收入（ARR）</strong>，足见其在开发者群体中的巨大吸引力。
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/Gemini_Generated_Image_tyiw3ntyiw3ntyiw.png"
+                        alt="Claude Code 封面图">
+                </div>
+                <p>结合官方文档与最新的技术调研，本次教程将重点抓住四个关键模块：首先，我们会从技术演进的视角出发，深入理解 <code>Claude Code</code>
+                    的本质定义、三层核心架构和代理循环机制，而不仅仅停留在「功能列表」的表面；其次，通过与 <code>Cursor</code> 和 <code>OpenAI Codex</code>
+                    的系统性横向对比，从交互范式、性能基准到 Token 消耗效率等多个维度建立清晰的工具选型认知；第三，也是本教程的核心重点——我们将逐步骤、逐命令地演示 Windows、Linux 和 macOS
+                    三大平台上的完整安装配置流程，涵盖环境预检、多路径安装、账户认证到安全配置的全链路，<span
+                        class="highlight">确保每一位学习者都能在自己的机器上顺利跑通</span>；最后，通过分层验证手段确认部署结果的正确性，并提供常见问题的排查指南。</p>
+                <p>为了把这些内容讲清楚，接下来我们会按照「认知 → 对比 → 实操 → 验证」的主线展开。先从 AI 编程工具的代际演进切入，建立对 Claude Code
+                    的深层认知，再通过竞品对比加深理解，然后进入手把手的安装实战，最后以验证环节收尾。让我们从第一个核心问题开始：Claude Code 究竟是什么，它为什么如此高效？</p>
+            </div>
+
+            <!-- Section 1 -->
+            <div class="cell">
+                <h2 id="section1">1. 什么是 Claude Code</h2>
+            </div>
+
+            <div class="cell">
+                <p>在正式进入安装配置之前，我们有必要先建立对 <code>Claude Code</code>
+                    的深层认知。很多同学可能已经听说过它，甚至已经在使用，但对它的技术本质、底层架构和工作机制未必有系统的理解。这一章的目标，不仅是帮助大家从「听说过」升级到「真正懂」，更要从架构层面回答一个关键问题：<span
+                        class="highlight">Claude Code 为什么能在 SWE-bench Verified 测试中达到 80.9% 的自主问题解决率，远超多数竞品？</span></p>
+                <p>要回答这个问题，我们需要理解一个核心概念的转变：<code>Claude Code</code> 并非单纯的代码生成器，也不是嵌入 IDE
+                    的聊天窗口。用更精确的术语来说，它是一个<strong>代理套件（Agentic Harness）</strong>——将 Claude
+                    模型的推理能力封装在一个能够直接访问文件系统、运行终端命令并集成版本控制系统的执行环境中。它的工作模式基于「<strong>代理循环（Agentic
+                        Loop）</strong>」，涵盖上下文采集、行动执行与结果验证三个交织的阶段。这意味着它不仅能写出代码，还能通过运行 <code>npm test</code> 或
+                    <code>pytest</code> 来验证代码的正确性，并根据报错信息自主进行多轮重构，直到任务达成预定目标。这种端到端的任务处理能力，使其在处理诸如「修复整个项目的 Lint
+                    错误」或「为身份验证模块编写完整测试用例」等复杂任务时表现卓越。
+                </p>
+            </div>
+
+            <!-- 1.1 -->
+            <div class="cell">
+                <h3 id="section1-1">1.1 产品定位与核心理念</h3>
+            </div>
+            <div class="cell">
+                <p>用官方文档的原话来说，<code>Claude Code</code> 是一个「可以读取你的代码库、编辑文件、运行命令，并与你的开发工具集成」的<strong>代理编码工具（Agentic Coding
+                        Tool）</strong>。它可以在<strong>终端（Terminal）、IDE（VS Code / JetBrains）、桌面应用和浏览器</strong>中使用。</p>
+                <p>这里需要特别理解的一个设计哲学是：<code>Claude Code</code> 坚持<strong>「终端优先」的 Unix 哲学</strong>。它认为终端是开发者的核心指挥部，通过 CLI
+                    接入可以实现与编译、构建及测试工具链的<strong>零距离对接</strong>。这种设计减少了 UI 层面的抽象带来的认知损耗，使得智能体能更直接地感知执行环境。在终端中输入
+                    <code>claude</code> 即可启动一个交互式会话，你用自然语言描述你想做的事情，<code>Claude Code</code>
+                    会自主规划执行路径、读取相关文件、编写代码、运行测试、提交 Git 变更——整个过程就像你在和一个经验丰富的同事进行结对编程（Pair Programming）。
+                </p>
+                <p>与传统插件的本质区别在于：传统 AI 编程工具是开发者思维的<strong>延伸</strong>，而 <code>Claude Code</code>
+                    是一个具备独立行动能力的<strong>数字同事</strong>。它不需要你逐行告诉它做什么，只需要给出目标和约束条件，它就会自行规划路径并执行。Anthropic 内部目前 100%
+                    的代码都经过了 AI 生产或辅助，工程师的角色正在向「AI 团队管理者」转变——这不是未来的预测，而是正在发生的现实。</p>
+            </div>
+
+            <!-- 1.2 -->
+            <div class="cell">
+                <h3 id="section1-2">1.2 三层核心架构：模型、工具与环境的协同</h3>
+            </div>
+            <div class="cell">
+                <p>理解了 Claude Code 的定位之后，一个自然的问题是：它的效能从何而来？答案在于其独特的<strong>三层协作架构</strong>。这三层各司其职、紧密协同，构成了 Claude Code
+                    区别于其他 AI 编程工具的技术根基：</p>
+                <p><strong>模型层（The Brain）</strong>：这是 Claude Code 的「大脑」，主要采用 Claude Sonnet 或更高级别的 Opus
+                    模型。这些模型经过专门微调，在代码推理、长序列规划和工具调用准确率方面处于行业领先地位。在 SWE-bench Verified 测试中，其自主解决问题的成功率达到了
+                    <strong>80.9%</strong>。2026 年版本中进一步引入了「<strong>Extended Thinking</strong>」机制——模型在行动前会分配数千个 Token
+                    进行纯推理，模拟各种可能的边界情况，从而大幅降低因逻辑疏忽导致的回归 Bug。
+                </p>
+                <p><strong>工具层（The Hands）</strong>：这是 Claude Code
+                    的「双手」，为模型提供了一套标准化的操作接口。通过这些接口，模型可以执行文件读写（<code>read_file</code>、<code>edit_file</code>）、正则搜索（<code>grep</code>）、目录扫描（<code>ls</code>）、终端交互（<code>bash</code>）以及多文件同步编辑（<code>MultiEdit</code>）等操作。这些工具不是花哨的附加功能，而是让
+                    AI 从「只能说」进化到「能动手」的关键桥梁。</p>
+                <p><strong>环境层（The Field）</strong>：这是 Claude Code 的「战场」，智能体直接运行在开发者的本地工作目录中。它能够感知当前的 Git
+                    状态、环境变量、项目配置文件（如 <code>package.json</code>、<code>pyproject.toml</code>）以及通过 <code>CLAUDE.md</code>
+                    文件传达的团队规范。这种深度的环境感知能力，使得 Claude Code 的输出天然贴合项目的实际技术栈和编码风格。</p>
+                <p><span class="highlight">核心洞察：正是「模型的推理能力 + 工具的执行能力 + 环境的感知能力」三者的紧密协同，使得 Claude Code
+                        能够完成从理解需求到验证交付的端到端闭环，而不仅仅是生成一段代码片段。</span></p>
+            </div>
+
+            <!-- 1.3 -->
+            <div class="cell">
+                <h3 id="section1-3">1.3 代理循环（Agentic Loop）：为什么 Claude Code 如此高效</h3>
+            </div>
+            <div class="cell">
+                <p>三层架构提供了「能力基座」，而让 Claude Code 真正高效运转的核心引擎，是其<strong>代理循环（Agentic Loop）</strong>机制。与传统的「用户提问 → AI
+                    回答」单轮交互不同，Claude Code 在接到任务后会进入一个自驱动的多轮循环，直到任务完成或需要人工决策时才停下来。</p>
+                <p class="no-indent">这个循环包含四个交织的阶段：</p>
+                <p><strong>探索（Explore）</strong>：智能体首先调用 <code>ls</code>、<code>grep</code>
+                    等工具扫描项目结构，理解代码库的组织方式、技术栈和依赖关系。这一阶段的目标是建立「项目地图」，为后续的精准操作奠定基础。</p>
+                <p><strong>规划（Plan）</strong>：在充分探索的基础上，模型将复杂需求拆解为可执行的子任务（Subtasks）。对于大型任务，它会在 <code>CLAUDE.md</code> 或
+                    <code>SPEC.md</code> 中记录执行计划，确保思路清晰、步骤有序。
+                </p>
+                <p><strong>实施（Implement）</strong>：利用 <code>MultiEdit</code> 等工具同时修改多个相关文件。例如，在修改 API 定义时，它会同步更新对应的 Mock
+                    数据和测试用例，而不是只改一个文件留下一堆不一致。</p>
+                <p><strong>验证（Verify）</strong>：运行 Shell 指令（如
+                    <code>npm test</code>、<code>pytest</code>、<code>cargo build</code>）查看构建是否通过。<span
+                        class="highlight">如果失败，它会将 stdout/stderr
+                        的报错信息输入回模型，自动开始第二轮循环——修改代码、重新测试——直到所有测试通过或达到重试上限。</span>
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/Gemini_Generated_Image_q346n3q346n3q346.png"
+                        alt="代理循环示意图">
+                </div>
+                <p>正是这种「自我反馈」机制，使得 Claude Code 生成的代码 <strong>rework 率比竞品低约
+                        30%</strong>——即它产出的代码更具生产就绪性，更少需要人类进行二次修正。研究表明，在处理「修复整个项目的 Lint
+                    错误」或「为身份验证模块编写完整测试用例」等复杂任务时，代理循环的优势尤为显著。</p>
+            </div>
+
+            <!-- 1.4 -->
+            <div class="cell">
+                <h3 id="section1-4">1.4 核心功能矩阵</h3>
+            </div>
+            <div class="cell">
+                <p>理解了架构和代理循环之后，我们来看 Claude Code
+                    在实际开发场景中的具体能力分布。下面这张功能矩阵表不仅列出了「能做什么」，更重要的是揭示了每项能力背后的技术实现机制——这有助于我们理解它为什么能做到这些：</p>
+                <p class="table-title">Claude Code 核心功能矩阵</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>功能维度</th>
+                            <th>具体应用场景示例</th>
+                            <th>技术实现机制</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>代码生命周期自动化</td>
+                            <td>修复 Bug、重构模块、编写单元测试</td>
+                            <td>闭环代理循环 + 搜索与编辑工具链</td>
+                        </tr>
+                        <tr>
+                            <td>版本控制集成</td>
+                            <td>自动暂存更改、撰写提交消息、创建分支并提交 PR</td>
+                            <td>直接集成 Git 指令</td>
+                        </tr>
+                        <tr>
+                            <td>复杂任务规划</td>
+                            <td>基于 PRD 构建完整的 Spring Boot 应用</td>
+                            <td>任务原语拆解 + 子代理调度</td>
+                        </tr>
+                        <tr>
+                            <td>跨工具链集成</td>
+                            <td>通过 MCP 协议读取 Jira、Slack 或 Google Drive 数据</td>
+                            <td>模型上下文协议 (MCP)</td>
+                        </tr>
+                        <tr>
+                            <td>环境维护</td>
+                            <td>解决合并冲突、更新依赖、修复 Lint 错误</td>
+                            <td>全局文件检索 + 多文件编辑</td>
+                        </tr>
+                        <tr>
+                            <td>CI/CD 自动化</td>
+                            <td>GitHub Actions 代码审查、GitLab CI/CD 问题分类</td>
+                            <td>管道式数据处理 + 非交互模式</td>
+                        </tr>
+                        <tr>
+                            <td>多媒介输入</td>
+                            <td>粘贴错误日志截图、设计稿图片作为任务上下文</td>
+                            <td>多模态模型推理</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>从表格中可以看到，<code>Claude Code</code> 的能力远不止「写代码」这一件事。它更像是一个<strong>全栈开发助手</strong>，从代码理解、编写、调试、测试到版本控制和
+                    CI/CD 集成，形成了一个完整的闭环。而这些能力的实现，都依赖于前面讲到的三层架构和代理循环机制的协同运作。</p>
+            </div>
+
+            <!-- 1.5 -->
+            <div class="cell">
+                <h3 id="section1-5">1.5 关键特性与高级概念</h3>
+            </div>
+            <div class="cell">
+                <p>在核心功能矩阵之上，<code>Claude Code</code> 还提供了一系列高级特性，它们构成了其区别于其他 AI 编程工具的「护城河」。特别值得关注的是
+                    <code>CLAUDE.md</code>（项目记忆）、<code>MCP</code>（工具互联）和<strong>权限分级模型</strong>（安全边界）这三项——它们分别解决了「AI
+                    如何理解你的项目」「AI 如何触达你的工具链」和「AI 被赋予了多大的权力」这三个核心问题：
+                </p>
+                <p class="table-title">Claude Code 关键特性与高级概念</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>特性</th>
+                            <th>说明</th>
+                            <th>核心价值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>CLAUDE.md</code></td>
+                            <td>项目根目录下的 Markdown 文件，每次会话自动加载</td>
+                            <td>设定编码标准、架构决策、首选库，让 AI 遵循团队规范</td>
+                        </tr>
+                        <tr>
+                            <td><code>MCP</code></td>
+                            <td>连接外部数据源的开放标准协议</td>
+                            <td>让 Claude Code 访问 Google Drive、Jira、Slack、Figma 等外部系统</td>
+                        </tr>
+                        <tr>
+                            <td><code>Hooks</code></td>
+                            <td>在 Claude Code 操作前/后执行的 Shell 命令</td>
+                            <td>文件编辑后自动格式化、提交前自动 Lint 检查</td>
+                        </tr>
+                        <tr>
+                            <td><code>Skills</code></td>
+                            <td>可打包共享的工作流模板</td>
+                            <td>团队共享 /review-pr、/deploy-staging 等标准化流程</td>
+                        </tr>
+                        <tr>
+                            <td><code>Sub-agents</code></td>
+                            <td>生成多个 AI 代理并行工作</td>
+                            <td>主代理协调分配，子代理通过 Git Worktrees 并行处理不同任务</td>
+                        </tr>
+                        <tr>
+                            <td><code>Plan Mode</code></td>
+                            <td>规划模式，AI 先设计方案再执行</td>
+                            <td>复杂任务先规划、评审，获批后再实施（只读，不执行写操作）</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>其中，<code>CLAUDE.md</code> 不是普通的文档，而是智能体在每个会话开始时<strong>强制阅读</strong>的「项目法典」。它应当包含构建/测试命令（如
+                    <code>npm run test:watch</code>）、代码风格约定（如「使用 ES 模块，严禁 CommonJS」）以及架构决策（如「所有 API 路径必须以
+                    <code>/v1/</code> 开头」）。保持文件精简、及时清理过时规则，对于维持智能体的判断准确性至关重要。
+                </p>
+                <p><code>MCP</code> 协议的生态优势也值得特别说明。通过配置 <code>.mcp.json</code> 文件，Claude Code 可以变成一个「全知者」——从 Google
+                    Drive 读取最新的产品规格书来编写代码，从 Slack 中总结团队讨论的技术结论并转化为代码注释，甚至从 Jira 读取 Bug 描述、修复后自动更新工单状态。这种「工具互联」的能力使
+                    Claude Code 超越了单纯的文本编辑器，介入到整个软件交付的业务逻辑中。</p>
+                <p class="table-title">MCP 典型集成场景</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>外部资源</th>
+                            <th>典型 MCP 集成方式</th>
+                            <th>实际价值</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>项目文档</td>
+                            <td>Google Drive / Notion MCP</td>
+                            <td>智能体能根据最新的产品规格书（PRD）编写代码</td>
+                        </tr>
+                        <tr>
+                            <td>实时沟通</td>
+                            <td>Slack MCP</td>
+                            <td>智能体能直接总结团队讨论的技术结论并转化为代码注释</td>
+                        </tr>
+                        <tr>
+                            <td>工单系统</td>
+                            <td>Jira / Linear MCP</td>
+                            <td>智能体能读取 Bug 描述，修复后自动更新工单状态</td>
+                        </tr>
+                        <tr>
+                            <td>设计工具</td>
+                            <td>Figma MCP</td>
+                            <td>将设计稿中的 CSS 变量或布局参数自动映射到前端组件</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- 1.6 -->
+            <div class="cell">
+                <h3 id="section1-6">1.6 安全与权限模型</h3>
+            </div>
+            <div class="cell">
+                <p>赋予 AI 执行终端命令和编辑文件的能力，意味着我们必须认真对待安全边界的问题。<code>Claude Code</code>
+                    在设计上采用了<strong>权限分级模型</strong>，确保开发者始终掌握控制权。理解这些权限级别，是安全使用 Claude Code 的前提：</p>
+                <p class="table-title">Claude Code 权限分级模型</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>权限模式</th>
+                            <th>行为说明</th>
+                            <th>适用场景</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>default（标准模式）</strong></td>
+                            <td>写文件、运行 Bash 命令前必须获得用户逐一批准</td>
+                            <td>日常开发，安全性最高</td>
+                        </tr>
+                        <tr>
+                            <td><strong>plan（计划模式）</strong></td>
+                            <td>只读模式，仅分析代码，不执行任何写操作</td>
+                            <td>代码审查、架构分析</td>
+                        </tr>
+                        <tr>
+                            <td><strong>acceptEdits</strong></td>
+                            <td>代码编辑自动批准，但 Bash 命令仍需人工审核</td>
+                            <td>信任编辑但需控制命令执行</td>
+                        </tr>
+                        <tr>
+                            <td><strong>全自动模式</strong></td>
+                            <td>所有操作自动批准（需谨慎）</td>
+                            <td>受控的 CI/CD 环境</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>在底层实现上，Claude Code 通过操作系统级别的沙箱机制保护用户隐私和系统安全：在 Linux 上使用 <code>bubblewrap</code>，在 macOS 上使用
+                    <code>seatbelt</code>，来限制文件读取范围和网络访问。<span class="highlight">严禁在未沙箱化的环境下使用
+                        <code>--dangerously-skip-permissions</code> 参数</span>——这会完全绕过安全检查，仅适用于完全受控的自动化流水线。
+                </p>
+                <p>在交互操作层面，两个快捷键值得记住：按 <code>Esc</code> 两次可以紧急停止操作并触发自动快照回滚（Checkpointing），按 <code>Shift+Tab</code> 可以在
+                    Normal（询问模式）、Auto-Accept（自动模式）和 Plan（计划模式）之间循环切换。</p>
+            </div>
+
+            <!-- 1.7 -->
+            <div class="cell">
+                <h3 id="section1-7">1.7 运行环境与使用方式</h3>
+            </div>
+            <div class="cell">
+                <p>最后，我们来梳理 <code>Claude Code</code> 的多平台使用方式。它提供了五种入口，适配不同开发者的偏好和工作场景：</p>
+                <p><strong>终端 CLI</strong>：最核心、功能最完整的使用方式。在终端中输入 <code>claude</code> 启动交互式会话，或使用
+                    <code>claude "task"</code> 执行一次性任务。这也是本教程重点讲解的安装目标。
+                </p>
+                <p><strong>VS Code / Cursor 扩展</strong>：在编辑器中提供内联 Diff 视图、@-提及、计划审查等功能。安装方式是在扩展市场搜索 "Claude Code"。</p>
+                <p><strong>JetBrains 插件</strong>：支持 IntelliJ IDEA、PyCharm、WebStorm 等 JetBrains 全家桶，提供交互式 Diff
+                    查看和选择上下文共享。</p>
+                <p><strong>桌面应用</strong>：独立应用程序，支持可视化 Diff 查看、多会话并行和云会话启动。支持 macOS 和 Windows。</p>
+                <p><strong>Web 版</strong>：在浏览器中运行，无需本地安装。适合启动长时间运行的任务或处理本地没有的仓库。访问 <a href="https://claude.ai/code"
+                        target="_blank">claude.ai/code</a> 即可使用。</p>
+                <p><span class="highlight">重要提示：所有使用方式连接的是同一个底层 Claude Code 引擎，你的 <code>CLAUDE.md</code> 文件、设置和 MCP
+                        服务器配置在所有界面中通用。</span>你甚至可以用 <code>/teleport</code> 命令将 Web 上的会话拉入终端，或用 <code>/desktop</code>
+                    将终端会话交接给桌面应用——这种跨界面的流动性，是 Claude Code 生态的一大亮点。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/Gemini_Generated_Image_bbg26ibbg26ibbg2.png"
+                        alt="Claude Code 多平台使用方式">
+                </div>
+            </div>
+
+            <!-- ===================== Section 2 ===================== -->
+            <div class="cell">
+                <h2 id="section2">2. Claude Code 与 Cursor、Codex 的区别与联系</h2>
+            </div>
+
+            <div class="cell">
+                <p>在上一章中，我们从架构内幕（三层协作）、工作机制（代理循环）、功能矩阵到安全模型，建立了对 <code>Claude Code</code>
+                    的深层技术认知。接下来一个自然而然的问题是：它和市面上其他热门的 AI 编程工具——尤其是 <code>Cursor</code> 和
+                    <code>OpenAI Codex</code>——到底有什么区别？各自适合什么场景？这是很多开发者在工具选型时最关心的问题。本章将基于 2026
+                    年初的行业基准数据进行系统性横向对比，帮助大家建立清晰的认知框架。
+                </p>
+                <p>需要先说明的是，这三款工具并不是简单的「竞品」关系，它们代表了 AI 编程辅助的<strong>三种不同范式</strong>：<code>Cursor</code> 是「<strong>IDE
+                        优先</strong>」路线，<code>Codex</code>（2026
+                    版桌面应用）定位为「<strong>代理指挥中心</strong>」，<code>Claude Code</code> 则坚持「<strong>终端优先</strong>」的 Unix
+                    哲学。理解这种范式差异，比单纯比较功能列表更有价值。</p>
+            </div>
+
+            <!-- 2.2 架构与工作流 -->
+            <div class="cell">
+                <h3 id="section2-2">2.2 架构与工作流差异深度分析</h3>
+            </div>
+            <div class="cell">
+                <p>对比表给出了全景视图，但要真正理解这三款工具的差异，我们还需要深入它们的架构和工作流层面。</p>
+                <p><strong>Claude Code 的「终端原生代理」模式</strong>：<code>Claude Code</code> 的设计哲学是「让 AI 生活在你的终端里」。当你在终端中输入
+                    <code>claude</code> 启动会话后，AI 获得的是<strong>与你相同的开发环境访问权限</strong>——它可以读取你的文件系统、运行你的构建工具、操作你的 Git
+                    仓库。这种设计意味着 <code>Claude Code</code> 不需要额外的索引步骤，它通过内置的 <code>ripgrep</code>
+                    进行实时代码搜索，按需读取文件。更重要的是，它的每一个操作（编辑文件、运行命令）都需要你的明确批准，这在安全性和可控性上提供了很好的保障。
+                </p>
+                <p><strong>Cursor 的「IDE 增强」模式</strong>：<code>Cursor</code> 本质上是一个基于 VS Code 分叉的增强型
+                    IDE。它的核心优势在于<strong>编辑器级别的深度集成</strong>：实时 Tab 补全、内联 Diff 显示、上下文感知的代码建议。对于习惯在图形化 IDE
+                    中工作的开发者来说，Cursor 提供了最无缝的 AI 辅助体验。但它的代理能力（Agent Mode）相对较新，在自主执行复杂多步骤任务方面，不如 <code>Claude Code</code>
+                    成熟。</p>
+                <p><strong>Codex 的「云端沙箱」模式</strong>：<code>OpenAI Codex</code> 采用了完全不同的路径——它将代码执行完全放在云端沙箱中。当你给 Codex
+                    一个任务时，它会将你的 GitHub 仓库拉取到云端环境中，在隔离的沙箱里完成代码修改和测试，最终以 Pull Request
+                    的形式将结果推送回你的仓库。这种模式的好处是完全不影响你的本地环境，但缺点是你无法实时观察和干预 AI 的工作过程。</p>
+            </div>
+
+            <!-- 2.3 核心效能 -->
+            <div class="cell">
+                <h3 id="section2-3">2.3 核心效能与性能基准对比（2026 年度数据）</h3>
+            </div>
+            <div class="cell">
+                <p>功能对比之外，我们还需要关注量化的性能基准。下面这张表基于 2026 年初的行业基准测试及用户调研数据，从工程效能的角度给出更客观的判断依据：</p>
+                <p class="table-title">2026 年度 AI 编程工具效能基准对比</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>评价维度</th>
+                            <th>Claude Code</th>
+                            <th>Cursor (Pro)</th>
+                            <th>OpenAI Codex (App)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>基础模型</strong></td>
+                            <td>Claude Sonnet/Opus</td>
+                            <td>混合模型 (GPT-4o/Claude)</td>
+                            <td>GPT-5.3 Codex (2026 版)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>SWE-bench 评分</strong></td>
+                            <td><strong>80.9%</strong> (业内领先)</td>
+                            <td>约 72.5%</td>
+                            <td>约 78.4%</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Token 消耗效率</strong></td>
+                            <td>极高（比 Cursor 节省约 5.5x）</td>
+                            <td>较低（频繁全量上下文发送）</td>
+                            <td>中等（优化了缓存机制）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>代码 rework 率</strong></td>
+                            <td><strong>低 30%</strong>（更具生产就绪性）</td>
+                            <td>标准</td>
+                            <td>略低于标准</td>
+                        </tr>
+                        <tr>
+                            <td><strong>并发任务支持</strong></td>
+                            <td>子代理 + Git Worktrees</td>
+                            <td>有限（主要单线程交互）</td>
+                            <td>原生多代理并行</td>
+                        </tr>
+                        <tr>
+                            <td><strong>平台兼容性</strong></td>
+                            <td>全平台 (Win/Mac/Linux)</td>
+                            <td>全平台</td>
+                            <td>macOS 独占（首发阶段）</td>
+                        </tr>
+                        <tr>
+                            <td><strong>典型月费</strong></td>
+                            <td>$20/月起，重度用户可能超 $200</td>
+                            <td>$20/月</td>
+                            <td>包含在 ChatGPT 订阅中</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>从数据中可以提炼出几个关键洞察：第一，Claude Code 在 SWE-bench 上的 80.9% 成功率意味着它在<strong>自主解决真实 GitHub Issue</strong>
+                    方面处于行业顶尖；第二，Token 消耗效率的巨大差异（5.5 倍）意味着在长时间会话中，Claude Code 的成本控制显著优于 Cursor；第三，rework 率低 30% 意味着
+                    Claude Code 产出的代码更具「生产就绪性」，减少了人类二次修正的工作量。</p>
+            </div>
+
+            <!-- 2.4 联系与互补 -->
+            <div class="cell">
+                <h3 id="section2-4">2.4 联系与互补关系</h3>
+            </div>
+            <div class="cell">
+                <p>虽然我们花了很多篇幅讨论这三款工具的差异，但在实际开发中，它们并不是非此即彼的关系。相反，很多高效的开发者会<strong>同时使用多款工具</strong>，让它们在不同场景下各司其职：</p>
+                <p><strong>组合一：Claude Code + Cursor</strong>。这是目前最流行的组合方式。用 <code>Cursor</code>
+                    进行日常的代码编辑和实时补全（快速写代码的效率无可匹敌），用 <code>Claude Code</code> 处理需要跨文件重构、复杂调试、Git
+                    操作等需要「深度思考和自主执行」的任务。事实上，<code>Claude Code</code> 官方就提供了 VS Code 扩展，可以在 Cursor（基于 VS Code）中直接使用。</p>
+                <p><strong>组合二：Claude Code + Codex</strong>。对于开源项目维护者来说，可以用 <code>Codex</code> 处理 Issue 分流和简单的 Bug
+                    修复（因为它可以异步在云端工作），用 <code>Claude Code</code> 处理复杂的架构调整和本地开发任务。</p>
+                <p><strong>核心判断标准</strong>：如果你的工作流以终端为中心、需要 AI 深度参与完整开发周期、或者需要通过 <code>MCP</code> 集成企业工具链，那么
+                    <code>Claude Code</code> 是最佳选择。如果你更看重 IDE 内的实时编辑体验，<code>Cursor</code> 可能更适合。如果你需要异步的云端 AI
+                    处理能力和多任务并行管理，<code>Codex</code> 值得一试。
+                </p>
+                <p><span class="highlight">关键认知：AI
+                        编程工具的竞争不是零和博弈，而是生态共建。选择最适合你工作流的工具组合，才是正确的打开方式。</span>对于需要深度理解整个项目架构、执行大规模重构或进行跨模块 Bug
+                    追踪的资深工程师，Claude Code 提供的「高级开发者」视角具有不可替代性。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/Gemini_Generated_Image_nlfx4snlfx4snlfx.png"
+                        alt="三款工具架构对比">
+                </div>
+            </div>
+
+            <!-- ===================== Section 3 ===================== -->
+            <div class="cell">
+                <h2 id="section3">3. 多平台安装配置教程</h2>
+            </div>
+
+            <div class="cell">
+                <p>前面两章我们完成了对 <code>Claude Code</code> 的认知构建和竞品对比分析，接下来进入本教程的核心实战部分——在你的机器上完成 <code>Claude Code</code>
+                    的安装与配置。这一章的目标很明确：<span class="highlight">无论你使用的是 Windows、Linux 还是 macOS，跟着步骤走完之后，你都能在终端中成功运行
+                        <code>claude</code> 命令并启动交互式会话。</span></p>
+                <p>我们会按照 Windows → Linux → macOS 的顺序依次讲解安装流程。之所以将 Windows 放在第一位，是因为 Windows 平台的安装配置相对最复杂（涉及 Git Bash /
+                    WSL 的选择），需要更多篇幅来覆盖各种情况。Linux 和 macOS 的安装流程则相对简洁。在开始具体平台的安装之前，我们先来看一下所有平台通用的系统要求。</p>
+            </div>
+
+            <!-- 3.1 系统要求 -->
+            <div class="cell">
+                <h3 id="section3-1">3.1 系统要求总览</h3>
+            </div>
+            <div class="cell">
+                <p>在开始安装之前，我们需要确认自己的系统环境是否满足 <code>Claude Code</code> 的最低要求。根据官方文档，以下是各平台的系统要求汇总：</p>
+                <p class="table-title">Claude Code 系统要求一览</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>要求项</th>
+                            <th>具体要求</th>
+                            <th>备注</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>操作系统</strong></td>
+                            <td>macOS 13.0+ / Ubuntu 20.04+ / Debian 10+ / Windows 10+</td>
+                            <td>Windows 需配合 WSL 或 Git for Windows</td>
+                        </tr>
+                        <tr>
+                            <td><strong>硬件</strong></td>
+                            <td>4 GB+ RAM</td>
+                            <td>建议 8 GB 以上以获得流畅体验</td>
+                        </tr>
+                        <tr>
+                            <td><strong>网络</strong></td>
+                            <td>需要互联网连接</td>
+                            <td>需访问 Anthropic API 服务</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Shell</strong></td>
+                            <td>Bash 或 Zsh 效果最佳</td>
+                            <td>Windows 原生通过 Git Bash 提供</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Node.js</strong></td>
+                            <td>18+（仅 npm 安装方式需要）</td>
+                            <td>原生安装方式不需要 Node.js</td>
+                        </tr>
+                        <tr>
+                            <td><strong>账户</strong></td>
+                            <td>Claude.ai 订阅 或 Anthropic Console 账户</td>
+                            <td>推荐使用 Claude Pro/Max 订阅</td>
+                        </tr>
+                        <tr>
+                            <td><strong>地区</strong></td>
+                            <td>Anthropic 支持的国家/地区</td>
+                            <td>需确认所在地区是否受支持</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><span class="highlight">特别注意：从 2025 年开始，Claude Code 推荐使用「原生安装（Native Install）」方式，不再依赖 Node.js 和
+                        npm。原生安装的二进制文件会自动后台更新，免去手动升级的麻烦。npm 安装方式已被官方标记为「已弃用（Deprecated）」。</span></p>
+            </div>
+
+            <!-- 3.2 Windows 安装 -->
+            <div class="cell">
+                <h3 id="section3-2">3.2 Windows 安装配置（图文全流程）</h3>
+            </div>
+            <div class="cell">
+                <p>Windows 是三大平台中安装配置最复杂的，原因在于 Windows 不原生支持 Unix Shell，Claude Code 需要借助 Git Bash
+                    作为命令执行环境。本节通过<strong>真实操作截图</strong>，带你从环境准备到成功启动，一步不落。</p>
+            </div>
+
+            <div class="cell">
+                <p class="no-indent"><strong>步骤一：安装 Claude Code（PowerShell 原生安装）</strong></p>
+                <p>在 Windows 上安装 Claude Code，官方最推荐的方式是 <strong>PowerShell 原生安装</strong>，支持自动更新，安装后
+                    <code>claude.exe</code> 位于 <code>%USERPROFILE%\.local\bin\</code> 目录。
+                </p>
+                <p class="no-indent"><strong>（1）以管理员身份打开 PowerShell</strong></p>
+                <p>按 <code>Win + S</code> 搜索 "PowerShell"，在搜索结果中右键点击 "Windows PowerShell"，选择
+                    <strong>"以管理员身份运行"</strong>：
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221222010383.png"
+                        alt="搜索 PowerShell → 右键选择以管理员身份运行">
+                </div>
+                <p>在打开的管理员 PowerShell 窗口中，先确认 Git 是否已安装（Claude Code 需要 Git Bash 作为执行环境）：</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code>git --version</code></pre>
+                </div>
+                <p>如果输出了版本号（如 <code>git version 2.x.x</code>）说明 Git 已就绪，直接进入下一步。如果报错"命令不存在"，需要先安装 Git for Windows：</p>
+                <ol>
+                    <li>访问 <a href="https://git-scm.com/downloads/win"
+                            target="_blank">https://git-scm.com/downloads/win</a> 下载 Windows 版 Git</li>
+                    <li>安装时勾选 <strong>"Git Bash Here"</strong> 和 <strong>"Add to PATH"</strong> 选项</li>
+                    <li>安装完成后，重新打开 PowerShell 并再次运行 <code>git --version</code> 验证</li>
+                </ol>
+
+                <p class="no-indent"><strong>（2）执行 Claude Code 安装命令</strong></p>
+                <p>Git 确认安装完毕后，在管理员 PowerShell 中输入以下命令并回车：</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 安装最新版本（默认）
+irm https://claude.ai/install.ps1 | iex
+
+# 安装稳定版本（推荐生产环境使用）
+# & ([scriptblock]::Create((irm https://claude.ai/install.ps1))) stable
+
+# 安装指定版本号
+# & ([scriptblock]::Create((irm https://claude.ai/install.ps1))) 1.0.58</code></pre>
+                </div>
+
+                <p class="no-indent"><strong>（3）安装结果说明</strong></p>
+                <p>安装命令执行完成后，终端将显示如下输出：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221222322140.png"
+                        alt="安装成功！版本 2.1.50">
+                </div>
+                <p class="no-indent">输出中的关键信息：</p>
+                <ul>
+                    <li><code>√ Claude Code successfully installed!</code> — 安装成功确认</li>
+                    <li><code>Version: 2.1.50</code> — 已安装的版本号</li>
+                    <li><code>Location: C:\Users\snowb\.local\bin\claude.exe</code> — 可执行文件位置</li>
+                </ul>
+                <p><strong>大多数 Windows 用户</strong>安装后会看到以下黄色警告，这是正常现象，不代表安装失败：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221222543217.png"
+                        alt="安装脚本提示：PATH 需要手动添加">
+                </div>
+                <p>警告原文的含义：<strong>Claude 已经安装成功了，但临门一脚还没踢进去</strong> —— 它的安装路径还没有被添加到系统的"环境变量（PATH）"中。</p>
+
+                <p class="no-indent"><strong>（4）手动添加环境变量（Windows 用户必经之路）</strong></p>
+                <p>安装脚本不会自动将 <code>claude.exe</code> 所在目录添加到系统 PATH，需要手动完成。操作路径为：按 <code>Win + S</code> 搜索
+                    <strong>"环境变量"</strong> → 打开 <strong>"编辑账户的环境变量"</strong> → 在上方 <strong>"用户变量"</strong> 区域选中
+                    <strong>Path</strong> → 点击 <strong>"编辑"</strong> → 点击 <strong>"新建"</strong> → 粘贴路径
+                    <code>C:\Users\snowb\.local\bin</code>（将 <code>snowb</code> 替换为你的实际用户名）→ 逐层点击 <strong>"确定"</strong>
+                    保存。
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221222731198.png"
+                        alt="环境变量设置完整流程">
+                </div>
+                <blockquote>
+                    <p><span class="highlight"><strong>完成后务必关闭当前所有 PowerShell 或终端窗口，重新打开一个新的 PowerShell。</strong>
+                            环境变量修改只对新打开的终端生效，不重启终端将无法识别 <code>claude</code> 命令。</span></p>
+                </blockquote>
+
+                <p class="no-indent"><strong>（5）验证安装是否成功</strong></p>
+                <p>重新打开 PowerShell 后，运行以下命令验证：</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code>claude --version</code></pre>
+                </div>
+                <p>如果能看到版本号（如 <code>2.1.50</code>），就说明一切搞定了！</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221224441979-1771733445473-1.png"
+                        alt="claude --version 验证通过">
+                </div>
+                <p class="no-indent">如果仍提示"claude 不是内部或外部命令"，请检查：</p>
+                <ol>
+                    <li>PATH 是否添加到了 <strong>"用户变量"</strong> 中的 Path（不是系统变量）</li>
+                    <li>是否已完全关闭旧 PowerShell 并<strong>重新打开了新窗口</strong></li>
+                    <li>路径是否正确（注意将 <code>snowb</code> 换成你的实际用户名）</li>
+                </ol>
+
+                <p class="no-indent"><strong>（6）配置 Git Bash 路径（仅在报错时需要）</strong></p>
+                <p>如果运行 <code>claude</code> 时出现 "requires git-bash" 错误，说明 Claude Code 找不到 Git Bash，需要手动指定路径：</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 临时设置（仅当前会话有效）
+$env:CLAUDE_CODE_GIT_BASH_PATH="C:\Program Files\Git\bin\bash.exe"
+
+# 永久设置（通过系统属性 → 环境变量添加）
+# 变量名: CLAUDE_CODE_GIT_BASH_PATH
+# 变量值: C:\Program Files\Git\bin\bash.exe</code></pre>
+                </div>
+            </div>
+
+            <!-- 步骤二：首次启动 -->
+            <div class="cell">
+                <p class="no-indent"><strong>步骤二：首次启动</strong></p>
+                <p>安装并配置好 PATH 之后，进入项目目录启动 Claude Code，完成账号绑定。以下通过真实截图演示完整流程。</p>
+
+                <p class="no-indent"><strong>（1）进入项目目录，启动 Claude Code</strong></p>
+                <p>在 PowerShell 中切换到你的工作目录，然后输入 <code>claude</code> 启动：</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code>cd C:\Users\你的用户名\Desktop\你的项目文件夹
+claude</code></pre>
+                </div>
+                <p><strong>首次启动时</strong>，Claude Code 会弹出工作区安全检查，询问是否信任当前目录：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221224517817-1771733487465-3.png"
+                        alt="首次启动的工作区信任确认">
+                </div>
+                <p>选择 <strong>"1. Yes, I trust this folder"</strong> 并按 Enter，进入 Claude Code 主界面：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221224601795-1771733487465-4.png"
+                        alt="Claude Code v2.1.50 主界面">
+                </div>
+                <p>设置完成后，如果出现 <code>Claude Code on Windows requires git-bash</code> 错误，请检查环境变量
+                    <code>CLAUDE_CODE_GIT_BASH_PATH</code> 是否指向了正确的 <code>bash.exe</code> 路径。
+                </p>
+            </div>
+
+            <!-- 方式二：WSL 安装 -->
+            <div class="cell">
+                <p class="no-indent"><strong>方式二：WSL 安装</strong></p>
+                <p>对于已经在使用 WSL（Windows Subsystem for Linux）的开发者，你可以直接在 WSL 环境中安装 <code>Claude Code</code>，使用体验与原生 Linux
+                    完全一致。WSL 1 和 WSL 2 均受支持。</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 步骤 1: 进入 WSL
+wsl
+
+# 步骤 2: 执行 Linux 原生安装脚本
+curl -fsSL https://claude.ai/install.sh | bash</code></pre>
+                </div>
+                <p>使用 WSL 安装时需要特别注意以下几个常见陷阱：</p>
+                <p><strong>陷阱一：Node/npm 路径冲突</strong>。如果你在 Windows 和 WSL 中都安装了 Node.js，WSL 可能会使用 Windows 的 npm（路径以
+                    <code>/mnt/c/</code> 开头），导致安装失败。运行 <code>which npm</code> 和 <code>which node</code> 确认它们指向 Linux
+                    路径（以 <code>/usr/</code> 开头）。如果不是，需要在 <code>~/.bashrc</code> 中确保 nvm 正确加载。
+                </p>
+                <p><strong>陷阱二：跨文件系统性能问题</strong>。在 WSL 中访问 Windows 文件系统（<code>/mnt/c/</code>）的性能远低于访问 Linux
+                    文件系统（<code>/home/</code>）。如果你的项目在 Windows 分区上，搜索结果可能不完整。<span class="highlight">建议将项目克隆到 Linux
+                        文件系统中使用。</span></p>
+                <p><strong>陷阱三：IDE 连接问题（WSL 2）</strong>。如果在 WSL 2 中使用 JetBrains IDE，可能会因为网络配置问题导致 IDE 无法检测到 Claude
+                    Code。解决方法是配置 Windows 防火墙规则或切换 WSL 2 的网络模式为 <code>mirrored</code>。</p>
+            </div>
+
+            <!-- Windows 安装方式选择指南 -->
+            <div class="cell">
+                <p class="no-indent"><strong>Windows 安装方式选择指南</strong></p>
+                <p>面对两种安装方式，该如何选择？下面这张决策对比表可以帮助你快速做出判断：</p>
+                <p class="table-title">Windows 两种安装方式对比</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>安装方式</th>
+                            <th>自动更新</th>
+                            <th>依赖项</th>
+                            <th>适用人群</th>
+                            <th>推荐度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>PowerShell 原生安装</td>
+                            <td>支持</td>
+                            <td>Git for Windows</td>
+                            <td>大多数 Windows 用户</td>
+                            <td>五星推荐</td>
+                        </tr>
+                        <tr>
+                            <td>WSL 安装</td>
+                            <td>支持</td>
+                            <td>WSL 环境</td>
+                            <td>已在使用 WSL 的开发者</td>
+                            <td>四星推荐</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>对于绝大多数 Windows 用户，我们推荐<strong>方式一（PowerShell 原生安装）</strong>，它是最简单、最直接、且支持自动更新的方式。</p>
+            </div>
+
+            <!-- 3.3 Linux 安装 -->
+            <div class="cell">
+                <h3 id="section3-3">3.3 Linux 安装配置</h3>
+            </div>
+            <div class="cell">
+                <p>完成了 Windows 平台的详细讲解之后，我们来看 Linux 平台。相比 Windows，Linux 的安装流程要简洁得多——毕竟 <code>Claude Code</code> 的底层就是为类
+                    Unix 环境设计的，Linux 是它的「原生生态」。我们以最常用的 Ubuntu/Debian 系统为例，同时也会覆盖其他发行版的注意事项。</p>
+
+                <p class="no-indent"><strong>（1）确认系统环境</strong></p>
+                <p>在安装之前，我们需要确认系统版本和基本工具是否满足要求。<code>Claude Code</code> 要求 Ubuntu 20.04+ 或 Debian 10+。</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 查看系统版本
+cat /etc/os-release
+
+# 确认 curl 已安装（安装脚本需要）
+curl --version
+
+# 如果 curl 未安装，通过包管理器安装
+sudo apt update && sudo apt install -y curl    # Ubuntu/Debian
+sudo yum install -y curl                        # CentOS/RHEL</code></pre>
+                </div>
+
+                <p class="no-indent"><strong>（2）执行原生安装脚本</strong></p>
+                <p>Linux 上的安装只需要一行命令。安装脚本会自动检测你的系统架构（x86_64 / ARM64），下载对应的二进制文件，并放置在 <code>~/.local/bin/</code> 目录下。</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 安装最新版本（默认）
+curl -fsSL https://claude.ai/install.sh | bash
+
+# 安装稳定版本（生产环境推荐）
+curl -fsSL https://claude.ai/install.sh | bash -s stable
+
+# 安装指定版本
+curl -fsSL https://claude.ai/install.sh | bash -s 1.0.58</code></pre>
+                </div>
+
+                <p class="no-indent"><strong>（3）验证安装并配置 PATH</strong></p>
+                <p>安装完成后，重新打开终端（或执行 <code>source ~/.bashrc</code>），验证 <code>claude</code> 命令是否可用。</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 重新加载 shell 配置
+source ~/.bashrc   # 或 source ~/.zshrc
+
+# 验证 claude 命令
+claude --version
+
+# 如果提示 command not found，手动将 ~/.local/bin 添加到 PATH
+echo 'export PATH="$HOME/.local/bin:$PATH"' >> ~/.bashrc
+source ~/.bashrc
+
+# 运行健康检查
+claude doctor</code></pre>
+                </div>
+                <p>如果一切顺利，<code>claude --version</code> 会输出当前安装的版本号，<code>claude doctor</code> 会显示安装类型和系统状态的全面检查报告。</p>
+
+                <p class="no-indent"><strong>（4）（可选）Homebrew 备选安装</strong></p>
+                <p>如果你的 Linux 系统上已经安装了 <code>Homebrew</code>（Linuxbrew），也可以通过 Homebrew 安装 <code>Claude Code</code>。</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 通过 Homebrew 安装
+brew install --cask claude-code
+
+# 后续更新（Homebrew 不会自动更新，需手动执行）
+brew upgrade claude-code</code></pre>
+                </div>
+
+                <p><strong>Alpine Linux 特别说明</strong>：如果你使用的是 Alpine Linux 或其他基于 <code>musl/uClibc</code>
+                    的发行版，原生安装程序需要额外的依赖项。你需要先安装 <code>libgcc</code>、<code>libstdc++</code> 和 <code>ripgrep</code>：</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code>apk add libgcc libstdc++ ripgrep</code></pre>
+                </div>
+                <p>并设置环境变量 <code>USE_BUILTIN_RIPGREP=0</code> 以使用系统安装的 <code>ripgrep</code> 替代内置版本。</p>
+            </div>
+
+            <!-- 3.4 macOS 安装 -->
+            <div class="cell">
+                <h3 id="section3-4">3.4 macOS 安装配置</h3>
+            </div>
+            <div class="cell">
+                <p>macOS 是 <code>Claude Code</code> 支持最完善的平台之一——Anthropic 的开发团队本身就大量使用 macOS，因此安装体验在三个平台中是最顺滑的。macOS
+                    用户不需要像 Windows 那样额外安装 Git Bash，系统自带的 Terminal 和 Bash/Zsh 就是最佳运行环境。</p>
+
+                <p class="no-indent"><strong>（1）确认系统版本</strong></p>
+                <p><code>Claude Code</code> 要求 macOS 13.0（Ventura）或更高版本。同时支持 Intel 和 Apple Silicon（M1/M2/M3/M4）架构。</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 查看 macOS 版本
+sw_vers
+
+# 查看处理器架构
+uname -m
+# 输出 arm64 表示 Apple Silicon, x86_64 表示 Intel</code></pre>
+                </div>
+
+                <p class="no-indent"><strong>（2）执行原生安装（推荐）</strong></p>
+                <p>打开 Terminal（终端），执行以下命令。安装脚本会自动检测你的 Mac 是 Intel 还是 Apple Silicon 架构，下载对应的二进制文件。安装完成的二进制文件经过 Apple
+                    公证（Notarized），并由「Anthropic PBC」签名，确保安全性。</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 安装最新版本（默认）
+curl -fsSL https://claude.ai/install.sh | bash
+
+# 安装稳定版本
+curl -fsSL https://claude.ai/install.sh | bash -s stable</code></pre>
+                </div>
+
+                <p class="no-indent"><strong>（3）验证安装</strong></p>
+                <p>安装完成后，与 Linux 一样，验证命令是否可用：</p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 重新打开终端或重新加载配置
+source ~/.zshrc   # macOS 默认使用 Zsh
+
+# 验证版本
+claude --version
+
+# 健康检查
+claude doctor</code></pre>
+                </div>
+                <p>macOS 用户通常不会遇到 PATH 问题，因为 <code>~/.local/bin</code> 在大多数 macOS 配置中已经包含在默认 PATH 中。如果确实遇到了，添加方式与 Linux
+                    相同。</p>
+
+                <p class="no-indent"><strong>（4）（可选）通过 Homebrew 安装</strong></p>
+                <p>macOS 上的 <code>Homebrew</code> 是最流行的包管理器。如果你更习惯通过 Homebrew 管理软件，也可以使用它来安装 <code>Claude Code</code>。
+                </p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code># 安装
+brew install --cask claude-code
+
+# 更新
+brew upgrade claude-code</code></pre>
+                </div>
+
+                <p class="no-indent"><strong>（5）（可选）安装桌面应用</strong></p>
+                <p>除了 CLI 之外，macOS 用户还可以安装 <code>Claude Code</code> 的桌面应用程序。桌面应用提供了可视化的 Diff
+                    查看、多会话并行管理和云会话启动等功能，适合喜欢图形界面的用户。</p>
+                <p>访问官方下载链接下载 macOS 版本（通用版，同时支持 Intel 和 Apple Silicon）的 <code>.dmg</code> 文件，双击打开后将应用拖入
+                    <code>Applications</code> 文件夹即可。启动应用后登录你的 Claude 账户，点击<strong>「代码」</strong>标签即可开始使用。
+                </p>
+            </div>
+
+            <!-- ===================== Section 4 ===================== -->
+            <div class="cell">
+                <h2 id="section4">4. 账户注册与登录认证</h2>
+            </div>
+
+            <div class="cell">
+                <p>完成了各平台的安装之后，接下来需要完成账户准备和登录认证，让 <code>Claude Code</code> 真正可用。目前有两种主流的接入方式：第一种是通过 <strong>Claude
+                        官方订阅</strong>（Pro / Max / Team / Enterprise），这是最推荐的方式，订阅费中已包含 Claude Code 的使用额度，开箱即用；第二种是通过
+                    <strong>Anthropic API Key</strong> 按量计费，适合需要精细控制成本或已有 API 额度的开发者，我们将借助 <code>cc-switch</code>
+                    工具来便捷管理 API Key 的切换。本章将依次介绍这两种方式的完整配置流程。
+                </p>
+            </div>
+
+            <!-- 4.1 官方订阅 -->
+            <div class="cell">
+                <h3 id="section4-1">4.1 方式一：官方订阅（推荐）</h3>
+            </div>
+            <div class="cell">
+                <p>Claude Code 需要 <strong>Claude Pro、Max、Team 或 Enterprise</strong> 订阅才能使用。这是官方推荐的接入方式，订阅费中已包含 Claude
+                    Code 的使用额度，无需额外配置 API Key。以下是从账号注册到成功登录的完整流程。</p>
+
+                <p class="no-indent"><strong>（1）登录 Claude.ai</strong></p>
+                <p>打开浏览器，访问 <a href="https://claude.ai" target="_blank">claude.ai</a>，点击 <strong>"Continue with
+                        Google"</strong> 使用 Google 账号一键登录，无需单独注册：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221214606828.png"
+                        alt="Claude.ai 登录页面">
+                </div>
+                <p>在弹出的 Google 账号选择窗口中，点击要绑定的 Google 账号：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221214636942.png"
+                        alt="选择 Google 账号">
+                </div>
+                <p>随后出现授权确认弹窗，点击 <strong>"继续"</strong> 完成登录：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221214747075.png" alt="确认授权">
+                </div>
+
+                <p class="no-indent"><strong>（2）进入主界面，升级套餐</strong></p>
+                <p>登录成功后，进入 Claude.ai 主界面。点击左下角账号名称旁的展开图标，打开用户菜单：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221214822439.png"
+                        alt="Claude.ai 主界面">
+                </div>
+                <p>在弹出的用户菜单中，点击 <strong>"Upgrade plan"</strong>（升级套餐）：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221214841578.png"
+                        alt="点击 Upgrade plan">
+                </div>
+                <p>在套餐选择页中，<strong>Claude Code 功能包含在 Pro 套餐及以上</strong>。Pro 套餐年付 $17/月，月付 $20/月：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221214921100.png" alt="套餐对比">
+                </div>
+                <blockquote>
+                    <p><span class="highlight"><strong>注意：Free 套餐无法使用 Claude Code！</strong> 至少需要升级至 Pro 套餐。如果你想按 API
+                            用量付费，可在 Anthropic Console 创建 API Key，跳过订阅步骤直接安装。</span></p>
+                </blockquote>
+                <p>完成订阅后，可在 <strong>Settings → Usage</strong> 页面随时查看 Claude Code 的用量与额度情况：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221215522531.png"
+                        alt="Settings → Usage 用量查看">
+                </div>
+                <p>账号准备完毕，下面开始登录认证！安装完成并确认 <code>claude --version</code> 可用后，我们需要完成账号登录。在你的项目目录中启动 Claude Code，然后通过
+                    <code>/login</code> 命令完成 OAuth 认证。
+                </p>
+                <p>在提示符 <code>></code> 处输入 <code>/login</code>（支持 Tab 自动补全），按 Enter 执行：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221224614579-1771733618264-10.png"
+                        alt="/login 命令界面">
+                </div>
+                <p class="no-indent">三种登录方式对比：</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>选项</th>
+                            <th>适用对象</th>
+                            <th>计费方式</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. Claude account with subscription</strong>（推荐）</td>
+                            <td>已购买 Pro / Max / Team / Enterprise 套餐</td>
+                            <td>订阅费包含</td>
+                        </tr>
+                        <tr>
+                            <td>2. Anthropic Console account</td>
+                            <td>有 Anthropic API Key</td>
+                            <td>按 Token 用量计费</td>
+                        </tr>
+                        <tr>
+                            <td>3. 3rd-party platform</td>
+                            <td>Amazon Bedrock / Microsoft Foundry / Vertex AI 用户</td>
+                            <td>平台计费</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>选择方式 1 后，系统自动打开浏览器进行 OAuth 授权：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221224634432-1771733618263-7.png"
+                        alt="OAuth 授权页面">
+                </div>
+                <p>点击 <strong>"Authorize"</strong> 后，终端自动显示登录成功：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221224657946-1771733618264-9.png"
+                        alt="登录成功">
+                </div>
+                <p>登录后可用 <code>/model</code> 查看并切换可用的 Claude 模型：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260221224729132-1771733618264-11.png"
+                        alt="/model 命令">
+                </div>
+                <p class="table-title">可用模型列表</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>模型选项</th>
+                            <th>模型 ID</th>
+                            <th>适用场景</th>
+                            <th>价格（输入/输出 per MTok）</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Default（推荐）</strong></td>
+                            <td>claude-opus-4-5-thinking</td>
+                            <td>平衡能力与成本，日常首选</td>
+                            <td>$3 / $15</td>
+                        </tr>
+                        <tr>
+                            <td>Sonnet (1M)</td>
+                            <td>claude-sonnet-4-6</td>
+                            <td>超长会话（100万上下文）</td>
+                            <td>$6 / $22.5</td>
+                        </tr>
+                        <tr>
+                            <td>Opus</td>
+                            <td>claude-opus-4-6</td>
+                            <td>最强复杂任务</td>
+                            <td>$5 / $25</td>
+                        </tr>
+                        <tr>
+                            <td>Opus (1M)</td>
+                            <td>claude-opus-4-6 (long)</td>
+                            <td>长会话 + 最强能力</td>
+                            <td>$10 / $37.5</td>
+                        </tr>
+                        <tr>
+                            <td>Haiku</td>
+                            <td>claude-haiku-4-5</td>
+                            <td>快速简单任务，成本最低</td>
+                            <td>$1 / $5</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <blockquote>
+                    <p><strong>恭喜完成！</strong> 至此 Claude Code 在 Windows 上的完整安装流程（账号注册 → 安装 → PATH 配置 → 版本验证 →
+                        首次登录）全部完成。接下来可继续了解其他安装方式，或直接跳至第 4 部分进行功能验证。</p>
+                </blockquote>
+                <p>登录过程中，系统会打开浏览器让你完成 OAuth 认证。授权成功后，凭证会被安全地存储在你的系统上（<code>~/.claude.json</code> 或对应的 Windows 路径），后续启动
+                    <code>Claude Code</code> 不需要重新登录。
+                </p>
+                <p><span class="highlight">重要提示：如果你在同一个邮箱下同时拥有 Claude.ai 订阅和 Console 账户，可以使用 <code>/login</code>
+                        命令在两种账户之间切换。首次使用 Console 账户认证时，系统会自动为你创建一个名为「Claude Code」的工作区，用于集中跟踪和管理使用成本。</span></p>
+
+                <p class="no-indent"><strong>验证官方登录是否成功</strong></p>
+                <p>完成登录后，在终端中执行 <code>claude</code> 命令启动
+                    <code>Claude Code</code>。进入主界面后，直接提问「你好，请问你是什么模型？」。如果看到欢迎界面显示「Sonnet 4.6 · Claude Max」，回答为「我是 Claude
+                    Sonnet 4.6，由 Anthropic 开发的 AI 助手」，说明官方订阅登录成功，<code>Claude Code</code> 正在使用 Anthropic 官方模型。
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222104000157.png" alt="登录成功验证">
+                </div>
+            </div>
+
+            <!-- 4.2 CC-Switch -->
+            <div class="cell">
+                <h3 id="section4-2">4.2 方式二：通过 CC-Switch 管理 API Key 接入</h3>
+            </div>
+            <div class="cell">
+                <p>除了官方订阅之外，<code>Claude Code</code> 还支持通过第三方模型 API 接入的方式使用。这对于国内用户而言尤为重要——Claude 的官方订阅需要海外支付方式，且 Token
+                    价格较高。借助社区开源工具 <code>CC-Switch</code>，我们可以一键切换到
+                    <code>MiniMax-M2.5</code>、<code>GLM-5</code>、<code>DeepSeek</code> 等国内大模型，在 Claude Code
+                    的交互框架中使用更经济、访问更稳定的模型服务。本节将以 <code>MiniMax-M2.5</code> 为例，完整演示从工具安装到模型切换的全流程。
+                </p>
+            </div>
+
+            <!-- CC-Switch 是什么 -->
+            <div class="cell">
+                <p class="no-indent"><strong>（1）CC-Switch 是什么</strong></p>
+                <p>在正式介绍功能细节之前，我们先从整体视角来定位这个工具。<code>CC-Switch</code> 并不是一个新的 AI 模型，也不是某个平台的官方产品——它是一款由社区开发者主导构建的<span
+                        class="highlight">跨平台桌面应用</span>，核心职责是统一管理多个 AI CLI 工具的供应商配置与运行环境。理解这一点，对后续理解它的所有功能设计逻辑都至关重要。
+                </p>
+
+                <p class="no-indent"><strong>项目定位与开源背景</strong></p>
+                <p><code>CC-Switch</code> 是一个托管在 GitHub 上的开源项目，项目地址为 <code>farion1231/cc-switch</code>。从项目主页可以看到，它的
+                    Slogan 是「All-in-One Assistant for Claude Code, Codex &amp; Gemini CLI」，清晰地表明了它的定位——<span
+                        class="highlight">不是替代某个 AI 工具，而是成为它们共同的管理层</span>。目前项目已发布至 v3.10.x，支持 Windows、macOS 和 Linux
+                    三大平台，累计下载量超过 1.1 万次，在 GitHub 上曾登上 Trending 榜单第一位。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102029930.png"
+                        alt="CC-Switch 项目主页">
+                </div>
+                <p>从 GitHub 仓库的 Releases 页面可以看到，项目维护非常活跃，提供多种安装格式，包括 Windows 的 <code>.msi</code> 安装包、macOS 的
+                    <code>.tar.gz</code> 包以及 Linux 的 <code>.AppImage</code> 和 <code>.deb</code>/<code>.rpm</code>
+                    格式，几乎覆盖了主流的桌面操作系统环境。
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102103501.png"
+                        alt="GitHub Releases 页面">
+                </div>
+
+                <p class="no-indent"><strong>核心功能总览</strong></p>
+                <p><code>CC-Switch</code> 的功能模块经过精心设计，围绕「管理」这一核心目标，从供应商配置、MCP 服务器、系统提示词到性能测速，形成了一套完整的 CLI
+                    工具管理体系。下表列出了最核心的功能模块及其作用：</p>
+                <p class="table-title">CC-Switch 核心功能模块一览</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>功能模块</th>
+                            <th>功能描述</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>供应商管理</td>
+                            <td>创建、切换、管理多个 API 供应商配置，支持一键激活，内置 20+ 预设供应商</td>
+                        </tr>
+                        <tr>
+                            <td>MCP 服务器管理</td>
+                            <td>统一配置 Model Context Protocol 服务器，跨工具同步，支持导入导出</td>
+                        </tr>
+                        <tr>
+                            <td>系统提示词管理</td>
+                            <td>多套提示词预设，支持 Markdown 实时预览与快速切换</td>
+                        </tr>
+                        <tr>
+                            <td>Skills 市场</td>
+                            <td>从 GitHub 自动发现并一键安装 Claude Skills，无需手动操作</td>
+                        </tr>
+                        <tr>
+                            <td>端点测速</td>
+                            <td>内置延迟测量工具，可视化评估各供应商响应质量</td>
+                        </tr>
+                        <tr>
+                            <td>配置备份</td>
+                            <td>自动备份与恢复，支持跨设备同步</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>打开 <code>CC-Switch</code>
+                    主界面后，顶部导航栏展示了它所支持管理的四类工具：<code>Claude</code>、<code>Codex</code>、<code>Gemini</code> 和
+                    <code>OpenCode</code>。每个标签页下都可以独立管理供应商配置，互不干扰。这种设计意味着，你可以为同一工具维护多套配置——例如在 <code>Claude</code>
+                    标签下同时保留官方 Claude、MiniMax 和 DeepSeek 的接入配置，按需一键切换，<span
+                        class="highlight">完全不需要每次手动修改环境变量或配置文件。</span>
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102244784.png"
+                        alt="CC-Switch 主界面">
+                </div>
+            </div>
+
+            <!-- 为什么推荐 CC-Switch -->
+            <div class="cell">
+                <p class="no-indent"><strong>（2）为什么更推荐国内用户使用 CC-Switch</strong></p>
+                <p>理解了 <code>CC-Switch</code> 是什么之后，我们自然要问：已经有官方的 <code>Claude Code</code>
+                    了，为什么还需要这个工具？这个问题对于国内开发者尤其值得认真回答——因为我们面临的使用门槛，和海外用户是完全不同的。这一章我们从现实困境出发，分析为什么 <code>CC-Switch</code>
+                    + 国内大模型的组合，是目前国内开发者最具性价比的选择。</p>
+
+                <p class="no-indent"><strong>使用原生 Claude 的现实门槛</strong></p>
+                <p>对于国内开发者来说，直接使用官方 <code>Claude Code</code> 需要同时迈过三道门槛：网络访问、账号注册和 Token
+                    费用。这三个问题并不是偶然叠加的麻烦，而是结构性障碍，缺少任何一个环节都会导致工具无法使用：</p>
+                <p class="table-title">原生 Claude Code 对国内用户的主要使用门槛</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>门槛类型</th>
+                            <th>具体问题</th>
+                            <th>影响程度</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>网络访问</td>
+                            <td>需要稳定的代理工具，且 Claude 会主动检测异常 IP</td>
+                            <td>高</td>
+                        </tr>
+                        <tr>
+                            <td>账号注册</td>
+                            <td>需要海外手机号验证，注册流程繁琐，随时可能被封号</td>
+                            <td>高</td>
+                        </tr>
+                        <tr>
+                            <td>Token 费用</td>
+                            <td>Claude Max 套餐约 $100/月，按量计费更昂贵</td>
+                            <td>高</td>
+                        </tr>
+                        <tr>
+                            <td>支付方式</td>
+                            <td>需要 Visa/MasterCard 等国际信用卡，国内银行卡不支持</td>
+                            <td>中</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p><span class="highlight">这四个问题中，任何一个都可能成为实际使用的拦路虎。</span>而对于希望把 <code>Claude Code</code>
+                    真正集成到日常开发工作流的开发者来说，稳定性和可持续性是最重要的指标——一旦代理波动或账号异常，整个工作流就会中断，代价远比切换一个模型要高得多。</p>
+
+                <p class="no-indent"><strong>值得关注的国内替代模型</strong></p>
+                <p>随着国内大模型生态的快速发展，越来越多的模型开始兼容 Anthropic 的 API 协议（即 Claude API 格式），这意味着我们可以在不修改 <code>Claude Code</code>
+                    工具本身的情况下，直接将底层模型替换为国内产品。目前在 <code>Claude Code</code> 生态中表现较为突出的有以下几款：</p>
+                <p class="table-title">支持 Claude API 协议的国内主流大模型对比</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>模型</th>
+                            <th>提供商</th>
+                            <th>编程能力特点</th>
+                            <th>价格参考</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>MiniMax-M2.5</td>
+                            <td><a href="https://platform.minimaxi.com/subscribe/coding-plan"
+                                    target="_blank">MiniMax</a></td>
+                            <td>SWE-Bench 76.3%，SOTA 编码与 Agent 能力</td>
+                            <td>Coding Plan 月套餐 ¥29 起</td>
+                        </tr>
+                        <tr>
+                            <td>GLM-5</td>
+                            <td><a href="https://www.bigmodel.cn/glm-coding?ic=RRVJPB5SII&closedialog=true"
+                                    target="_blank">智谱 AI</a></td>
+                            <td>国内商业落地成熟，中文表现优秀</td>
+                            <td>按量计费，有免费额度</td>
+                        </tr>
+                        <tr>
+                            <td>Qwen-Coder</td>
+                            <td>阿里云</td>
+                            <td>代码生成能力强，开源版可本地部署</td>
+                            <td>按量计费，有免费额度</td>
+                        </tr>
+                        <tr>
+                            <td>DeepSeek-V3.2</td>
+                            <td>DeepSeek</td>
+                            <td>推理与代码能力突出，价格极具竞争力</td>
+                            <td>按量计费，极低单价</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>其中 <code>MiniMax-M2.5</code> 是目前在 <code>Claude Code</code> 生态中接入体验最为完整的国内模型之一——它不仅原生兼容 Anthropic
+                    协议，<code>CC-Switch</code> 也将其作为首批预设供应商之一，配置过程几乎不需要手动填写任何技术参数，只需提供 API Key 即可完成接入，非常适合作为入门示例。</p>
+
+                <p class="no-indent"><strong>CC-Switch 的核心价值</strong></p>
+                <p>明确了上述背景后，<code>CC-Switch</code> 的价值就变得非常清晰了：它把「切换供应商」这件本来需要手动修改多个配置文件的麻烦事，变成了一个<span
+                        class="highlight">图形化界面的一键操作</span>。更重要的是，它维护了一份持续更新的预设供应商列表——目前已内置超过 20 家国内外供应商的接入配置，用户只需填写 API
+                    Key，其余字段（Base URL、超时设置、模型名称等）均已自动填充完毕。</p>
+                <p>从工作流的角度来看，<code>CC-Switch</code> 真正解决的是「配置管理的心智负担」问题。当你需要在不同项目中使用不同模型时——例如日常开发用
+                    <code>MiniMax</code>，特定任务切回
+                    <code>Claude Official</code>——不再需要记忆和维护多套环境变量，打开应用切换一下即可。这种设计对于习惯多工具并行的开发者来说，体验提升是实质性的。
+                </p>
+            </div>
+
+            <!-- （3）以 MiniMax 为例 -->
+            <div class="cell">
+                <p class="no-indent"><strong>（3）以 MiniMax 为例：完整配置流程</strong></p>
+                <p>前两章我们从认知层面完成了对 <code>CC-Switch</code> 的定位建立。接下来进入实操环节——我们选取 <code>MiniMax-M2.5</code>
+                    作为配置示例，完整走一遍从「零基础」到「在 <code>Claude Code</code> 中成功调用国内模型」的全过程。</p>
+                <p>整个流程分为四个步骤：下载安装 <code>CC-Switch</code>、获取 <code>MiniMax</code> API
+                    Key、在工具中添加供应商配置，以及最终启用并验证效果。每一步都配有操作截图，确保可以直接跟着执行。<span class="highlight">注意：在开始前，如果你的系统中已手动设置了
+                        <code>ANTHROPIC_AUTH_TOKEN</code> 或 <code>ANTHROPIC_BASE_URL</code> 等环境变量，需要先将其清除，避免与 CC-Switch
+                        写入的配置产生冲突。</span></p>
+            </div>
+
+            <!-- 步骤一：下载并安装 CC-Switch -->
+            <div class="cell">
+                <p class="no-indent"><strong>步骤一：下载并安装 CC-Switch</strong></p>
+                <p>第一步需要从 GitHub 获取与当前操作系统匹配的安装包。<code>CC-Switch</code> 的所有发行版均托管在 GitHub Releases
+                    页面，本步骤的判据是：安装完成后，<code>CC-Switch</code> 主界面能够正常打开，并显示包含
+                    <code>Claude</code>、<code>Codex</code>、<code>Gemini</code>、<code>OpenCode</code> 四个标签页的默认界面。
+                </p>
+
+                <p class="no-indent"><strong>（1）前往 GitHub Releases 页面选择安装包</strong></p>
+                <p>访问 <code>https://github.com/farion1231/cc-switch/releases</code>，找到最新版本，在 Assets 列表中根据操作系统选择对应的安装包格式：
+                </p>
+                <p class="table-title">CC-Switch 各平台推荐安装包格式</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>操作系统</th>
+                            <th>推荐安装包</th>
+                            <th>说明</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Windows 10+</td>
+                            <td><code>CC-Switch-vX.X.X-Windows.msi</code></td>
+                            <td>标准安装版，推荐普通用户使用</td>
+                        </tr>
+                        <tr>
+                            <td>macOS 10.15+</td>
+                            <td><code>CC-Switch-vX.X.X-macOS.tar.gz</code></td>
+                            <td>解压后拖入应用程序文件夹</td>
+                        </tr>
+                        <tr>
+                            <td>Linux (Debian/Ubuntu)</td>
+                            <td><code>CC-Switch-vX.X.X-Linux-x86_64.deb</code></td>
+                            <td>dpkg 安装</td>
+                        </tr>
+                        <tr>
+                            <td>Linux (通用)</td>
+                            <td><code>CC-Switch-vX.X.X-Linux-x86_64.AppImage</code></td>
+                            <td>直接运行，无需安装</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102103501.png"
+                        alt="GitHub Releases Assets 区域">
+                </div>
+
+                <p class="no-indent"><strong>（2）运行安装程序，完成安装向导</strong></p>
+                <p>以 Windows 为例，双击下载的 <code>.msi</code> 文件，按照安装向导提示点击「Next」完成安装。向导最后一页出现「Completed the CC Switch Setup
+                    Wizard」提示时，保持勾选「Launch CC Switch」选项，然后点击「Finish」，程序将在安装完成后自动启动。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102212678.png"
+                        alt="安装向导最终页面">
+                </div>
+                <p>安装完成后，<code>CC-Switch</code> 主界面将自动打开。若一切正常，可以看到顶部带有
+                    <code>Claude</code>、<code>Codex</code>、<code>Gemini</code>、<code>OpenCode</code>
+                    四个标签页的主界面，以及默认内置的「Claude Official」供应商配置。这说明安装成功，可以继续进行下一步。
+                </p>
+            </div>
+
+            <!-- 步骤二：获取 MiniMax API Key -->
+            <div class="cell">
+                <p class="no-indent"><strong>步骤二：获取 MiniMax API Key</strong></p>
+                <p>在 <code>CC-Switch</code> 中添加供应商之前，需要先在 MiniMax 平台注册账号并订阅 Coding Plan，获取一个有效的 API Key。API Key
+                    是后续所有配置的核心凭证，<span class="highlight">请妥善保存，不要与他人共享，也不要提交到代码仓库。</span>本步骤的判据是：在 MiniMax 控制台页面成功看到并复制了
+                    <code>sk-</code> 开头的 API Key 字符串。
+                </p>
+
+                <p class="no-indent"><strong>（1）注册账号并订阅 Coding Plan 套餐</strong></p>
+                <p>访问 <code>https://platform.minimaxi.com</code>，注册并登录账号后进入「Coding Plan」订阅页面。目前提供多档套餐，面向个人开发者的 Starter
+                    套餐仅需 ¥29/月，包含 40 次提示额度；日常开发推荐 Plus 套餐 ¥49/月，提供 100 次提示额度。对于需要高频使用的团队，也可选择极速版套餐，支持更高的并发请求。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102545427.png"
+                        alt="MiniMax Coding Plan 价格体系">
+                </div>
+
+                <p class="no-indent"><strong>（2）在 Coding Plan 控制台复制 API Key</strong></p>
+                <p>完成套餐订阅后，进入 Coding Plan 控制台页面。页面下方的「API Key」区域会展示当前账号的密钥（以 <code>sk-</code> 开头），点击右侧的「复制并重置」按钮获取完整的
+                    API Key 字符串，备用于下一步配置。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222103026744.png"
+                        alt="Coding Plan 控制台 API Key">
+                </div>
+                <blockquote>
+                    <p>每个订阅周期内的 API Key 为固定值。如果点击「重置」，旧 Key 将立即失效，请确保在所有已配置的环境中同步更新，避免误操作导致服务中断。</p>
+                </blockquote>
+            </div>
+
+            <!-- 步骤三：在 CC-Switch 中添加 MiniMax 供应商 -->
+            <div class="cell">
+                <p class="no-indent"><strong>步骤三：在 CC-Switch 中添加 MiniMax 供应商</strong></p>
+                <p>拿到 API Key 后，回到 <code>CC-Switch</code> 主界面，开始添加 MiniMax 作为新的 Claude
+                    供应商。这一步的核心优势在于：<code>CC-Switch</code> 已为 MiniMax 内置了完整的预设配置，我们只需填写 API Key
+                    一个字段，其余所有参数由工具自动填充。本步骤的判据是：主界面供应商列表中出现了 MiniMax 条目。</p>
+
+                <p class="no-indent"><strong>（1）点击右上角 + 按钮，进入添加供应商页面</strong></p>
+                <p>在 <code>CC-Switch</code> 主界面右上角，找到橙色的「+」按钮并点击，进入「添加新供应商」页面。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102345859.png"
+                        alt="主界面右上角的橙色 + 按钮">
+                </div>
+
+                <p class="no-indent"><strong>（2）在预设供应商列表中选择 MiniMax</strong></p>
+                <p>进入添加页面后，顶部有「Claude 供应商」和「统一供应商」两个选项卡，默认显示「Claude 供应商」。下方的预设列表中内置了超过 20
+                    家主流服务商，找到「MiniMax」并点击选中——选中后按钮会高亮显示，同时页面下方的配置表单将自动切换为 MiniMax 的预设内容。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102507424.png"
+                        alt="预设供应商列表选择 MiniMax">
+                </div>
+                <p>选择 MiniMax 后，可以看到「请求地址」字段已自动填充为 <code>https://api.minimaxi.com/anthropic</code>，<span
+                        class="highlight">这是 MiniMax 专门为兼容 Claude API 协议提供的端点地址，无需手动修改。</span></p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222102521898.png"
+                        alt="MiniMax 配置表单自动填充">
+                </div>
+
+                <p class="no-indent"><strong>（3）填入 API Key，点击添加完成注册</strong></p>
+                <p>在「API Key」输入框中粘贴上一步从 MiniMax 控制台复制的密钥，然后点击右下角的蓝色「+ 添加」按钮完成配置。此时官网链接、请求地址、API 格式等字段均已自动填充，无需额外修改。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222104133124.png"
+                        alt="填入 API Key 后点击添加">
+                </div>
+                <p>添加成功后，<code>CC-Switch</code> 自动返回主界面，可以看到 MiniMax 已作为新条目出现在供应商列表中。注意此时系统<span class="highlight">尚未切换到
+                        MiniMax</span>，仍需完成步骤四的「启用」操作，配置才会真正生效。</p>
+            </div>
+
+            <!-- 步骤四：启用 MiniMax 配置并验证 -->
+            <div class="cell">
+                <p class="no-indent"><strong>步骤四：启用 MiniMax 配置并验证接入效果</strong></p>
+                <p>添加供应商只是把配置信息录入了 <code>CC-Switch</code>，真正生效还需要执行「启用」操作。启用后，<code>CC-Switch</code> 会将 MiniMax 的 API
+                    Key、Base URL 等参数写入 <code>Claude Code</code> 的配置文件，下次启动 <code>Claude Code</code> 时将自动使用 MiniMax
+                    作为底层模型。本步骤的最终判据是：在 <code>Claude Code</code> 终端中询问模型身份，回答中出现「MiniMax-M2.5」字样。</p>
+
+                <p class="no-indent"><strong>（1）点击 MiniMax 条目上的「启用」按钮使配置生效</strong></p>
+                <p>在主界面的供应商列表中，找到 MiniMax 条目，点击右侧的蓝色「启用」按钮。启用成功后，按钮状态会变为「使用中」，表示配置已写入 <code>Claude Code</code> 的环境配置文件。
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222104153930.png" alt="点击启用按钮">
+                </div>
+                <p>如需了解 <code>CC-Switch</code> 在后台具体写入了哪些参数，可以点击条目右侧的编辑图标查看配置 JSON。可以看到，<code>CC-Switch</code> 自动为
+                    <code>Claude Code</code> 写入了以下关键环境变量：
+                </p>
+                <div class="code-block">
+                    <button class="copy-btn" onclick="copyCode(this)">复制</button>
+                    <pre><code>{
+    "env": {
+        "ANTHROPIC_AUTH_TOKEN": "sk-...",
+        "ANTHROPIC_BASE_URL": "https://api.minimaxi.com/anthropic",
+        "ANTHROPIC_MODEL": "MiniMax-M2.5",
+        "ANTHROPIC_DEFAULT_OPUS_MODEL": "MiniMax-M2.5",
+        "ANTHROPIC_DEFAULT_SONNET_MODEL": "MiniMax-M2.5",
+        "API_TIMEOUT_MS": "3000000",
+        "CLAUDE_CODE_DISABLE_NONESSENTIAL_TRAFFIC": 1
+    }
+}</code></pre>
+                </div>
+                <p>这些正是 <code>Claude Code</code> 识别并调用第三方模型所需的全部配置，<code>CC-Switch</code> 帮助我们自动完成了原本需要手动维护的所有配置工作。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222104750655.png"
+                        alt="编辑供应商页面展示完整配置 JSON">
+                </div>
+
+                <p class="no-indent"><strong>（2）打开 Claude Code 终端，验证 MiniMax 接入是否成功</strong></p>
+                <p>完成启用后，<span class="highlight">关闭当前所有终端窗口，重新打开一个新的终端</span>，执行 <code>claude</code> 命令启动
+                    <code>Claude Code</code>。进入主界面后，直接提问「你好，请问你是什么模型？」来验证模型是否已切换为 MiniMax。
+                </p>
+                <p>成功切换到 MiniMax 后，<code>Claude Code</code> 欢迎界面变为「MiniMax-M2.5 · API Usage
+                    Billing」，同样的问题得到的回答变为「我当前使用的是 MiniMax-M2.5 模型」——这说明接入已经完全生效：</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222104921420.png"
+                        alt="Claude Code 成功接入 MiniMax-M2.5">
+                </div>
+                <p><span class="highlight">至此，CC-Switch 接入 MiniMax 的完整流程已全部走通。</span>整个过程不涉及任何手动编辑配置文件的操作。切换其他国内供应商（如
+                    <code>DeepSeek</code>、<code>智谱 GLM</code>、<code>Kimi</code> 等）的流程与此完全一致，只需重复步骤三和步骤四即可——选择对应的预设供应商，填入
+                    API Key，点击启用。
+                </p>
+                <blockquote>
+                    <p>如果启动 <code>Claude Code</code> 后仍显示原有模型，可能是因为系统中存在旧的 <code>ANTHROPIC_AUTH_TOKEN</code> 或
+                        <code>ANTHROPIC_BASE_URL</code> 系统环境变量，其优先级高于 CC-Switch 写入的配置。建议检查系统级环境变量并将其清除后重新启动终端再试。
+                    </p>
+                </blockquote>
+            </div>
+
+            <!-- ===================== Section 5 ===================== -->
+            <div class="cell">
+                <h2 id="section5">5. 基本命令速查</h2>
+            </div>
+            <div class="cell">
+                <p>作为本教程的收尾，我们整理一份日常使用中最高频的 <code>Claude Code</code> 命令速查表。这些命令覆盖了启动、查询、Git 操作和会话管理等核心场景：</p>
+                <p class="table-title">Claude Code 日常命令速查表</p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>命令</th>
+                            <th>功能</th>
+                            <th>示例</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><code>claude</code></td>
+                            <td>启动交互模式</td>
+                            <td><code>claude</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>claude "task"</code></td>
+                            <td>运行一次性任务</td>
+                            <td><code>claude "fix the build error"</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>claude -p "query"</code></td>
+                            <td>查询后自动退出</td>
+                            <td><code>claude -p "explain this function"</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>claude -c</code></td>
+                            <td>继续最近的对话</td>
+                            <td><code>claude -c</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>claude -r</code></td>
+                            <td>恢复之前的对话</td>
+                            <td><code>claude -r</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>claude commit</code></td>
+                            <td>创建 Git 提交</td>
+                            <td><code>claude commit</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>claude doctor</code></td>
+                            <td>安装健康检查</td>
+                            <td><code>claude doctor</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>claude update</code></td>
+                            <td>手动更新</td>
+                            <td><code>claude update</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/help</code></td>
+                            <td>显示帮助（会话内）</td>
+                            <td><code>> /help</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/clear</code></td>
+                            <td>清除对话历史</td>
+                            <td><code>> /clear</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/compact</code></td>
+                            <td>压缩上下文</td>
+                            <td><code>> /compact</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>/login</code></td>
+                            <td>登录/切换账户</td>
+                            <td><code>> /login</code></td>
+                        </tr>
+                        <tr>
+                            <td><code>exit</code> 或 <code>Ctrl+C</code></td>
+                            <td>退出 Claude Code</td>
+                            <td><code>> exit</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p>至此，<code>Claude Code</code> 的本地部署与配置教程就全部完成了。我们从认知层面理解了它的产品定位，通过与 Cursor 和 Codex
+                    的对比建立了选型认知，在三大操作系统上完成了安装配置，完成了账户注册与登录认证，并通过分层验证确认了部署结果，并整理了常见问题排查表和命令速查表。掌握了这些内容，你已经具备了在实际项目中高效使用
+                    <code>Claude Code</code> 的基础。后续课程中，我们将深入探讨 <code>CLAUDE.md</code> 的最佳实践、<code>MCP</code>
+                    协议的高级用法、以及如何通过 <code>Hooks</code> 和 <code>Skills</code> 构建团队级的自动化工作流。
+                </p>
+            </div>
+
+            <!-- ===================== Section 6 ===================== -->
+            <div class="cell">
+                <h2 id="section6">6. 在 Cursor 中使用 Claude Code 插件</h2>
+            </div>
+
+            <div class="cell">
+                <p>前面几章我们完成了 <code>Claude Code</code> 在终端中的完整安装与配置流程。事实上，<code>Claude Code</code>
+                    还提供了一个专为编辑器设计的使用路径——以插件形式嵌入 <code>VS Code</code> 或 <code>Cursor</code> 中直接运行。对于日常在
+                    <code>Cursor</code> 里开发的同学来说，这意味着无需在终端和编辑器之间来回切换：你可以直接在编辑器侧边打开 <code>Claude Code</code> 面板，享受它的
+                    Agent 编程能力，同时保留 <code>Cursor</code> 原有的补全与对话体验。
+                </p>
+                <p>本章将完整演示如何在 <code>Cursor</code> 中安装并启用 <code>Claude Code for VS Code</code> 插件，以及如何通过
+                    <code>CC-Switch</code> 的一键同步功能，让插件自动跟随当前激活的供应商配置（如 <code>MiniMax-M2.5</code> 或官方 Claude）——<span
+                        class="highlight">全程不需要手动编辑任何配置文件。</span>整个流程分为三步：安装插件、在 CC-Switch 中开启同步、在 Cursor 中打开并验证。
+                </p>
+            </div>
+
+            <!-- 步骤一：安装插件 -->
+            <div class="cell">
+                <p class="no-indent"><strong>步骤一：在 Cursor 中安装 Claude Code for VS Code 插件</strong></p>
+                <p>由于 <code>Cursor</code> 基于 <code>VS Code</code> 内核构建，它完全兼容 VS Code 扩展市场中的所有插件。我们只需在扩展面板中搜索并安装官方的
+                    <code>Claude Code for VS Code</code> 插件即可。本步骤的判据是：扩展面板中出现 <code>Claude Code for VS Code</code>
+                    条目，且状态为已安装（显示 Disable / Uninstall 按钮）。
+                </p>
+
+                <p class="no-indent"><strong>（1）在扩展面板中搜索并安装插件</strong></p>
+                <p>打开 <code>Cursor</code>，点击左侧活动栏的扩展图标（或按 <code>Ctrl+Shift+X</code>），在搜索框中输入
+                    <code>Claude</code>。在搜索结果中找到 <strong>「Claude Code for VS Code」</strong>（发布者：Anthropic，安装量 310 万+），点击
+                    <strong>Install</strong> 完成安装。
+                </p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222113840521.png"
+                        alt="在 Cursor 扩展面板搜索并安装 Claude Code for VS Code">
+                </div>
+                <p>安装完成后，插件卡片右侧会出现 <strong>Disable</strong> 和 <strong>Uninstall</strong> 按钮（替换原来的
+                    Install），表示插件已成功安装并激活。右键点击插件条目，可以看到包含 <strong>Settings</strong>（设置）在内的上下文菜单——这是后续配置的入口，<span
+                        class="highlight">但使用 CC-Switch 时不需要在这里手动修改任何参数。</span></p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222113903364.png" alt="插件安装成功">
+                </div>
+            </div>
+
+            <!-- 步骤二：CC-Switch 同步 -->
+            <div class="cell">
+                <p class="no-indent"><strong>步骤二：在 CC-Switch 中开启「应用到 Claude Code 插件」</strong></p>
+                <p>插件安装完成后，回到 <code>CC-Switch</code>。<code>CC-Switch</code> 内置了一项专为 VS Code / Cursor
+                    插件设计的同步功能——只需在设置中开启一个开关，此后每次在 <code>CC-Switch</code> 中切换供应商时，插件所使用的模型和 API 配置都会自动同步更新，<span
+                        class="highlight">无需手动修改任何 JSON 配置文件或环境变量。</span>本步骤的判据是：CC-Switch 设置页中「应用到 Claude Code
+                    插件」开关处于开启状态（绿色）。</p>
+
+                <p class="no-indent"><strong>（1）点击 CC-Switch 主界面左上角的齿轮图标进入设置</strong></p>
+                <p>打开 <code>CC-Switch</code>，在主界面左上角找到齿轮图标（设置按钮），点击进入设置页面。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222114117897.png"
+                        alt="CC-Switch 主界面点击齿轮进入设置">
+                </div>
+
+                <p class="no-indent"><strong>（2）开启「应用到 Claude Code 插件」开关</strong></p>
+                <p>进入设置页面后，在「通用」标签下找到 <strong>「应用到 Claude Code 插件」</strong> 选项，将右侧开关拨到开启状态（显示绿色）。该选项的说明文字为：「开启后 Vscode
+                    Claude Code 插件的供应商将随本软件切换」——这正是我们需要的效果。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222114145288.png"
+                        alt="开启应用到 Claude Code 插件开关">
+                </div>
+                <p>开关开启后，<code>CC-Switch</code> 会立即将当前激活供应商的配置写入 <code>Claude Code for VS Code</code> 插件所读取的配置路径。后续每次在
+                    <code>CC-Switch</code> 主界面点击某个供应商的「启用」按钮，插件的模型配置也会同步刷新，<span
+                        class="highlight">真正做到「一处切换，多处生效」。</span>
+                </p>
+            </div>
+
+            <!-- 步骤三：验证 -->
+            <div class="cell">
+                <p class="no-indent"><strong>步骤三：在 Cursor 中打开 Claude Code 面板并验证效果</strong></p>
+                <p>完成上述两步后，回到 <code>Cursor</code>，打开 <code>Claude Code</code> 面板，验证插件是否已正确接入当前激活的供应商。本步骤的最终判据是：在 Cursor
+                    的 Claude Code 面板中提问，能够收到正常回复。</p>
+
+                <p class="no-indent"><strong>（1）通过编辑器顶部菜单打开 Claude Code 面板</strong></p>
+                <p>在 <code>Cursor</code> 中，点击右上角的 <code>...</code>（更多操作）按钮，在弹出的下拉菜单中找到并点击 <strong>「Claude Code:
+                        Open」</strong>，即可在编辑器中打开 Claude Code 交互面板。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222114312525.png"
+                        alt="Cursor 菜单打开 Claude Code 面板">
+                </div>
+                <blockquote>
+                    <p>如果在菜单中找不到「Claude Code: Open」选项，请确认插件已正确安装且处于启用状态。也可以通过命令面板（<code>Ctrl+Shift+P</code>）搜索
+                        <code>Claude Code: Open</code> 来打开。
+                    </p>
+                </blockquote>
+
+                <p class="no-indent"><strong>（2）在 Claude Code 面板中发起对话，验证接入效果</strong></p>
+                <p><code>Claude Code</code> 面板在编辑器中打开后，在底部输入框中输入「你好，请问你是什么模型？」并发送。如果能够收到正常回复，说明插件已成功接入 CC-Switch
+                    当前激活的供应商配置。</p>
+                <div class="img-container">
+                    <img src="https://muyu001.oss-cn-beijing.aliyuncs.com/img/image-20260222114453606.png"
+                        alt="Cursor 中 Claude Code 面板验证成功">
+                </div>
+                <p><span class="highlight">至此，在 Cursor 中使用 Claude Code 插件的完整配置流程已全部完成。</span>后续如需切换底层模型（例如从官方 Claude 切换到
+                    MiniMax），只需在 <code>CC-Switch</code> 主界面点击对应供应商的「启用」按钮，插件会自动同步，无需重启 Cursor 或做任何额外操作。</p>
+                <blockquote>
+                    <p><strong>使用体验说明</strong>：在 Cursor 中，Claude Code 以独立对话面板的形式运行，与 Cursor 自身的 AI 补全和 Composer
+                        功能相互独立、互不干扰。你可以同时使用 Cursor 的原生补全能力进行日常快速编辑，在需要执行复杂 Agent 任务（跨文件重构、Git 操作、测试修复等）时切换到 Claude Code
+                        面板，充分发挥两者各自的优势。</p>
+                </blockquote>
+            </div>
+        </main>
+
+        <footer class="notebook-footer">
+            <div class="nav-links">
+                <a href="./导学1：网络环境配置与VPN准备.html">← 导学1 · 网络环境配置与VPN准备</a>
+                <a href="./导学3：Git安装与GitHub配置.html">导学3 · Git安装与GitHub配置 →</a>
+            </div>
+            <p class="copyright">《Vibe Coding AI全栈开发实战》· 木羽老师</p>
+        </footer>
+    </div>
+
+    <div class="modal" id="imageModal">
+        <span class="modal-close" onclick="closeModal()">&times;</span>
+        <img id="modalImage" src="" alt="">
+    </div>
+
+    <script>
+        document.querySelectorAll('.cell img').forEach(img => {
+            img.addEventListener('click', function () {
+                const modal = document.getElementById('imageModal');
+                const modalImg = document.getElementById('modalImage');
+                modal.classList.add('active');
+                modalImg.src = this.src;
+            });
+        });
+        function closeModal() {
+            document.getElementById('imageModal').classList.remove('active');
+        }
+        document.getElementById('imageModal').addEventListener('click', function (e) {
+            if (e.target === this) closeModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape') closeModal();
+        });
+        function copyCode(btn) {
+            const code = btn.nextElementSibling.querySelector('code').innerText;
+            navigator.clipboard.writeText(code).then(() => {
+                btn.textContent = '已复制 ✓';
+                btn.classList.add('copied');
+                setTimeout(() => { btn.textContent = '复制'; btn.classList.remove('copied'); }, 2000);
+            });
+        }
+    </script>
+</body>
+
+</html>
