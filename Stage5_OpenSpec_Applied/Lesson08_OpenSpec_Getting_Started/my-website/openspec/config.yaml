@@ -1,0 +1,23 @@
+schema: spec-driven
+
+context: |
+  项目：个人品牌站（Personal Website）
+  技术栈：React 19 + Vite 7 + TypeScript + Tailwind CSS v4
+  部署：GitHub Pages，base path 为 /my-website/
+  设计风格：科技感，动态粒子风，支持亮/暗切换
+  性能：首屏加载 < 2 秒，所有图片使用 lazy loading
+
+rules:
+  proposal:
+    - 必须明确写出 out-of-scope（不做什么）
+    - 必须评估对现有功能的影响
+  specs:
+    - 使用 Given/When/Then 格式描述交互行为
+    - 每个 spec 必须包含至少一个边界/异常场景
+  tasks:
+    - 每个任务粒度不超过 30 分钟
+    - 按 Phase 分组，每个 Phase 结束后等待我确认
+
+languages: |
+  Generate all artifacts in Simplified Chinese.
+  Use English for code-related terms.
