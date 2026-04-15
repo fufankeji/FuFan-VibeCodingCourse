@@ -17,9 +17,15 @@
   - 规范文档驱动的 AI 开发实践
   - 从规范到落地的项目实战
 
+- **[Lesson 09](./Lesson09_OpenSpec_Advanced_Practice/)**：OpenSpec 应用进阶
+  - 进阶工程化工作流（从 3 命令到 7 命令）
+  - 生产级规范文档管理
+  - 基于 OpenSpec 的复杂项目编排
+
 ## 项目结构
 
 - `Lesson08_OpenSpec_Getting_Started/CourseWare/`：课程课件与直播协作文件
+- `Lesson09_OpenSpec_Advanced_Practice/CourseWare/`：课程课件与直播协作文件
 
 ## 课程资料
 
@@ -27,7 +33,9 @@
 
 - `06_OpenSpec.pptx`
 - `06_OpenSpec入门实战.excalidraw`
+- `07_OpenSpec.pptx`
+- `07_OpenSpec应用进阶.excalidraw`
 
 ## 学习成果
 
-理解 OpenSpec 方法论，并能运用规范驱动开发模式，借助 AI 高效构建实际项目。
+理解 OpenSpec 方法论，并能运用规范驱动开发模式，借助 AI 高效构建实际项目。掌握完整的 7 命令工程化工作流，具备生产级开发能力。

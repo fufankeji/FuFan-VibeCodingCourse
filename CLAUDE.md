@@ -47,4 +47,4 @@ Each Stage folder must have `README.md` (English) and `README_CN.md` (Chinese):
 | Stage2_Cursor_Deep_Dive | Cursor IDE | Lesson 03-04 |
 | Stage3_Claude_Code_Engineering | Claude Code | Lesson 05-06 + Bonus |
 | Stage4_Enterprise_Practice | Enterprise | Lesson 07 |
-| Stage5_OpenSpec_Applied | OpenSpec | Lesson 08 |
+| Stage5_OpenSpec_Applied | OpenSpec | Lesson 08-09 |
