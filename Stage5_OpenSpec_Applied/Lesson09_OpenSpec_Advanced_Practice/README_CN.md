@@ -19,10 +19,16 @@
 
 - [07_OpenSpec.pptx](./CourseWare/07_OpenSpec.pptx)
 - [07_OpenSpec应用进阶.excalidraw](./CourseWare/07_OpenSpec应用进阶.excalidraw)
+- [07_OpenSpec应用进阶直播协作文档.excalidraw](./CourseWare/07_OpenSpec应用进阶直播协作文档.excalidraw)
 
 ## 实战项目
 
-*（直播结束后添加）*
+- **[my-website](./my-website/)**：个人品牌展示站 — OpenSpec 进阶工作流实战
+- 技术栈：`React` `TypeScript` `Vite`
+- 核心模块：
+  - [openspec/](./my-website/openspec/) — OpenSpec 规范、变更与配置
+  - [src/components/](./my-website/src/components/) — HeroSection、Navbar、ProjectSection、AboutSection、ThemeToggle
+  - [src/contexts/](./my-website/src/contexts/) — ThemeContext
 
 ## 关于 `.excalidraw` 文件
 

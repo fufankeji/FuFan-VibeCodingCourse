@@ -19,10 +19,16 @@ This lesson takes OpenSpec to the next level — from 3 core commands to the ful
 
 - [07_OpenSpec.pptx](./CourseWare/07_OpenSpec.pptx)
 - [07_OpenSpec应用进阶.excalidraw](./CourseWare/07_OpenSpec应用进阶.excalidraw)
+- [07_OpenSpec应用进阶直播协作文档.excalidraw](./CourseWare/07_OpenSpec应用进阶直播协作文档.excalidraw)
 
 ## Project Assets
 
-*(To be added after live session)*
+- **[my-website](./my-website/)**: personal brand website — OpenSpec advanced workflow practice
+- Tech stack: `React` `TypeScript` `Vite`
+- Key modules:
+  - [openspec/](./my-website/openspec/) — OpenSpec specs, changes, and config
+  - [src/components/](./my-website/src/components/) — HeroSection, Navbar, ProjectSection, AboutSection, ThemeToggle
+  - [src/contexts/](./my-website/src/contexts/) — ThemeContext
 
 ## About `.excalidraw` Files
 

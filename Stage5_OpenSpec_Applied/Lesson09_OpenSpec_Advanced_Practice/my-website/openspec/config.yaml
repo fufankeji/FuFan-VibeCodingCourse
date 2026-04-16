@@ -1,0 +1,59 @@
+schema: spec-driven
+
+context: |
+  项目：个人品牌站 → 全栈 AI 学习平台（StudyPal）
+  阶段：现有代码为纯前端品牌站，正在向全栈 AI 学习平台扩展
+
+  技术栈：
+    前端：React 19 + Vite 7 + TypeScript + Tailwind CSS v4
+    后端：FastAPI + SQLite（即将添加）
+    粒子效果：tsparticles（lazy loaded）
+
+  样式方案：
+    - Tailwind CSS v4，禁止内联 style
+    - 暗色模式通过 ThemeContext + document.documentElement.classList 控制
+    - 自定义 dark variant：@custom-variant dark (&:where(.dark, .dark *))
+    - 设计风格：科技感，动态粒子背景，支持亮/暗切换
+
+  路由：
+    - 当前无路由库，Navbar 使用锚点跳转（#home, #projects, #contact）
+    - 所有 section 在 App.tsx 中线性堆叠
+    - 扩展多页面时需引入 react-router-dom
+
+  部署：GitHub Pages（npm run deploy → gh-pages -d dist），base path /my-website/
+
+  约束：
+    - 复用已有组件（ThemeContext, Navbar, ProjectCard），不推倒重来
+    - 新增后端不影响前端构建流程（前后端独立构建、独立部署）
+    - 开发阶段通过 Vite server.proxy 将 /api/* 转发到 FastAPI
+
+  现有组件清单：
+    - ThemeContext / ThemeToggle — 全局主题切换，可直接复用
+    - Navbar — 锚点导航，多页面时需改造为 router Link
+    - HeroSection — 首屏 hero + ParticleBackground（lazy）
+    - ProjectSection / ProjectCard — 项目展示（数据硬编码，需改为 props/API）
+    - AboutSection — 关于我（静态文案）
+
+rules:
+  specs:
+    - "所有 API 行为使用 Given/When/Then 格式"
+    - "每个 spec 必须包含至少一个错误场景"
+    - "每个 requirement 的 scenario 不超过 5 个"
+    - "单个 spec 文件不超过 2000 词"
+    - "省略理由说明，除非直接影响实现"
+    - "使用 RFC 2119 关键词（SHALL/SHOULD/MAY）"
+  tasks:
+    - "单个 task 不超过 2 小时工作量"
+    - "相关 task 按 phase 分组"
+    - "每个 phase 结束后包含验证步骤"
+    - "新建服务前必须先检查是否有可复用的已有服务"
+  design:
+    - "包含组件层级图"
+    - "文档化所有 API 端点规范"
+  proposal:
+    - "必须显式列出不做的事项（out-of-scope/NOT doing 清单）"
+    - "高风险变更必须包含回滚方案"
+
+languages: |
+  Generate all artifacts in Simplified Chinese.
+  Use English for code-related terms.

@@ -1,0 +1,65 @@
+[
+  {
+    "id": "streak_3",
+    "title": "初露锋芒",
+    "description": "连续学习 3 天",
+    "icon": "🔥",
+    "condition": { "type": "streak", "threshold": 3 }
+  },
+  {
+    "id": "streak_7",
+    "title": "坚持一周",
+    "description": "连续学习 7 天",
+    "icon": "⭐",
+    "condition": { "type": "streak", "threshold": 7 }
+  },
+  {
+    "id": "streak_30",
+    "title": "月度达人",
+    "description": "连续学习 30 天",
+    "icon": "🏆",
+    "condition": { "type": "streak", "threshold": 30 }
+  },
+  {
+    "id": "hours_10",
+    "title": "学习新手",
+    "description": "累计学习 10 小时",
+    "icon": "📖",
+    "condition": { "type": "total_hours", "threshold": 10 }
+  },
+  {
+    "id": "hours_50",
+    "title": "勤奋学者",
+    "description": "累计学习 50 小时",
+    "icon": "📚",
+    "condition": { "type": "total_hours", "threshold": 50 }
+  },
+  {
+    "id": "hours_100",
+    "title": "学习大师",
+    "description": "累计学习 100 小时",
+    "icon": "🎓",
+    "condition": { "type": "total_hours", "threshold": 100 }
+  },
+  {
+    "id": "sessions_10",
+    "title": "十次打卡",
+    "description": "完成 10 次学习",
+    "icon": "✅",
+    "condition": { "type": "total_sessions", "threshold": 10 }
+  },
+  {
+    "id": "sessions_50",
+    "title": "五十次打卡",
+    "description": "完成 50 次学习",
+    "icon": "💪",
+    "condition": { "type": "total_sessions", "threshold": 50 }
+  },
+  {
+    "id": "level_5",
+    "title": "等级提升",
+    "description": "达到等级 5",
+    "icon": "🌟",
+    "condition": { "type": "level", "threshold": 5 }
+  }
+]
