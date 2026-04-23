@@ -1,0 +1,124 @@
+/**
+ * AgentHub — Tailwind v4 Design System
+ * =====================================
+ * Single source of truth for all design tokens.
+ * Ported from Figma Make (Start Project/src/styles/globals.css + theme.css).
+ *
+ * Usage:  bg-bg-base  text-fg-default  text-xs  rounded-md  spacing via p-2 etc.
+ */
+
+@import "tailwindcss";
+@import "tw-animate-css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* ================================================================
+   @theme — All tokens are static values (no var() indirection).
+   Tailwind v4 generates utilities directly from these.
+   ================================================================ */
+
+@theme {
+  /* ── Color / Background ──────────────────────────── */
+  --color-bg-base:     hsl(220 15% 10%);
+  --color-bg-subtle:   hsl(220 15% 13%);
+  --color-bg-muted:    hsl(220 15% 17%);
+  --color-bg-elevated: hsl(220 15% 22%);
+
+  /* ── Color / Foreground ──────────────────────────── */
+  --color-fg-default:   hsl(220 10% 95%);
+  --color-fg-secondary: hsl(220 10% 70%);
+  --color-fg-muted:     hsl(220 10% 50%);
+  --color-fg-disabled:  hsl(220 10% 35%);
+
+  /* ── Color / Primary ─────────────────────────────── */
+  --color-primary-default: hsl(220 100% 65%);
+  --color-primary-hover:   hsl(220 90% 65%);
+  --color-primary-active:  hsl(220 90% 55%);
+  --color-primary-fg:      hsl(0 0% 100%);
+
+  /* ── Color / Status ──────────────────────────────── */
+  --color-status-success: hsl(163 57% 50%);
+  --color-status-warning: hsl(38 90% 55%);
+  --color-status-error:   hsl(0 70% 60%);
+
+  /* ── Color / Border ──────────────────────────────── */
+  --color-border-default: hsl(220 15% 22%);
+  --color-border-subtle:  hsl(220 15% 17%);
+  --color-border-strong:  hsl(220 15% 30%);
+
+  /* ── Typography / Font Family ────────────────────── */
+  /* 通过 next/font/google 注入到 <html> 的 CSS 变量。
+     中文走系统字体 fallback（避免 Next 16 Turbopack 装 Noto_Sans_SC 子集失败）。 */
+  --font-sans: var(--font-inter), "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: var(--font-jetbrains-mono), monospace;
+
+  /* ── Typography / Font Size ──────────────────────── */
+  /* Scale: 12 / 13 / 14 / 15 / 16 / 18 / 20 / 24 / 30 / 36 */
+  --text-xs:   12px;
+  --text-sm:   13px;
+  --text-base: 14px;
+  --text-md:   15px;
+  --text-lg:   16px;
+  --text-xl:   18px;
+  --text-2xl:  20px;
+  --text-3xl:  24px;
+  --text-4xl:  30px;
+  --text-5xl:  36px;
+
+  /* ── Spacing ─────────────────────────────────────── */
+  /* 4px base scale: 0 / 4 / 8 / 12 / 16 / 20 / 24 / 32 / 40 / 48 / 64 */
+  --spacing-0:  0px;
+  --spacing-1:  4px;
+  --spacing-2:  8px;
+  --spacing-3:  12px;
+  --spacing-4:  16px;
+  --spacing-5:  20px;
+  --spacing-6:  24px;
+  --spacing-8:  32px;
+  --spacing-10: 40px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+
+  /* ── Border Radius ───────────────────────────────── */
+  --radius-sm:   4px;
+  --radius-md:   8px;
+  --radius-lg:   12px;
+  --radius-xl:   16px;
+  --radius-full: 9999px;
+}
+
+/* ================================================================
+   Base layer — global resets & defaults
+   ================================================================ */
+
+@layer base {
+  * {
+    border-color: var(--color-border-default);
+    outline-color: color-mix(in oklab, var(--color-primary-default) 40%, transparent);
+    box-sizing: border-box;
+  }
+
+  body {
+    background: var(--color-bg-base);
+    color: var(--color-fg-default);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Link hover underline transition */
+  a {
+    transition: all 200ms;
+    text-decoration: underline transparent;
+    text-underline-offset: 2px;
+  }
+  a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* Nav links: no underline */
+  nav a,
+  nav a:hover {
+    text-decoration: none;
+  }
+}

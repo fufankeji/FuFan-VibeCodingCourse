@@ -19,6 +19,7 @@
 
 - [08_Spec-Kit.pptx](./CourseWare/08_Spec-Kit.pptx)
 - [08_Spec-Kit 入门实战.excalidraw](./CourseWare/08_Spec-Kit%20入门实战.excalidraw)
+- [08_Spec-kit进阶应用直播协作.excalidraw](./CourseWare/08_Spec-kit进阶应用直播协作.excalidraw)
 
 ## 实战项目
 

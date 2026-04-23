@@ -1,0 +1,62 @@
+{
+  "color": {
+    "bg": {
+      "base":     { "value": "hsl(220, 15%, 10%)", "type": "color" },
+      "subtle":   { "value": "hsl(220, 15%, 13%)", "type": "color" },
+      "muted":    { "value": "hsl(220, 15%, 17%)", "type": "color" },
+      "elevated": { "value": "hsl(220, 15%, 22%)", "type": "color" }
+    },
+    "fg": {
+      "default":  { "value": "hsl(220, 10%, 95%)", "type": "color" },
+      "secondary":{ "value": "hsl(220, 10%, 70%)", "type": "color" },
+      "muted":    { "value": "hsl(220, 10%, 50%)", "type": "color" },
+      "disabled": { "value": "hsl(220, 10%, 35%)", "type": "color" }
+    },
+    "border": {
+      "default":  { "value": "hsl(220, 15%, 22%)", "type": "color" },
+      "subtle":   { "value": "hsl(220, 15%, 17%)", "type": "color" },
+      "strong":   { "value": "hsl(220, 15%, 30%)", "type": "color" }
+    },
+    "primary": {
+      "default":  { "value": "hsl(220, 90%, 60%)", "type": "color" },
+      "hover":    { "value": "hsl(220, 90%, 65%)", "type": "color" },
+      "active":   { "value": "hsl(220, 90%, 55%)", "type": "color" },
+      "fg":       { "value": "hsl(0, 0%, 100%)",   "type": "color" }
+    },
+    "success":    { "value": "hsl(160, 70%, 50%)", "type": "color" },
+    "warning":    { "value": "hsl(38, 90%, 55%)",  "type": "color" },
+    "error":      { "value": "hsl(0, 70%, 60%)",   "type": "color" }
+  },
+  "space": {
+    "0":  0,
+    "1":  4,
+    "2":  8,
+    "3":  12,
+    "4":  16,
+    "5":  20,
+    "6":  24,
+    "8":  32,
+    "10": 40,
+    "12": 48,
+    "16": 64
+  },
+  "text": {
+    "xs":  12,
+    "sm":  13,
+    "base": 14,
+    "md":  15,
+    "lg":  16,
+    "xl":  18,
+    "2xl": 20,
+    "3xl": 24,
+    "4xl": 30,
+    "5xl": 36
+  },
+  "radius": {
+    "sm":   4,
+    "md":   8,
+    "lg":   12,
+    "xl":   16,
+    "full": 9999
+  }
+}

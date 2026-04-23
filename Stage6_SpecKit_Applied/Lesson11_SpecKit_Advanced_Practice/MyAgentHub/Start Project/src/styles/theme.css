@@ -1,0 +1,125 @@
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  --bg-base: hsl(220, 15%, 10%);
+  --bg-subtle: hsl(220, 15%, 13%);
+  --bg-muted: hsl(220, 15%, 17%);
+  --bg-elevated: hsl(220, 15%, 22%);
+
+  --fg-default: hsl(220, 10%, 95%);
+  --fg-secondary: hsl(220, 10%, 70%);
+  --fg-muted: hsl(220, 10%, 50%);
+  --fg-disabled: hsl(220, 10%, 35%);
+
+  --primary-default: hsl(220, 90%, 60%);
+  --primary-hover: hsl(220, 90%, 65%);
+  --primary-active: hsl(220, 90%, 55%);
+  --primary-fg: hsl(0, 0%, 100%);
+
+  --status-success: hsl(160, 70%, 50%);
+  --status-warning: hsl(38, 90%, 55%);
+  --status-error: hsl(0, 70%, 60%);
+
+  --border-default: hsl(220, 15%, 22%);
+  --border-subtle: hsl(220, 15%, 17%);
+  --border-strong: hsl(220, 15%, 30%);
+
+  --font-sans: 'Inter Variable', 'Inter', 'Noto Sans SC', sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', monospace;
+
+  /* Font sizes: 12 / 13 / 14 / 15 / 16 / 18 / 20 / 24 / 30 / 36 */
+  --text-12: 12px;
+  --text-13: 13px;
+  --text-14: 14px;
+  --text-15: 15px;
+  --text-16: 16px;
+  --text-18: 18px;
+  --text-20: 20px;
+  --text-24: 24px;
+  --text-30: 30px;
+  --text-36: 36px;
+}
+
+@theme inline {
+  --color-bg-base: var(--bg-base);
+  --color-bg-subtle: var(--bg-subtle);
+  --color-bg-muted: var(--bg-muted);
+  --color-bg-elevated: var(--bg-elevated);
+
+  --color-fg-default: var(--fg-default);
+  --color-fg-secondary: var(--fg-secondary);
+  --color-fg-muted: var(--fg-muted);
+  --color-fg-disabled: var(--fg-disabled);
+
+  --color-primary-default: var(--primary-default);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-active: var(--primary-active);
+  --color-primary-fg: var(--primary-fg);
+
+  --color-success: var(--status-success);
+  --color-warning: var(--status-warning);
+  --color-error: var(--status-error);
+
+  --color-border-default: var(--border-default);
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --font-sans: var(--font-sans);
+  --font-mono: var(--font-mono);
+
+  --text-12: var(--text-12);
+  --text-13: var(--text-13);
+  --text-14: var(--text-14);
+  --text-15: var(--text-15);
+  --text-16: var(--text-16);
+  --text-18: var(--text-18);
+  --text-20: var(--text-20);
+  --text-24: var(--text-24);
+  --text-30: var(--text-30);
+  --text-36: var(--text-36);
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-xl: 16px;
+
+  /* Space scale 4 / 8 / 12 / 16 / 20 / 24 / 32 / 48 / 64 */
+  --spacing-1: 4px;
+  --spacing-2: 8px;
+  --spacing-3: 12px;
+  --spacing-4: 16px;
+  --spacing-5: 20px;
+  --spacing-6: 24px;
+  --spacing-8: 32px;
+  --spacing-12: 48px;
+  --spacing-16: 64px;
+}
+
+@layer base {
+  * {
+    @apply border-border-default outline-primary-default/40;
+    box-sizing: border-box;
+  }
+
+  body {
+    @apply bg-bg-base text-fg-default font-sans antialiased;
+  }
+
+  /* [Prep-02] 修复 #2: Link hover 下划线 transition */
+  a {
+    @apply transition-all duration-200;
+    text-decoration: underline transparent;
+    text-underline-offset: 2px;
+  }
+  a:hover {
+    text-decoration-color: currentColor;
+  }
+
+  /* Nav links 不需要下划线 */
+  nav a {
+    text-decoration: none;
+  }
+  nav a:hover {
+    text-decoration: none;
+  }
+}
