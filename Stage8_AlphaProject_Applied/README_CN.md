@@ -17,6 +17,11 @@
   - 量化交易领域建模
   - 借助 AI 生成产品需求文档（PRD）
 
+- **[Lesson 15](./Lesson15_AlphaProject_Architecture_UI/)**：AlphaProject 中篇 —— 技术架构选型、UI 设计 & Claude Code 环境配置
+  - 前后端技术栈选型
+  - 平台前端 UI 设计
+  - Claude Code 环境初始化与项目配置
+
 ## 项目结构
 
 - `Lesson14_AlphaProject_Research_PRD/CourseWare/`：课程课件与直播协作文件

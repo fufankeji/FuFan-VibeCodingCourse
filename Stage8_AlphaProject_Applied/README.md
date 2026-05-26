@@ -17,6 +17,11 @@ Comprehensive project practice — drive a real, end-to-end Vibe Coding build of
   - Quantitative-trading domain modeling
   - Product Requirements Document (PRD) generation with AI assistance
 
+- **[Lesson 15](./Lesson15_AlphaProject_Architecture_UI/)**: AlphaProject Part 2 — Architecture Selection, UI Design & Claude Code Setup
+  - Frontend / backend tech-stack selection
+  - Frontend UI design for the platform
+  - Claude Code environment initialization and project configuration
+
 ## Project Structure
 
 - `Lesson14_AlphaProject_Research_PRD/CourseWare/`: lesson slides and live collaboration files
