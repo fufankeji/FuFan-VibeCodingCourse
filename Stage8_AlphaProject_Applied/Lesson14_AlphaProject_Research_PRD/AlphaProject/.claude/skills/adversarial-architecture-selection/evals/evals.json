@@ -1,0 +1,85 @@
+{
+  "skill_name": "adversarial-architecture-selection",
+  "description": "Test cases for adversarial-architecture-selection Skill — verifying Phase 0 dynamic allocation, 5-role team spawning, 7-dimension paper enforcement, anti-bias guardrails, and Phase 3 synthesis quality.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "fork-selection-N4-projects",
+      "prompt": "我已完成立项调研，specs/research/03-开源项目.md 列了 4 个候选 fork 项目（daily_stock_analysis / vnpy / Qbot / backtrader-cn）。帮我做架构基线决策。",
+      "expected_output": "Skill should: (1) confirm Agent Teams enabled, (2) Phase 0 assign 4 projects to 3 advocates per the N=4 rule (1 advocate owns 2, others own 1, merge by tech-stack similarity), (3) spawn 5 teammates with proper role prompts, (4) drive Phase 1/2/3 to produce 06-架构基线决策.md and update 05-决策汇总.md.",
+      "files": [],
+      "assertions": [
+        {"id": "verifies-agent-teams-enabled", "description": "Checks CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS=1 before spawning team"},
+        {"id": "phase0-correct-allocation", "description": "N=4 case: 1 advocate owns 2 projects, others own 1; merge by tech-stack similarity"},
+        {"id": "writes-task-allocation-doc", "description": "Writes specs/research/debate/00-任务分配.md before spawning"},
+        {"id": "spawns-5-teammates", "description": "Spawns exactly 5 teammates (3 advocate + 1 red team + 1 integration assessor)"},
+        {"id": "enforces-7-dimensions", "description": "All position papers must include all 7 dimensions, dimension 6 (致命缺陷自述) mandatory"},
+        {"id": "phase2-shuffle-papers", "description": "Phase 2 random-shuffles papers before broadcasting to mailbox"},
+        {"id": "red-team-attacks-per-paper", "description": "Red team issues 3 critiques per paper (total = 3N, not 3 × num advocates)"},
+        {"id": "phase3-produces-06-doc", "description": "Phase 3 produces specs/research/06-架构基线决策.md with all 5 required sections"},
+        {"id": "phase3-updates-05-to-v2", "description": "Phase 3 updates specs/research/05-决策汇总.md to v2 with change log"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "fork-selection-N2-projects",
+      "prompt": "我在 daily_stock_analysis 和 vnpy 之间纠结，帮我对抗决策。",
+      "expected_output": "Skill should detect N=2 and apply the special rule: advocate-3 becomes 'backup red team' to strengthen the opposition, maintaining a 2-vs-2 debate balance.",
+      "files": [],
+      "assertions": [
+        {"id": "detects-N2-special-case", "description": "Recognizes N=2 triggers backup-red-team substitution"},
+        {"id": "spawns-2-advocates-2-red-1-integrator", "description": "Team composition: 2 advocates + 2 red team + 1 integration assessor (still 5 total)"},
+        {"id": "explains-rationale", "description": "Tells user why advocate-3 is replaced (to maintain adversarial balance)"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "library-selection-langchain-llamaindex-haystack",
+      "prompt": "构建企业 RAG 系统，在 LangChain / LlamaIndex / Haystack 之间选型。注意这不是 fork，是纯库选型。",
+      "expected_output": "Skill should adapt the 7-dimension framework for library-selection context (改造成本 → 学习+集成成本; 致命缺陷 → 性能/API稳定性/锁定风险). Phase 0 task-allocation doc must explicitly state the adapted dimension meanings.",
+      "files": [],
+      "assertions": [
+        {"id": "adapts-7-dimensions-to-library-context", "description": "Documents adapted dimension meanings in 00-任务分配.md"},
+        {"id": "dimension-5-becomes-learning-cost", "description": "Dimension 5 reframed as learning + integration cost, not fork-改造 cost"},
+        {"id": "dimension-6-emphasizes-lockin-risk", "description": "Dimension 6 (致命缺陷) emphasizes performance / API stability / vendor lock-in"},
+        {"id": "open-questions-include-version-pinning", "description": "Phase 3 Open Questions should include version-pinning strategy and migration plan"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "single-candidate-rejection",
+      "prompt": "我决定 fork daily_stock_analysis，帮我做对抗调研。",
+      "expected_output": "Skill must refuse to spawn a 5-role adversarial team for single candidate. Should suggest either: (a) terminate adversarial flow (no candidate to compare), or (b) use single-agent devil's advocate Skill instead (lighter weight).",
+      "files": [],
+      "assertions": [
+        {"id": "refuses-single-candidate", "description": "Does not spawn adversarial team for N=1"},
+        {"id": "suggests-alternative", "description": "Recommends devil's advocate single-agent Skill as lighter alternative"},
+        {"id": "asks-if-user-has-doubts", "description": "Asks user if they have specific concerns that need challenging"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "bias-guardrail-enforcement",
+      "prompt": "[模拟场景] 在对抗调研 Phase 2 中，代言人 A 在回应红队质疑时写了 500 字，远超 200 字限制。",
+      "expected_output": "Skill must detect length-bias violation and require teammate to rewrite within 200 words. Should not let the over-long response pass to Phase 3 evaluation.",
+      "files": [],
+      "assertions": [
+        {"id": "detects-200-word-violation", "description": "Catches the >200 word response"},
+        {"id": "requests-rewrite", "description": "Asks teammate to compress to ≤200 words, not just truncate"},
+        {"id": "explains-why-length-bias", "description": "Briefly explains why length bias matters (anti-bias guardrail)"}
+      ]
+    },
+    {
+      "id": 6,
+      "name": "missing-fatal-flaw-rejection",
+      "prompt": "[模拟场景] 代言人提交的 position-paper 中第 6 维'致命缺陷自述'写'暂未发现明显缺陷'。",
+      "expected_output": "Skill must reject the paper and require advocate to genuinely self-report 3 flaws with evidence. 'No flaws found' is treated as dereliction of duty.",
+      "files": [],
+      "assertions": [
+        {"id": "rejects-empty-self-critique", "description": "Treats '暂未发现明显缺陷' as failure to comply"},
+        {"id": "requires-3-flaws-with-evidence", "description": "Demands rewrite with 3 concrete flaws + source-line / Issue / commit evidence"},
+        {"id": "explains-self-attack-rationale", "description": "Reminds advocate why self-attack is mandatory (anti self-advocacy bias)"}
+      ]
+    }
+  ]
+}

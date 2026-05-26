@@ -20,6 +20,8 @@ temp*.json
 !Stage7_Superpowers_Applied/Lesson12_Superpowers_Getting_Started/nanoclaw-v2-backend/.claude/**
 !Stage7_Superpowers_Applied/Lesson13_SpecKit_Superpowers_Cooperation/nanoclaw-v2-backend/.claude/
 !Stage7_Superpowers_Applied/Lesson13_SpecKit_Superpowers_Cooperation/nanoclaw-v2-backend/.claude/**
+!Stage8_AlphaProject_Applied/Lesson14_AlphaProject_Research_PRD/AlphaProject/.claude/
+!Stage8_AlphaProject_Applied/Lesson14_AlphaProject_Research_PRD/AlphaProject/.claude/**
 
 # Python
 __pycache__/

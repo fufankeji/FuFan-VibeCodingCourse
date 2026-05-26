@@ -17,7 +17,7 @@ The first session of the AlphaProject comprehensive practice — Intelligent Inv
 
 ## Course Materials
 
-- [12_AlphaProject 综合项目实战（是上）.excalidraw](./CourseWare/12_AlphaProject%20综合项目实战（是上）.excalidraw)
+- [12_AlphaProject 综合项目实战（上）.excalidraw](./CourseWare/12_AlphaProject%20综合项目实战（上）.excalidraw)
 
 ## Course Assets
 
@@ -27,9 +27,15 @@ Skills, MCP server, and editor configs that power the research-to-PRD workflow u
 - **MCP**: `muyu-search-mcp` (multi-provider web search)
 - **Configs**: `claude-hud-config.json`
 
-## Project Assets
+## Project Output — [`AlphaProject/`](./AlphaProject/)
 
-*(To be added after live sessions — full-stack Intelligent Investment Research platform)*
+The research-and-PRD phase output, generated live with Claude Code.
+
+- **[`specs/prd.md`](./AlphaProject/specs/prd.md)**: production-grade Product Requirements Document
+- **[`specs/research/`](./AlphaProject/specs/research/)**: 6 research notes — product form, data sources, open-source survey, implementation options, decision summary, architecture baseline
+- **[`specs/research/debate/`](./AlphaProject/specs/research/debate/)**: adversarial architecture-selection debate — position papers, red-team attacks, advocate responses, integration assessment
+- **`.claude/skills/`**: the skills used to produce the above (`product-research-kickoff`, `adversarial-architecture-selection`, `prd-writer`)
+- **`.mcp.json`**: muyu-search MCP wiring — `MUYU_API_KEY` is redacted, fill in your own key before use
 
 ## About `.excalidraw` Files
 

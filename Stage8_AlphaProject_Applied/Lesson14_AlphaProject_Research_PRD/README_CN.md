@@ -17,7 +17,7 @@ AlphaProject 综合项目实战系列首讲 —— 智能投研（量化交易�
 
 ## 课程资料
 
-- [12_AlphaProject 综合项目实战（是上）.excalidraw](./CourseWare/12_AlphaProject%20综合项目实战（是上）.excalidraw)
+- [12_AlphaProject 综合项目实战（上）.excalidraw](./CourseWare/12_AlphaProject%20综合项目实战（上）.excalidraw)
 
 ## 课程资产
 
@@ -27,9 +27,15 @@ AlphaProject 综合项目实战系列首讲 —— 智能投研（量化交易�
 - **MCP**：`muyu-search-mcp`（多源 Web 搜索）
 - **Configs**：`claude-hud-config.json`
 
-## 实战项目
+## 项目产出 —— [`AlphaProject/`](./AlphaProject/)
 
-*（直播完成后添加 —— 智能投研全栈平台项目）*
+调研与 PRD 阶段的真实产出，由 Claude Code 直播现场生成。
+
+- **[`specs/prd.md`](./AlphaProject/specs/prd.md)**：生产级产品需求文档
+- **[`specs/research/`](./AlphaProject/specs/research/)**：6 篇调研笔记 —— 产品形态、数据来源、开源项目、实现方案、决策汇总、架构基线决策
+- **[`specs/research/debate/`](./AlphaProject/specs/research/debate/)**：对抗式架构选型辩论 —— 立场陈述、红队攻击、拥护方回应、集成评估
+- **`.claude/skills/`**：产出上述内容所用的技能（`product-research-kickoff`、`adversarial-architecture-selection`、`prd-writer`）
+- **`.mcp.json`**：muyu-search MCP 接入配置 —— `MUYU_API_KEY` 已抹除，使用前请填入自己的 key
 
 ## 关于 `.excalidraw` 文件
 
