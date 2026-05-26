@@ -23,7 +23,7 @@ AlphaProject 综合项目实战第二讲。上篇锁定调研与 PRD 后，本�
 
 本节使用的技能 —— 完整索引详见 [`Assets/README_CN.md`](./Assets/README_CN.md)。
 
-- **Skills**：`claude-md-bootstrap`、`run-feature`
+- **Skills**：`claude-md-bootstrap`、`run-feature`、`speckit-design-injection`
 
 ## 实战项目
 

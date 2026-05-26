@@ -23,7 +23,7 @@ The second session of the AlphaProject comprehensive practice. With research and
 
 Skills used in this lesson — see [`Assets/README.md`](./Assets/README.md) for the full index.
 
-- **Skills**: `claude-md-bootstrap`, `run-feature`
+- **Skills**: `claude-md-bootstrap`, `run-feature`, `speckit-design-injection`
 
 ## Project Assets
 
