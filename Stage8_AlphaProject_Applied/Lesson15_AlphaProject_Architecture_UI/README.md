@@ -25,9 +25,16 @@ Skills used in this lesson — see [`Assets/README.md`](./Assets/README.md) for 
 
 - **Skills**: `claude-md-bootstrap`, `run-feature`, `speckit-design-injection`
 
-## Project Assets
+## Project Output — [`AlphaProject/`](./AlphaProject/)
 
-*(To be added after the live session — frontend scaffold + Claude Code project config)*
+The Part 2 snapshot of the live build — architecture baseline locked, Spec-Kit scaffolding installed, six features specced out, and UI design references exported.
+
+- **[`.specify/`](./AlphaProject/.specify/)**: Spec-Kit installation — `memory/constitution.md`, workflow registry, templates (spec / plan / tasks / checklist / constitution / agent-file), bash scripts, Claude integration manifest
+- **[`specs/001-watchlist-crud/`](./AlphaProject/specs/001-watchlist-crud/) → [`006-morning-briefing/`](./AlphaProject/specs/006-morning-briefing/)**: six end-to-end feature bundles, each with `spec.md`, `plan.md`, `tasks.md` (watchlist CRUD, Feishu push channel, watchlist dashboard, LLM anomaly explain, anomaly-detection push, morning briefing)
+- **[`specs/design-reference/stitch-export/`](./AlphaProject/specs/design-reference/stitch-export/)**: UI design exports — multiple dashboard variants (screen PNGs + HTML code) plus `DESIGN.md`
+- **[`specs/prd.md`](./AlphaProject/specs/prd.md)** + **[`specs/research/`](./AlphaProject/specs/research/)**: research and PRD carried over from Part 1
+- **`.claude/skills/`**: full skill set used through Part 2 — including the Spec-Kit family (`speckit-checklist`, `speckit-constitution`, `speckit-implement`, `speckit-clarify`, `speckit-plan`, `speckit-taskstoissues`) plus `product-research-kickoff`
+- **`.mcp.json`**: muyu-search MCP wiring — `MUYU_API_KEY` is redacted, fill in your own key before use
 
 ## About `.excalidraw` Files
 

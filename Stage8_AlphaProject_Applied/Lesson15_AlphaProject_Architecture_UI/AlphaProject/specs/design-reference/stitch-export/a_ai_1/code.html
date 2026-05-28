@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Stock Detail View</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary": "#ffb95f",
+                        "on-tertiary-fixed": "#311400",
+                        "on-primary-fixed": "#001a42",
+                        "bull": "#EF4444",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface-container-high": "#272a31",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-variant": "#32353c",
+                        "secondary-fixed": "#ffddb8",
+                        "tertiary-fixed": "#ffdcc6",
+                        "primary-container": "#4d8eff",
+                        "error": "#ffb4ab",
+                        "primary": "#adc6ff",
+                        "secondary-container": "#ee9800",
+                        "on-secondary": "#472a00",
+                        "inverse-primary": "#005ac2",
+                        "anomaly": "#FACC15",
+                        "on-error": "#690005",
+                        "background": "#10131a",
+                        "surface-card": "#18181B",
+                        "surface-container": "#1d2027",
+                        "surface-base": "#09090B",
+                        "surface-container-highest": "#32353c",
+                        "on-background": "#e1e2ec",
+                        "surface": "#10131a",
+                        "inverse-surface": "#e1e2ec",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-surface": "#e1e2ec",
+                        "surface-tint": "#adc6ff",
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#002e6a",
+                        "surface-bright": "#363941",
+                        "surface-border": "#27272A",
+                        "surface-container-low": "#191b23",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "inverse-on-surface": "#2e3038",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-container": "#00285d",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "on-secondary-container": "#5b3800",
+                        "breakthrough": "#6366F1",
+                        "bear": "#22C55E",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary": "#ffb786",
+                        "surface-container-lowest": "#0b0e15",
+                        "tertiary-container": "#df7412",
+                        "on-tertiary": "#502400",
+                        "surface-dim": "#10131a",
+                        "outline-variant": "#424754",
+                        "outline": "#8c909f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "table-cell-py": "0.25rem",
+                        "grid-gutter": "0.75rem",
+                        "stack-gap": "0.5rem",
+                        "table-cell-px": "0.5rem",
+                        "container-margin": "1rem"
+                    },
+                    "fontFamily": {
+                        "mono-label": ["JetBrains Mono"],
+                        "table-header": ["Inter"],
+                        "table-data": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "ai-commentary": ["Inter"],
+                        "display-price": ["Inter"],
+                        "caption": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-label": ["11px", { "lineHeight": "12px", "fontWeight": "500" }],
+                        "table-header": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "ai-commentary": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-price": ["36px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "caption": ["11px", { "lineHeight": "14px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-surface-base text-on-surface antialiased flex flex-col md:flex-row h-screen overflow-hidden">
+<!-- TopNavBar (Web & Mobile, mapped from JSON) -->
+<nav class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-grid-gutter h-12 bg-surface dark:bg-surface border-b border-surface-border dark:border-surface-border">
+<div class="flex items-center gap-4">
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary tracking-tight">ALPHA MONITOR</span>
+<div class="hidden md:flex items-center gap-4 ml-6 h-full">
+<a class="font-headline-sm text-headline-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors cursor-pointer active:opacity-80 px-2 flex items-center h-full" href="#">Market Data</a>
+<a class="font-headline-sm text-headline-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors cursor-pointer active:opacity-80 px-2 flex items-center h-full" href="#">Strategy Builder</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined text-on-surface cursor-pointer hover:bg-surface-container-high rounded-full p-1 transition-colors">search</span>
+<span class="material-symbols-outlined text-on-surface cursor-pointer hover:bg-surface-container-high rounded-full p-1 transition-colors">notifications</span>
+<span class="material-symbols-outlined text-on-surface cursor-pointer hover:bg-surface-container-high rounded-full p-1 transition-colors">account_circle</span>
+</div>
+</nav>
+<!-- SideNavBar (Web Only, mapped from JSON) -->
+<aside class="hidden md:flex fixed left-0 top-12 h-[calc(100vh-3rem)] w-64 flex-col z-40 bg-surface-container-low dark:bg-surface-container-low border-r border-surface-border dark:border-surface-border transition-all duration-150 ease-in-out">
+<div class="p-4 border-b border-surface-border flex items-center gap-3">
+<div class="w-10 h-10 rounded-full bg-surface-container-highest flex items-center justify-center">
+<span class="material-symbols-outlined text-on-surface">account_circle</span>
+</div>
+<div>
+<div class="font-headline-sm text-headline-sm text-on-surface dark:text-on-surface">Alpha Terminal</div>
+<div class="font-mono-label text-mono-label text-on-surface-variant">Market Engine v2.4</div>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto py-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-mono-label text-mono-label">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-mono-label text-mono-label">Morning Report</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span class="font-mono-label text-mono-label">Alert Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-surface-container-highest dark:bg-surface-container-highest text-primary dark:text-primary border-l-4 border-primary hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-mono-label text-mono-label">Settings</span>
+</a>
+</div>
+<div class="border-t border-surface-border py-2">
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">help</span>
+<span class="font-mono-label text-mono-label">Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span class="font-mono-label text-mono-label">Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Canvas -->
+<main class="flex-1 w-full md:pl-64 pt-12 overflow-y-auto bg-surface-base h-screen flex flex-col">
+<!-- Action Header -->
+<header class="px-container-margin py-4 border-b border-surface-border flex items-center justify-between sticky top-0 bg-surface-base/90 backdrop-blur z-30">
+<div class="flex items-center gap-4">
+<button class="material-symbols-outlined text-on-surface-variant hover:text-on-surface transition-colors" onclick="history.back()">arrow_back</button>
+<div>
+<h1 class="font-display-price text-display-price text-on-surface leading-none">NVDA</h1>
+<span class="font-mono-label text-mono-label text-on-surface-variant">NVIDIA Corporation</span>
+</div>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-DEFAULT bg-surface-container hover:bg-surface-container-high border border-surface-border transition-colors">
+<span class="material-symbols-outlined text-primary text-sm" style="font-variation-settings: 'FILL' 1;">star</span>
+<span class="font-mono-label text-mono-label text-on-surface">Holding</span>
+</button>
+<button class="flex items-center gap-2 px-3 py-1.5 rounded-DEFAULT bg-primary text-on-primary hover:bg-primary/90 transition-colors">
+<span class="font-mono-label text-mono-label font-bold">Trade</span>
+</button>
+</div>
+</header>
+<!-- Content Grid -->
+<div class="p-container-margin grid grid-cols-1 lg:grid-cols-12 gap-grid-gutter max-w-[1600px] mx-auto w-full">
+<!-- Left Column: Chart & Stats -->
+<div class="lg:col-span-8 flex flex-col gap-grid-gutter">
+<!-- Price & Chart Card -->
+<section class="bg-surface-card border border-surface-border rounded-lg p-4 flex flex-col gap-4">
+<div class="flex items-end justify-between">
+<div>
+<div class="font-display-price text-display-price text-bull">$875.28</div>
+<div class="font-mono-label text-mono-label text-bull flex items-center gap-1 mt-1">
+<span class="material-symbols-outlined text-[14px]">arrow_downward</span>
+                                -12.45 (-1.40%)
+                            </div>
+</div>
+<div class="flex gap-1">
+<button class="px-2 py-1 font-mono-label text-mono-label bg-surface-container-high rounded text-on-surface">1D</button>
+<button class="px-2 py-1 font-mono-label text-mono-label hover:bg-surface-container-high rounded text-on-surface-variant transition-colors">1W</button>
+<button class="px-2 py-1 font-mono-label text-mono-label hover:bg-surface-container-high rounded text-on-surface-variant transition-colors">1M</button>
+<button class="px-2 py-1 font-mono-label text-mono-label hover:bg-surface-container-high rounded text-on-surface-variant transition-colors">YTD</button>
+</div>
+</div>
+<!-- Chart Placeholder -->
+<div class="w-full h-[400px] bg-surface-container-lowest border border-surface-border rounded relative overflow-hidden flex items-center justify-center group cursor-crosshair">
+<div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHBhdHRlcm5Vbml0cz0idXNlclNwYWNlT25Vc2UiPjxwYXRoIGQ9Ik0gNDAgMCBMIDAgMCAwIDQwIiBmaWxsPSJub25lIiBzdHJva2U9IiMzMjM1M2MiIHN0cm9rZS13aWR0aD0iMC41Ii8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-50"></div>
+<span class="font-mono-label text-mono-label text-on-surface-variant relative z-10 flex items-center gap-2">
+<span class="material-symbols-outlined animate-pulse">show_chart</span>
+                             Live K-Line Chart Render Area
+                         </span>
+</div>
+</section>
+<!-- Key Statistics Grid -->
+<section class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+<div class="bg-surface-card border border-surface-border rounded p-3">
+<div class="font-caption text-caption text-on-surface-variant mb-1">Market Cap</div>
+<div class="font-table-data text-table-data text-on-surface">2.19T</div>
+</div>
+<div class="bg-surface-card border border-surface-border rounded p-3">
+<div class="font-caption text-caption text-on-surface-variant mb-1">P/E Ratio</div>
+<div class="font-table-data text-table-data text-on-surface">74.20</div>
+</div>
+<div class="bg-surface-card border border-surface-border rounded p-3">
+<div class="font-caption text-caption text-on-surface-variant mb-1">Dividend Yield</div>
+<div class="font-table-data text-table-data text-on-surface">0.02%</div>
+</div>
+<div class="bg-surface-card border border-surface-border rounded p-3">
+<div class="font-caption text-caption text-on-surface-variant mb-1">Beta</div>
+<div class="font-table-data text-table-data text-on-surface">1.68</div>
+</div>
+</section>
+</div>
+<!-- Right Column: AI Insights & News -->
+<div class="lg:col-span-4 flex flex-col gap-grid-gutter">
+<!-- AI Insight Card -->
+<section class="bg-surface-card border border-surface-border rounded-lg p-4 relative overflow-hidden">
+<div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-breakthrough to-primary"></div>
+<div class="flex items-center gap-2 mb-3">
+<span class="material-symbols-outlined text-breakthrough" style="font-variation-settings: 'FILL' 1;">auto_awesome</span>
+<h3 class="font-headline-sm text-headline-sm text-on-surface">AI Commentary</h3>
+</div>
+<div class="font-ai-commentary text-ai-commentary text-on-surface-variant mb-4">
+                        Volume profile indicates heavy distribution at $900 resistance level. The recent dip below the 20-EMA on the 4H chart suggests short-term bearish momentum. However, institutional accumulation appears strong around the $850 support zone.
+                    </div>
+<div class="p-3 bg-surface-container rounded border border-surface-border flex items-start gap-3">
+<div class="w-2 h-2 rounded-full bg-anomaly mt-1.5 flex-shrink-0"></div>
+<div>
+<div class="font-mono-label text-mono-label text-on-surface mb-1">Anomaly Alert (14:32 EST)</div>
+<div class="font-caption text-caption text-on-surface-variant">Unusual options activity detected: 15k volume on 950C exp Friday.</div>
+</div>
+</div>
+<div class="mt-4 pt-3 border-t border-surface-border flex justify-between items-center">
+<span class="font-caption text-caption text-outline">Generative AI insight. Verify data.</span>
+<button class="font-mono-label text-mono-label text-primary hover:text-primary-fixed transition-colors">View History</button>
+</div>
+</section>
+<!-- Recent News List -->
+<section class="bg-surface-card border border-surface-border rounded-lg flex flex-col h-[400px]">
+<div class="p-4 border-b border-surface-border flex items-center justify-between">
+<h3 class="font-headline-sm text-headline-sm text-on-surface">Related News</h3>
+<span class="material-symbols-outlined text-on-surface-variant">article</span>
+</div>
+<div class="flex-1 overflow-y-auto p-2">
+<a class="block p-3 rounded hover:bg-surface-container transition-colors border-b border-surface-border last:border-0 group" href="#">
+<div class="font-table-data text-table-data text-on-surface group-hover:text-primary transition-colors mb-1 line-clamp-2">Analyst upgrades price target citing sustained datacenter growth and AI chip demand.</div>
+<div class="flex items-center gap-2 font-caption text-caption text-on-surface-variant">
+<span>Reuters</span>
+<span>•</span>
+<span>2h ago</span>
+</div>
+</a>
+<a class="block p-3 rounded hover:bg-surface-container transition-colors border-b border-surface-border last:border-0 group" href="#">
+<div class="font-table-data text-table-data text-on-surface group-hover:text-primary transition-colors mb-1 line-clamp-2">Competitor announces new accelerator chip; market reaction muted.</div>
+<div class="flex items-center gap-2 font-caption text-caption text-on-surface-variant">
+<span>Bloomberg</span>
+<span>•</span>
+<span>5h ago</span>
+</div>
+</a>
+<a class="block p-3 rounded hover:bg-surface-container transition-colors border-b border-surface-border last:border-0 group" href="#">
+<div class="font-table-data text-table-data text-on-surface group-hover:text-primary transition-colors mb-1 line-clamp-2">Supply chain reports indicate easing constraints for advanced packaging components.</div>
+<div class="flex items-center gap-2 font-caption text-caption text-on-surface-variant">
+<span>Financial Times</span>
+<span>•</span>
+<span>1d ago</span>
+</div>
+</a>
+</div>
+</section>
+</div>
+</div>
+</main>
+</body></html>

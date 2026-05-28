@@ -1,0 +1,19 @@
+{
+  "mcpServers": {
+    "muyu-search": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "--from",
+        "/Users/muyu/Desktop/muyu-search-mcp",
+        "muyu-search"
+      ],
+      "env": {
+        "MUYU_PROVIDER": "openrouter",
+        "MUYU_API_URL": "https://openrouter.ai/api/v1",
+        "MUYU_API_KEY": "sk-or-v1-your-openrouter-key-here",
+        "MUYU_MODEL": "x-ai/grok-4-fast"
+      }
+    }
+  }
+}
