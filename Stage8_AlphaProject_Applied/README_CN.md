@@ -22,6 +22,11 @@
   - 平台前端 UI 设计
   - Claude Code 环境初始化与项目配置
 
+- **[Lesson 16](./Lesson16_AlphaProject_Testing/)**：AlphaProject 下篇 —— 全栈测试体系
+  - 后端 / 前端 / 全栈切片 / 全链路四层测试
+  - 测试路由策略与测试体系蓝图
+  - 通过 `run-feature` 闭环特性工作流
+
 ## 项目结构
 
 - `Lesson14_AlphaProject_Research_PRD/CourseWare/`：课程课件与直播协作文件

@@ -22,6 +22,11 @@ Comprehensive project practice — drive a real, end-to-end Vibe Coding build of
   - Frontend UI design for the platform
   - Claude Code environment initialization and project configuration
 
+- **[Lesson 16](./Lesson16_AlphaProject_Testing/)**: AlphaProject Part 3 — Full-Stack Testing Strategy
+  - Backend, frontend, fullstack-slice, and full-chain testing layers
+  - Test-routing strategy and testing system blueprint
+  - Feature workflow closed with `run-feature`
+
 ## Project Structure
 
 - `Lesson14_AlphaProject_Research_PRD/CourseWare/`: lesson slides and live collaboration files

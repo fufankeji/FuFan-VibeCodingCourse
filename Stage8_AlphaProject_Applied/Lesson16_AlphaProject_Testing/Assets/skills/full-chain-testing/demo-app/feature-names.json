@@ -1,0 +1,16 @@
+{
+  "_doc": "Toolkit convention file = PROJECT-SIDE EVIDENCE, never baked into the tool. For projects WITHOUT a spec tree (knife1): narrator (knife4b) reads feature names + route verb hints here; knife4_merge reads optional `risk_keywords` to extend the GENERIC P0 risk dictionary with this project's domain risk words. Spec-bearing projects derive names from spec titles and need none of this.",
+  "feature_names": {
+    "A": "用户下单页 (前端)",
+    "B": "订单服务 (写库+排队)",
+    "C": "通知服务 (定时确认+推送)"
+  },
+  "route_verb_hints": {
+    "place-order": "提交下单",
+    "order": "下单",
+    "deliveries": "查询投递记录"
+  },
+  "risk_keywords": {
+    "core-flow": ["place-order", "下单页", "通知服务"]
+  }
+}
