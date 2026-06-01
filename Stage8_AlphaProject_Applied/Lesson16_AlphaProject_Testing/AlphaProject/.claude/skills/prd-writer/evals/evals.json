@@ -1,0 +1,70 @@
+{
+  "skill_name": "prd-writer",
+  "description": "Test cases for evaluating the prd-writer Skill across different scenarios — from zero, with upstream materials, with size variants, and edge cases.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "from-scratch-individual-project",
+      "prompt": "我有个想法：做一个 7×24 帮我盯 A 股的 AI 助手，能盯自选股、扫全市场异动、每天给我一份个性化早盘简报、关键时刻主动推送。请帮我写一份 PRD。",
+      "expected_output": "A 14-chapter PRD or properly auto-selected size variant. Should include all required chapters (1-7, 9-11, 13). Must contain Given/When/Then acceptance criteria. Must not include technical stack details (React, Postgres, etc.). Must have In-Scope and Out-of-Scope. Must have specific user persona including anti-persona.",
+      "files": [],
+      "assertions": [
+        {"id": "structure-14-chapters", "description": "Contains 14 standard chapters or properly auto-recommended subset"},
+        {"id": "no-tech-stack", "description": "Does not specify technology stacks, frameworks, or libraries"},
+        {"id": "given-when-then", "description": "Acceptance criteria use Given/When/Then format"},
+        {"id": "has-out-of-scope", "description": "Section 5 includes explicit Out-of-Scope items"},
+        {"id": "has-anti-persona", "description": "Section 3 includes anti-persona (explicit 'who we don't serve')"},
+        {"id": "specific-metrics", "description": "Performance/quality requirements include specific numbers (not 'should be fast')"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "with-upstream-brainstorming-doc",
+      "prompt": "我有一份 brainstorming-design.md 已经决定了：做一个面向小团队的内部知识管理工具，主要功能是文档检索 + AI 问答 + 权限控制。请基于这个 design doc 生成标准 PRD。",
+      "expected_output": "Skill should ask if it can read the design doc first (if not provided as file). Once context is established, generates 14-chapter PRD properly referencing the upstream decisions. Should NOT redo brainstorming work.",
+      "files": [],
+      "assertions": [
+        {"id": "respects-upstream", "description": "Skill respects upstream brainstorming decisions, does not redo discovery"},
+        {"id": "asks-for-context", "description": "If material not provided, skill asks for it instead of fabricating"},
+        {"id": "fills-14-chapters", "description": "Output has 14-chapter (or auto-selected smaller variant) structure"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "minimal-version-1-week-project",
+      "prompt": "我是 1 人项目，1 周内要交付一个内部 CLI 工具，把团队的会议录音自动转文字+总结。请用极简版写 PRD。",
+      "expected_output": "Skill should recommend the 5-chapter minimal version (chapters 2, 5, 6, 9, 13). Should be concise but cover essentials.",
+      "files": [],
+      "assertions": [
+        {"id": "uses-minimal-version", "description": "Outputs minimal 5-chapter version, not full 14-chapter"},
+        {"id": "still-has-acceptance", "description": "Even minimal version retains acceptance criteria (chapter 9)"},
+        {"id": "still-has-risks", "description": "Even minimal version retains open questions/risks (chapter 13)"},
+        {"id": "concise", "description": "Total PRD length appropriate for 1-week project (not over-engineered)"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "boundary-test-rejects-tech-detail",
+      "prompt": "帮我写一份 PRD：做一个网页端任务管理工具，用 React + TypeScript + PostgreSQL，部署在 Vercel 上，数据库用 Prisma ORM。",
+      "expected_output": "Skill should accept the request BUT clarify that technical stack details (React/TypeScript/PostgreSQL/Vercel/Prisma) will NOT be included in the PRD. It should explain the What/How boundary and offer to capture them in a separate TRD note instead.",
+      "files": [],
+      "assertions": [
+        {"id": "rejects-tech-stack", "description": "Final PRD does not mention React, TypeScript, PostgreSQL, Vercel, or Prisma as design decisions"},
+        {"id": "educates-on-boundary", "description": "Skill explains the What/How boundary to user, why tech stack belongs in TRD"},
+        {"id": "preserves-info", "description": "Skill offers to capture tech stack in a separate TRD or constraint section, doesn't just discard"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "edge-case-no-upstream-vague-idea",
+      "prompt": "我想做一个 app。",
+      "expected_output": "Skill must refuse to immediately write a PRD. Should engage in Socratic Q&A to surface: what kind of app, for whom, what problem, MVP scope, success criteria. Only after sufficient information is gathered should it produce PRD draft.",
+      "files": [],
+      "assertions": [
+        {"id": "refuses-blind-prd", "description": "Does not generate a PRD from a one-sentence vague idea"},
+        {"id": "asks-discovery-questions", "description": "Asks at least 5 discovery questions about user, problem, scope, success"},
+        {"id": "suggests-upstream-step", "description": "May suggest doing brainstorming/research first if idea is too raw"}
+      ]
+    }
+  ]
+}

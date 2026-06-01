@@ -1,0 +1,1118 @@
+{
+  "features": [
+    {
+      "id": "demo",
+      "name": "static:demo-app",
+      "kind": "BE"
+    }
+  ],
+  "nodes": [
+    {
+      "id": "py:server.py",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "server.py",
+      "provenance": {
+        "file": "server.py",
+        "line": 20
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "id": "mod:__future__",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "__future__",
+      "provenance": {
+        "file": "server.py",
+        "line": 20
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 20
+        }
+      ]
+    },
+    {
+      "id": "mod:threading",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "threading",
+      "provenance": {
+        "file": "server.py",
+        "line": 23
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 23
+        }
+      ]
+    },
+    {
+      "id": "mod:time",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "time",
+      "provenance": {
+        "file": "server.py",
+        "line": 24
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 24
+        }
+      ]
+    },
+    {
+      "id": "mod:http.server",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "http.server",
+      "provenance": {
+        "file": "server.py",
+        "line": 25
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 25
+        }
+      ]
+    },
+    {
+      "id": "mod:urllib.parse",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "urllib.parse",
+      "provenance": {
+        "file": "server.py",
+        "line": 26
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 26
+        }
+      ]
+    },
+    {
+      "id": "mod:tracer",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "tracer",
+      "provenance": {
+        "file": "server.py",
+        "line": 28
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 28
+        }
+      ]
+    },
+    {
+      "id": "mod:infra",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "infra",
+      "provenance": {
+        "file": "server.py",
+        "line": 29
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 29
+        }
+      ]
+    },
+    {
+      "id": "route:POST /api/place-order",
+      "feature": "demo",
+      "kind": "route",
+      "label": "POST /api/place-order",
+      "provenance": {
+        "file": "server.py",
+        "line": 58
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 58
+        },
+        {
+          "span": "cid-FULLCHAIN:component:order-page->route:POST /api/place-order"
+        }
+      ]
+    },
+    {
+      "id": "route:GET /api/deliveries",
+      "feature": "demo",
+      "kind": "route",
+      "label": "GET /api/deliveries",
+      "provenance": {
+        "file": "server.py",
+        "line": 70
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 70
+        }
+      ]
+    },
+    {
+      "id": "mod:argparse",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "argparse",
+      "provenance": {
+        "file": "server.py",
+        "line": 176
+      },
+      "provenance_all": [
+        {
+          "file": "server.py",
+          "line": 176
+        }
+      ]
+    },
+    {
+      "id": "py:infra.py",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "infra.py",
+      "provenance": {
+        "file": "infra.py",
+        "line": 10
+      },
+      "provenance_all": [
+        {
+          "file": "infra.py",
+          "line": 10
+        }
+      ]
+    },
+    {
+      "id": "mod:queue",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "queue",
+      "provenance": {
+        "file": "infra.py",
+        "line": 12
+      },
+      "provenance_all": [
+        {
+          "file": "infra.py",
+          "line": 12
+        }
+      ]
+    },
+    {
+      "id": "py:tracer.py",
+      "feature": "demo",
+      "kind": "handler",
+      "label": "tracer.py",
+      "provenance": {
+        "file": "tracer.py",
+        "line": 12
+      },
+      "provenance_all": [
+        {
+          "file": "tracer.py",
+          "line": 12
+        }
+      ]
+    },
+    {
+      "id": "component:order-page",
+      "feature": "A",
+      "kind": "component",
+      "label": "component:order-page",
+      "provenance": {
+        "span": "cid-FULLCHAIN:component:order-page->route:POST /api/place-order"
+      },
+      "provenance_all": [
+        {
+          "span": "cid-FULLCHAIN:component:order-page->route:POST /api/place-order"
+        }
+      ]
+    },
+    {
+      "id": "handler:place_order",
+      "feature": "B",
+      "kind": "handler",
+      "label": "handler:place_order",
+      "provenance": {
+        "span": "cid-FULLCHAIN:route:POST /api/place-order->handler:place_order"
+      },
+      "provenance_all": [
+        {
+          "span": "cid-FULLCHAIN:route:POST /api/place-order->handler:place_order"
+        }
+      ]
+    },
+    {
+      "id": "datastore:kv:demo",
+      "feature": "B",
+      "kind": "datastore",
+      "label": "datastore:kv:demo",
+      "provenance": {
+        "span": "cid-FULLCHAIN:handler:place_order->datastore:kv:demo"
+      },
+      "provenance_all": [
+        {
+          "span": "cid-FULLCHAIN:handler:place_order->datastore:kv:demo"
+        }
+      ]
+    },
+    {
+      "id": "queue:order-confirm",
+      "feature": "B",
+      "kind": "queue",
+      "label": "queue:order-confirm",
+      "provenance": {
+        "span": "cid-FULLCHAIN:handler:place_order->queue:order-confirm"
+      },
+      "provenance_all": [
+        {
+          "span": "cid-FULLCHAIN:handler:place_order->queue:order-confirm"
+        }
+      ]
+    },
+    {
+      "id": "worker:order-confirm",
+      "feature": "B",
+      "kind": "handler",
+      "label": "worker:order-confirm",
+      "provenance": {
+        "span": "cid-FULLCHAIN:queue:order-confirm->worker:order-confirm"
+      },
+      "provenance_all": [
+        {
+          "span": "cid-FULLCHAIN:queue:order-confirm->worker:order-confirm"
+        }
+      ]
+    },
+    {
+      "id": "job:order_sweep",
+      "feature": "C",
+      "kind": "job",
+      "label": "job:order_sweep",
+      "provenance": {
+        "span": "cid-FULLCHAIN:datastore:kv:demo->job:order_sweep"
+      },
+      "provenance_all": [
+        {
+          "span": "cid-FULLCHAIN:datastore:kv:demo->job:order_sweep"
+        }
+      ]
+    },
+    {
+      "id": "handler:notify",
+      "feature": "C",
+      "kind": "handler",
+      "label": "handler:notify",
+      "provenance": {
+        "span": "cid-FULLCHAIN:job:order_sweep->handler:notify"
+      },
+      "provenance_all": [
+        {
+          "span": "cid-FULLCHAIN:job:order_sweep->handler:notify"
+        }
+      ]
+    },
+    {
+      "id": "external:push-channel",
+      "feature": "C",
+      "kind": "external",
+      "label": "external:push-channel",
+      "provenance": {
+        "span": "cid-FULLCHAIN:handler:notify->external:push-channel"
+      },
+      "provenance_all": [
+        {
+          "span": "cid-FULLCHAIN:handler:notify->external:push-channel"
+        }
+      ]
+    }
+  ],
+  "edges": [
+    {
+      "id": "py:server.py--import-->mod:__future__",
+      "from": "py:server.py",
+      "to": "mod:__future__",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "server.py",
+        "line": 20
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "server.py",
+            "line": 20
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:server.py--import-->mod:threading",
+      "from": "py:server.py",
+      "to": "mod:threading",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "server.py",
+        "line": 23
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "server.py",
+            "line": 23
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:server.py--import-->mod:time",
+      "from": "py:server.py",
+      "to": "mod:time",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "server.py",
+        "line": 24
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "server.py",
+            "line": 24
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:server.py--import-->mod:http.server",
+      "from": "py:server.py",
+      "to": "mod:http.server",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "server.py",
+        "line": 25
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "server.py",
+            "line": 25
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:server.py--import-->mod:urllib.parse",
+      "from": "py:server.py",
+      "to": "mod:urllib.parse",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "server.py",
+        "line": 26
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "server.py",
+            "line": 26
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:server.py--import-->mod:tracer",
+      "from": "py:server.py",
+      "to": "mod:tracer",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "server.py",
+        "line": 28
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "server.py",
+            "line": 28
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:server.py--import-->mod:infra",
+      "from": "py:server.py",
+      "to": "mod:infra",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "server.py",
+        "line": 29
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "server.py",
+            "line": 29
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:server.py--import-->mod:argparse",
+      "from": "py:server.py",
+      "to": "mod:argparse",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "server.py",
+        "line": 176
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "server.py",
+            "line": 176
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:infra.py--import-->mod:__future__",
+      "from": "py:infra.py",
+      "to": "mod:__future__",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "infra.py",
+        "line": 10
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "infra.py",
+            "line": 10
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:infra.py--import-->mod:queue",
+      "from": "py:infra.py",
+      "to": "mod:queue",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "infra.py",
+        "line": 12
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "infra.py",
+            "line": 12
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:infra.py--import-->mod:threading",
+      "from": "py:infra.py",
+      "to": "mod:threading",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "infra.py",
+        "line": 13
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "infra.py",
+            "line": 13
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:infra.py--import-->mod:tracer",
+      "from": "py:infra.py",
+      "to": "mod:tracer",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "infra.py",
+        "line": 15
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "infra.py",
+            "line": 15
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:tracer.py--import-->mod:__future__",
+      "from": "py:tracer.py",
+      "to": "mod:__future__",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "tracer.py",
+        "line": 12
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "tracer.py",
+            "line": 12
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:tracer.py--import-->mod:threading",
+      "from": "py:tracer.py",
+      "to": "mod:threading",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "tracer.py",
+        "line": 16
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "tracer.py",
+            "line": 16
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "py:tracer.py--import-->mod:time",
+      "from": "py:tracer.py",
+      "to": "mod:time",
+      "type": "import",
+      "source": "code",
+      "status": "code-confirmed",
+      "provenance": {
+        "file": "tracer.py",
+        "line": 17
+      },
+      "feature_from": "demo",
+      "feature_to": null,
+      "notes": "",
+      "provenance_all": [
+        {
+          "source": "code",
+          "status": "code-confirmed",
+          "provenance": {
+            "file": "tracer.py",
+            "line": 17
+          },
+          "notes": ""
+        }
+      ]
+    },
+    {
+      "id": "component:order-page--http-->route:POST /api/place-order",
+      "from": "component:order-page",
+      "to": "route:POST /api/place-order",
+      "type": "http",
+      "source": "trace",
+      "status": "trace-confirmed",
+      "provenance": {
+        "span": "cid-FULLCHAIN:component:order-page->route:POST /api/place-order",
+        "event": {
+          "ts": 1779869109.990589,
+          "cid": "cid-FULLCHAIN",
+          "from": "component:order-page",
+          "to": "route:POST /api/place-order",
+          "edge_type": "http"
+        }
+      },
+      "feature_from": "A",
+      "feature_to": "B",
+      "notes": "observed at runtime cid=cid-FULLCHAIN",
+      "provenance_all": [
+        {
+          "source": "trace",
+          "status": "trace-confirmed",
+          "provenance": {
+            "span": "cid-FULLCHAIN:component:order-page->route:POST /api/place-order",
+            "event": {
+              "ts": 1779869109.990589,
+              "cid": "cid-FULLCHAIN",
+              "from": "component:order-page",
+              "to": "route:POST /api/place-order",
+              "edge_type": "http"
+            }
+          },
+          "notes": "observed at runtime cid=cid-FULLCHAIN"
+        }
+      ]
+    },
+    {
+      "id": "route:POST /api/place-order--call-->handler:place_order",
+      "from": "route:POST /api/place-order",
+      "to": "handler:place_order",
+      "type": "call",
+      "source": "trace",
+      "status": "trace-confirmed",
+      "provenance": {
+        "span": "cid-FULLCHAIN:route:POST /api/place-order->handler:place_order",
+        "event": {
+          "ts": 1779869109.990687,
+          "cid": "cid-FULLCHAIN",
+          "from": "route:POST /api/place-order",
+          "to": "handler:place_order",
+          "edge_type": "call"
+        }
+      },
+      "feature_from": "B",
+      "feature_to": "B",
+      "notes": "observed at runtime cid=cid-FULLCHAIN",
+      "provenance_all": [
+        {
+          "source": "trace",
+          "status": "trace-confirmed",
+          "provenance": {
+            "span": "cid-FULLCHAIN:route:POST /api/place-order->handler:place_order",
+            "event": {
+              "ts": 1779869109.990687,
+              "cid": "cid-FULLCHAIN",
+              "from": "route:POST /api/place-order",
+              "to": "handler:place_order",
+              "edge_type": "call"
+            }
+          },
+          "notes": "observed at runtime cid=cid-FULLCHAIN"
+        }
+      ]
+    },
+    {
+      "id": "handler:place_order--shared-key-->datastore:kv:demo",
+      "from": "handler:place_order",
+      "to": "datastore:kv:demo",
+      "type": "shared-key",
+      "source": "trace",
+      "status": "trace-confirmed",
+      "provenance": {
+        "span": "cid-FULLCHAIN:handler:place_order->datastore:kv:demo",
+        "event": {
+          "ts": 1779869109.990729,
+          "cid": "cid-FULLCHAIN",
+          "from": "handler:place_order",
+          "to": "datastore:kv:demo",
+          "edge_type": "shared-key"
+        }
+      },
+      "feature_from": "B",
+      "feature_to": "B",
+      "notes": "observed at runtime cid=cid-FULLCHAIN",
+      "provenance_all": [
+        {
+          "source": "trace",
+          "status": "trace-confirmed",
+          "provenance": {
+            "span": "cid-FULLCHAIN:handler:place_order->datastore:kv:demo",
+            "event": {
+              "ts": 1779869109.990729,
+              "cid": "cid-FULLCHAIN",
+              "from": "handler:place_order",
+              "to": "datastore:kv:demo",
+              "edge_type": "shared-key"
+            }
+          },
+          "notes": "observed at runtime cid=cid-FULLCHAIN"
+        }
+      ]
+    },
+    {
+      "id": "handler:place_order--async-->queue:order-confirm",
+      "from": "handler:place_order",
+      "to": "queue:order-confirm",
+      "type": "async",
+      "source": "trace",
+      "status": "trace-confirmed",
+      "provenance": {
+        "span": "cid-FULLCHAIN:handler:place_order->queue:order-confirm",
+        "event": {
+          "ts": 1779869109.990761,
+          "cid": "cid-FULLCHAIN",
+          "from": "handler:place_order",
+          "to": "queue:order-confirm",
+          "edge_type": "async"
+        }
+      },
+      "feature_from": "B",
+      "feature_to": "B",
+      "notes": "observed at runtime cid=cid-FULLCHAIN",
+      "provenance_all": [
+        {
+          "source": "trace",
+          "status": "trace-confirmed",
+          "provenance": {
+            "span": "cid-FULLCHAIN:handler:place_order->queue:order-confirm",
+            "event": {
+              "ts": 1779869109.990761,
+              "cid": "cid-FULLCHAIN",
+              "from": "handler:place_order",
+              "to": "queue:order-confirm",
+              "edge_type": "async"
+            }
+          },
+          "notes": "observed at runtime cid=cid-FULLCHAIN"
+        }
+      ]
+    },
+    {
+      "id": "queue:order-confirm--async-->worker:order-confirm",
+      "from": "queue:order-confirm",
+      "to": "worker:order-confirm",
+      "type": "async",
+      "source": "trace",
+      "status": "trace-confirmed",
+      "provenance": {
+        "span": "cid-FULLCHAIN:queue:order-confirm->worker:order-confirm",
+        "event": {
+          "ts": 1779869109.990923,
+          "cid": "cid-FULLCHAIN",
+          "from": "queue:order-confirm",
+          "to": "worker:order-confirm",
+          "edge_type": "async"
+        }
+      },
+      "feature_from": "B",
+      "feature_to": "B",
+      "notes": "observed at runtime cid=cid-FULLCHAIN",
+      "provenance_all": [
+        {
+          "source": "trace",
+          "status": "trace-confirmed",
+          "provenance": {
+            "span": "cid-FULLCHAIN:queue:order-confirm->worker:order-confirm",
+            "event": {
+              "ts": 1779869109.990923,
+              "cid": "cid-FULLCHAIN",
+              "from": "queue:order-confirm",
+              "to": "worker:order-confirm",
+              "edge_type": "async"
+            }
+          },
+          "notes": "observed at runtime cid=cid-FULLCHAIN"
+        }
+      ]
+    },
+    {
+      "id": "datastore:kv:demo--shared-key-->job:order_sweep",
+      "from": "datastore:kv:demo",
+      "to": "job:order_sweep",
+      "type": "shared-key",
+      "source": "trace",
+      "status": "trace-confirmed",
+      "provenance": {
+        "span": "cid-FULLCHAIN:datastore:kv:demo->job:order_sweep",
+        "event": {
+          "ts": 1779869110.296051,
+          "cid": "cid-FULLCHAIN",
+          "from": "datastore:kv:demo",
+          "to": "job:order_sweep",
+          "edge_type": "shared-key"
+        }
+      },
+      "feature_from": "B",
+      "feature_to": "C",
+      "notes": "observed at runtime cid=cid-FULLCHAIN",
+      "provenance_all": [
+        {
+          "source": "trace",
+          "status": "trace-confirmed",
+          "provenance": {
+            "span": "cid-FULLCHAIN:datastore:kv:demo->job:order_sweep",
+            "event": {
+              "ts": 1779869110.296051,
+              "cid": "cid-FULLCHAIN",
+              "from": "datastore:kv:demo",
+              "to": "job:order_sweep",
+              "edge_type": "shared-key"
+            }
+          },
+          "notes": "observed at runtime cid=cid-FULLCHAIN"
+        }
+      ]
+    },
+    {
+      "id": "job:order_sweep--call-->handler:notify",
+      "from": "job:order_sweep",
+      "to": "handler:notify",
+      "type": "call",
+      "source": "trace",
+      "status": "trace-confirmed",
+      "provenance": {
+        "span": "cid-FULLCHAIN:job:order_sweep->handler:notify",
+        "event": {
+          "ts": 1779869110.296253,
+          "cid": "cid-FULLCHAIN",
+          "from": "job:order_sweep",
+          "to": "handler:notify",
+          "edge_type": "call"
+        }
+      },
+      "feature_from": "C",
+      "feature_to": "C",
+      "notes": "observed at runtime cid=cid-FULLCHAIN",
+      "provenance_all": [
+        {
+          "source": "trace",
+          "status": "trace-confirmed",
+          "provenance": {
+            "span": "cid-FULLCHAIN:job:order_sweep->handler:notify",
+            "event": {
+              "ts": 1779869110.296253,
+              "cid": "cid-FULLCHAIN",
+              "from": "job:order_sweep",
+              "to": "handler:notify",
+              "edge_type": "call"
+            }
+          },
+          "notes": "observed at runtime cid=cid-FULLCHAIN"
+        }
+      ]
+    },
+    {
+      "id": "handler:notify--cross-channel-->external:push-channel",
+      "from": "handler:notify",
+      "to": "external:push-channel",
+      "type": "cross-channel",
+      "source": "trace",
+      "status": "trace-confirmed",
+      "provenance": {
+        "span": "cid-FULLCHAIN:handler:notify->external:push-channel",
+        "event": {
+          "ts": 1779869110.296317,
+          "cid": "cid-FULLCHAIN",
+          "from": "handler:notify",
+          "to": "external:push-channel",
+          "edge_type": "cross-channel"
+        }
+      },
+      "feature_from": "C",
+      "feature_to": "C",
+      "notes": "observed at runtime cid=cid-FULLCHAIN",
+      "provenance_all": [
+        {
+          "source": "trace",
+          "status": "trace-confirmed",
+          "provenance": {
+            "span": "cid-FULLCHAIN:handler:notify->external:push-channel",
+            "event": {
+              "ts": 1779869110.296317,
+              "cid": "cid-FULLCHAIN",
+              "from": "handler:notify",
+              "to": "external:push-channel",
+              "edge_type": "cross-channel"
+            }
+          },
+          "notes": "observed at runtime cid=cid-FULLCHAIN"
+        }
+      ]
+    }
+  ],
+  "journeys": [
+    {
+      "id": "J2",
+      "name": "component:order-page → … → external:push-channel",
+      "p_level": "P0",
+      "crosses_features": [
+        "A",
+        "B",
+        "C"
+      ],
+      "hop_types": [
+        "ui",
+        "http",
+        "call",
+        "shared-key",
+        "cross-channel"
+      ],
+      "edge_ids": [
+        "component:order-page--http-->route:POST /api/place-order",
+        "route:POST /api/place-order--call-->handler:place_order",
+        "handler:place_order--shared-key-->datastore:kv:demo",
+        "datastore:kv:demo--shared-key-->job:order_sweep",
+        "job:order_sweep--call-->handler:notify",
+        "handler:notify--cross-channel-->external:push-channel"
+      ],
+      "acs": [],
+      "p_reason": "P0 启发式命中: irreversible-delivery, money + cross-channel 不可撤销投递 — 需人确认 (heuristic, needs human confirm)"
+    },
+    {
+      "id": "J1",
+      "name": "component:order-page → … → worker:order-confirm",
+      "p_level": "P0",
+      "crosses_features": [
+        "A",
+        "B"
+      ],
+      "hop_types": [
+        "ui",
+        "http",
+        "call",
+        "async"
+      ],
+      "edge_ids": [
+        "component:order-page--http-->route:POST /api/place-order",
+        "route:POST /api/place-order--call-->handler:place_order",
+        "handler:place_order--async-->queue:order-confirm",
+        "queue:order-confirm--async-->worker:order-confirm"
+      ],
+      "acs": [],
+      "p_reason": "P0 启发式命中: money — 需人确认 (heuristic, needs human confirm)"
+    }
+  ],
+  "_meta": {
+    "knife": "knife4_merge",
+    "inputs": [
+      "/tmp/k2_demo.json",
+      "/tmp/k3_demo.json"
+    ],
+    "gaps_spec_only": [],
+    "counts": {
+      "edges": 23,
+      "candidate": 0,
+      "code_confirmed": 15,
+      "trace_confirmed": 8,
+      "journeys": 2,
+      "P0": 2
+    },
+    "validation": {
+      "ok": true,
+      "problems": []
+    }
+  }
+}

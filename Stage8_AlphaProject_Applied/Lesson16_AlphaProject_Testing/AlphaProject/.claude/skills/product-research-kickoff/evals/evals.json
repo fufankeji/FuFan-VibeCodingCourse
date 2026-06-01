@@ -1,0 +1,71 @@
+{
+  "skill_name": "product-research-kickoff",
+  "description": "Test cases for product-research-kickoff Skill — verifying Q&A extraction, 4-theme template filling, dual-track research spec, and parallel Task dispatch prompt generation.",
+  "evals": [
+    {
+      "id": 1,
+      "name": "data-heavy-project-china-market",
+      "prompt": "我想做个 7×24 帮我盯 A 股的 AI 助手，给程序员散户用。帮我做立项调研。",
+      "expected_output": "Skill should run 3-round Socratic Q&A extracting 6 skeleton variables, then fill all 4 themes (theme 2 uses data-type template), generate final prompt with dual-track spec + Task parallel dispatch + prd-writer handoff.",
+      "files": [],
+      "assertions": [
+        {"id": "socratic-qa-not-questionnaire", "description": "Asks 2-3 questions per round, not all 6 at once"},
+        {"id": "extracts-6-variables", "description": "Final draft references all 6 skeleton variables"},
+        {"id": "theme2-uses-data-template", "description": "Theme 2 uses data-type variant (coverage/frequency/compliance), not API or hardware"},
+        {"id": "dual-track-spec-included", "description": "Output prompt includes WebSearch + muyu-search-mcp dual-track section"},
+        {"id": "planning-gate-mentioned", "description": "muyu-search-mcp planning state machine constraint explicitly written"},
+        {"id": "source-tagging-included", "description": "[WebSearch] / [muyu] / [双路 ✅] / [单源 ⚠️] / [冲突 ⚠️] tag spec included"},
+        {"id": "task-parallel-instruction", "description": "Final prompt instructs using Task tool with 4 parallel calls in single message"},
+        {"id": "prd-writer-handoff", "description": "Output ends with handoff suggestion to prd-writer Skill"}
+      ]
+    },
+    {
+      "id": 2,
+      "name": "api-driven-saas-overseas",
+      "prompt": "我想做个海外市场的 AI 翻译 SaaS，集成多家翻译 API。帮我做立项调研。",
+      "expected_output": "Skill should extract 海外市场 + API-driven resource type. Theme 2 should use API-type template (vendor list / pricing / SLA / quota). Should note that dual-track偏重 reverses (WebSearch primary).",
+      "files": [],
+      "assertions": [
+        {"id": "market-detected-overseas", "description": "Target market identified as 海外 → WebSearch primary noted"},
+        {"id": "theme2-uses-api-template", "description": "Theme 2 uses API-type variant (price/SLA/quota), not data or hardware"},
+        {"id": "still-includes-muyu", "description": "Even for overseas market, muyu路 still included as cross-validation"}
+      ]
+    },
+    {
+      "id": 3,
+      "name": "vague-idea-rejection",
+      "prompt": "我想做个 app。",
+      "expected_output": "Skill must refuse to proceed to template filling. Should engage in Q&A. If user can't answer the first 2 questions concretely, suggest brainstorming first (this Skill is not the right stage).",
+      "files": [],
+      "assertions": [
+        {"id": "refuses-blind-research", "description": "Does not jump to generating research prompt from one-sentence vague idea"},
+        {"id": "asks-foundational-questions", "description": "Starts with project definition + target market questions"},
+        {"id": "suggests-brainstorming-if-stuck", "description": "If user has no answer, suggests brainstorming as upstream step"}
+      ]
+    },
+    {
+      "id": 4,
+      "name": "internal-tool-no-competitor",
+      "prompt": "我要给团队做个内部知识库工具，没有什么明确对标。帮我立项调研。",
+      "expected_output": "Skill should detect 'no competitor' as red flag for Theme 1. Should suggest replacing Theme 1 with 'user scenario research' (interview 3 target users) per 主题适用性判断 in 4-themes-template.md.",
+      "files": [],
+      "assertions": [
+        {"id": "detects-theme1-not-applicable", "description": "Identifies that theme 1 (product form) is not directly applicable"},
+        {"id": "offers-replacement", "description": "Suggests user scenario research or asks user before skipping"},
+        {"id": "confirms-with-user", "description": "Does not silently skip — confirms with user first"}
+      ]
+    },
+    {
+      "id": 5,
+      "name": "complete-flow-with-fill-in",
+      "prompt": "我想做个浏览器扩展，自动总结 GitHub 仓库 README 给我。中国市场，对标 GitHub Copilot 的 Summary 功能。依赖 LLM API。打算用开源 fork。模块：浏览器扩展前端 / 后端总结服务 / 缓存层 / 用户配置。",
+      "expected_output": "Skill should recognize user already provided most of 6 variables. Should ask 1-2 clarifying questions max, then proceed to template filling. Final output is a complete parallel research prompt.",
+      "files": [],
+      "assertions": [
+        {"id": "recognizes-pre-filled", "description": "Does not re-ask questions user already answered"},
+        {"id": "asks-only-gaps", "description": "Only asks remaining gaps (e.g. confirm 4 modules are correct count)"},
+        {"id": "produces-complete-prompt", "description": "Final output is complete copy-pasteable Task-dispatch prompt"}
+      ]
+    }
+  ]
+}

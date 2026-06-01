@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Alpha Monitor - Alert Logs</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary": "#ffb95f",
+                        "on-tertiary-fixed": "#311400",
+                        "on-primary-fixed": "#001a42",
+                        "bull": "#EF4444",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface-container-high": "#272a31",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-variant": "#32353c",
+                        "secondary-fixed": "#ffddb8",
+                        "tertiary-fixed": "#ffdcc6",
+                        "primary-container": "#4d8eff",
+                        "error": "#ffb4ab",
+                        "primary": "#adc6ff",
+                        "secondary-container": "#ee9800",
+                        "on-secondary": "#472a00",
+                        "inverse-primary": "#005ac2",
+                        "anomaly": "#FACC15",
+                        "on-error": "#690005",
+                        "background": "#10131a",
+                        "surface-card": "#18181B",
+                        "surface-container": "#1d2027",
+                        "surface-base": "#09090B",
+                        "surface-container-highest": "#32353c",
+                        "on-background": "#e1e2ec",
+                        "surface": "#10131a",
+                        "inverse-surface": "#e1e2ec",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-surface": "#e1e2ec",
+                        "surface-tint": "#adc6ff",
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#002e6a",
+                        "surface-bright": "#363941",
+                        "surface-border": "#27272A",
+                        "surface-container-low": "#191b23",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "inverse-on-surface": "#2e3038",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-container": "#00285d",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "on-secondary-container": "#5b3800",
+                        "breakthrough": "#6366F1",
+                        "bear": "#22C55E",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary": "#ffb786",
+                        "surface-container-lowest": "#0b0e15",
+                        "tertiary-container": "#df7412",
+                        "on-tertiary": "#502400",
+                        "surface-dim": "#10131a",
+                        "outline-variant": "#424754",
+                        "outline": "#8c909f"
+                    },
+                    borderRadius: {
+                        DEFAULT: "0.125rem",
+                        lg: "0.25rem",
+                        xl: "0.5rem",
+                        full: "0.75rem"
+                    },
+                    spacing: {
+                        "table-cell-py": "0.25rem",
+                        "grid-gutter": "0.75rem",
+                        "stack-gap": "0.5rem",
+                        "table-cell-px": "0.5rem",
+                        "container-margin": "1rem"
+                    },
+                    fontFamily: {
+                        "mono-label": ["JetBrains Mono"],
+                        "table-header": ["Inter"],
+                        "table-data": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "ai-commentary": ["Inter"],
+                        "display-price": ["Inter"],
+                        "caption": ["Inter"]
+                    },
+                    fontSize: {
+                        "mono-label": ["11px", { lineHeight: "12px", fontWeight: "500" }],
+                        "table-header": ["12px", { lineHeight: "16px", letterSpacing: "0.05em", fontWeight: "500" }],
+                        "table-data": ["13px", { lineHeight: "18px", fontWeight: "400" }],
+                        "headline-sm": ["16px", { lineHeight: "24px", fontWeight: "600" }],
+                        "ai-commentary": ["14px", { lineHeight: "20px", fontWeight: "400" }],
+                        "display-price": ["36px", { lineHeight: "40px", letterSpacing: "-0.02em", fontWeight: "700" }],
+                        "caption": ["11px", { lineHeight: "14px", fontWeight: "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #09090B; } /* Level 0 Base */
+        .glass-panel {
+            background: rgba(24, 24, 27, 0.7);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+</head>
+<body class="bg-surface-base text-on-background antialiased overflow-x-hidden">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-surface border-b border-surface-border dark:border-surface-border fixed top-0 left-0 w-full z-50 flex items-center justify-between px-grid-gutter h-12">
+<div class="flex items-center gap-4">
+<span class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary tracking-tight">ALPHA MONITOR</span>
+<nav class="hidden md:flex items-center gap-2 ml-4">
+<!-- Navigation Links - Inactive states based on JSON -->
+<a class="text-on-surface-variant dark:text-on-surface-variant font-table-header text-table-header px-2 py-1 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors rounded cursor-pointer active:opacity-80" href="#">Market Data</a>
+<a class="text-on-surface-variant dark:text-on-surface-variant font-table-header text-table-header px-2 py-1 hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors rounded cursor-pointer active:opacity-80" href="#">Strategy Builder</a>
+</nav>
+</div>
+<div class="flex items-center gap-2">
+<!-- Search Bar: on_left conceptually based on JSON, but placed in trailing area for balance in this layout -->
+<div class="relative hidden sm:block mr-2">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-on-surface-variant" style="font-size: 16px;">search</span>
+<input class="bg-surface-container text-on-surface font-table-data text-table-data border border-surface-border rounded pl-8 pr-2 py-1 text-sm focus:outline-none focus:border-primary w-48" placeholder="Search symbol or anomaly..." type="text"/>
+</div>
+<!-- Trailing Icons -->
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-surface-container-high dark:hover:bg-surface-container-high cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="text-on-surface-variant hover:text-primary transition-colors p-1 rounded hover:bg-surface-container-high dark:hover:bg-surface-container-high cursor-pointer active:opacity-80">
+<span class="material-symbols-outlined">account_circle</span>
+</button>
+</div>
+</header>
+<!-- SideNavBar -->
+<aside class="bg-surface-container-low dark:bg-surface-container-low border-r border-surface-border dark:border-surface-border fixed left-0 top-12 h-[calc(100vh-3rem)] flex flex-col z-40 w-64 hidden md:flex transition-all duration-150 ease-in-out">
+<div class="p-grid-gutter border-b border-surface-border mb-2">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded bg-primary/20 flex items-center justify-center text-primary font-bold border border-primary/30">SO</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-on-surface dark:text-on-surface">Alpha Terminal</h2>
+<p class="font-caption text-caption text-on-surface-variant">Market Engine v2.4</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 flex flex-col gap-1 px-2">
+<!-- Tab: Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined" style="font-size: 18px;">dashboard</span>
+                Dashboard
+            </a>
+<!-- Tab: Morning Report -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined" style="font-size: 18px;">description</span>
+                Morning Report
+            </a>
+<!-- Tab: Alert Logs (ACTIVE) -->
+<a class="flex items-center gap-3 px-3 py-2 rounded bg-surface-container-highest dark:bg-surface-container-highest text-primary dark:text-primary border-l-4 border-primary transition-colors cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined" data-weight="fill" style="font-size: 18px;">notifications_active</span>
+                Alert Logs
+            </a>
+<!-- Tab: Settings -->
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined" style="font-size: 18px;">settings</span>
+                Settings
+            </a>
+</nav>
+<div class="p-2 border-t border-surface-border mt-auto flex flex-col gap-1">
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined" style="font-size: 18px;">help</span>
+                Support
+            </a>
+<a class="flex items-center gap-3 px-3 py-2 rounded text-on-surface-variant hover:bg-surface-container-high transition-colors font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined" style="font-size: 18px;">logout</span>
+                Sign Out
+            </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="md:ml-64 pt-12 min-h-screen p-container-margin">
+<!-- Header & Action -->
+<div class="flex flex-col md:flex-row md:items-center justify-between mb-6 gap-4">
+<div>
+<a class="inline-flex items-center gap-1 text-on-surface-variant hover:text-primary font-caption text-caption mb-2 transition-colors" href="#">
+<span class="material-symbols-outlined" style="font-size: 14px;">arrow_back</span>
+                    Back to Dashboard
+                </a>
+<h1 class="font-headline-sm text-headline-sm text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">history</span>
+                    System Alert History
+                </h1>
+</div>
+<!-- Filters -->
+<div class="flex flex-wrap items-center gap-2 glass-panel p-2 rounded border border-surface-border">
+<div class="flex items-center bg-surface-container rounded px-2 border border-surface-border focus-within:border-primary">
+<span class="material-symbols-outlined text-on-surface-variant" style="font-size: 14px;">filter_alt</span>
+<input class="bg-transparent border-none focus:ring-0 text-on-surface font-mono-label text-mono-label w-32 py-1 px-2 h-7 placeholder-outline" placeholder="Filter by Symbol..." type="text"/>
+</div>
+<select class="bg-surface-container text-on-surface font-mono-label text-mono-label border border-surface-border rounded h-7 py-0 px-2 focus:ring-primary focus:border-primary">
+<option>All Types</option>
+<option>Price Breakout</option>
+<option>Volume Anomaly</option>
+<option>AI Insight</option>
+</select>
+<select class="bg-surface-container text-on-surface font-mono-label text-mono-label border border-surface-border rounded h-7 py-0 px-2 focus:ring-primary focus:border-primary">
+<option>Last 24 Hours</option>
+<option>Last 7 Days</option>
+<option>Last 30 Days</option>
+</select>
+</div>
+</div>
+<!-- Vertical Timeline Grid -->
+<div class="max-w-4xl mx-auto">
+<div class="relative border-l border-surface-border ml-2 md:ml-4 space-y-8 pb-12">
+<!-- Alert Node 1: High Priority Breakout -->
+<div class="relative pl-6 md:pl-8 group">
+<!-- Timeline Dot -->
+<div class="absolute -left-[5px] top-4 w-2.5 h-2.5 rounded-full bg-anomaly shadow-[0_0_8px_rgba(250,204,21,0.6)]"></div>
+<!-- Timestamp -->
+<div class="font-mono-label text-mono-label text-on-surface-variant mb-2 pl-1 flex items-center gap-2">
+                        10:42:15 AM
+                        <span class="bg-surface-container-high px-1.5 py-0.5 rounded text-[9px] uppercase tracking-wider text-outline">Real-time</span>
+</div>
+<!-- Alert Card Level 1 -->
+<div class="bg-surface-card border border-surface-border rounded-lg p-4 hover:border-surface-variant transition-colors shadow-sm">
+<!-- Card Header: Stock Info & Trigger -->
+<div class="flex justify-between items-start mb-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container rounded flex items-center justify-center font-mono-label text-mono-label text-on-surface border border-surface-border">NVDA</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-mono-label text-mono-label text-primary">NVIDIA CORP</h3>
+<span class="bg-anomaly/20 text-anomaly border border-anomaly/30 px-1.5 py-0.5 rounded font-mono-label text-[10px] flex items-center gap-1">
+<span class="material-symbols-outlined" style="font-size: 10px;">bolt</span>
+                                            VOLATILITY SPIKE
+                                        </span>
+</div>
+<div class="font-table-data text-table-data text-on-surface-variant mt-0.5">Trigger: +4.2% within 5m window</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-mono-label text-mono-label text-on-surface mb-0.5">PRICE AT ALERT</div>
+<div class="font-headline-sm text-headline-sm text-bull flex items-center justify-end gap-1">
+                                    $892.45 <span class="material-symbols-outlined text-bull" style="font-size: 16px;">trending_up</span>
+</div>
+</div>
+</div>
+<!-- AI Insight Block (F3) -->
+<div class="bg-surface-container-low rounded border border-breakthrough/20 p-3 relative overflow-hidden">
+<!-- Subtle Background Glow -->
+<div class="absolute -top-10 -right-10 w-32 h-32 bg-breakthrough/10 rounded-full blur-3xl pointer-events-none"></div>
+<div class="flex items-center gap-2 mb-2 text-breakthrough">
+<span class="material-symbols-outlined" style="font-size: 16px;">auto_awesome</span>
+<span class="font-table-header text-table-header text-on-surface">LLM Market Analysis</span>
+</div>
+<div class="font-ai-commentary text-ai-commentary text-inverse-surface/90 leading-relaxed max-w-3xl space-y-2 mb-3">
+<p><strong>Context:</strong> Uncharacteristic volume surge detected ahead of upcoming developer conference. Options flow indicates aggressive call buying at the $950 strike expiring this Friday.</p>
+<p><strong>Synthesis:</strong> Historical correlation models suggest a 78% probability of sustained momentum through the afternoon session. Market makers appear poorly positioned for this rapid price appreciation, potentially exacerbating the upward move via delta hedging.</p>
+</div>
+<!-- Required Disclaimer -->
+<div class="border-t border-surface-border/50 pt-2 mt-2">
+<p class="font-caption text-caption text-outline">以上为信息整理，不构成投资建议 (Machine generated summary. Not financial advice.)</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Alert Node 2: Standard Alert -->
+<div class="relative pl-6 md:pl-8 group">
+<div class="absolute -left-[5px] top-4 w-2.5 h-2.5 rounded-full bg-surface-border border-2 border-surface-base"></div>
+<div class="font-mono-label text-mono-label text-on-surface-variant mb-2 pl-1">
+                        09:15:00 AM
+                    </div>
+<div class="bg-surface-card border border-surface-border rounded-lg p-4 opacity-80 hover:opacity-100 transition-opacity">
+<div class="flex justify-between items-start mb-3">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 bg-surface-container rounded flex items-center justify-center font-mono-label text-mono-label text-on-surface border border-surface-border">AAPL</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="font-mono-label text-mono-label text-on-surface">APPLE INC</h3>
+<span class="bg-surface-bright text-on-surface-variant border border-surface-border px-1.5 py-0.5 rounded font-mono-label text-[10px]">
+                                            SUPPORT TEST
+                                        </span>
+</div>
+<div class="font-table-data text-table-data text-on-surface-variant mt-0.5">Testing 50-day SMA</div>
+</div>
+</div>
+<div class="text-right">
+<div class="font-mono-label text-mono-label text-on-surface mb-0.5">PRICE AT ALERT</div>
+<div class="font-headline-sm text-headline-sm text-bear flex items-center justify-end gap-1">
+                                    $173.20 <span class="material-symbols-outlined text-bear" style="font-size: 16px;">trending_down</span>
+</div>
+</div>
+</div>
+<!-- Mini AI Summary for standard alert -->
+<div class="border-l-2 border-surface-border pl-3 mt-2">
+<p class="font-ai-commentary text-ai-commentary text-outline text-sm">Routine technical level breached. Volume remains within standard deviation. No immediate catalyst identified in news wire scan.</p>
+</div>
+</div>
+</div>
+</div>
+<!-- Load More -->
+<div class="flex justify-center mt-6">
+<button class="bg-surface-container hover:bg-surface-container-high border border-surface-border text-on-surface-variant font-mono-label text-mono-label py-2 px-6 rounded transition-colors flex items-center gap-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">refresh</span>
+                    Load Historical Data
+                </button>
+</div>
+</div>
+</main>
+</body></html>

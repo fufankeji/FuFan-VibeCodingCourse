@@ -1,0 +1,38 @@
+<!-- SPDX-License-Identifier: MIT -->
+<!-- Copyright (c) 2026 path-inventory toolkit authors. -->
+<!-- feature A (FE): one page, one button that calls feature B's endpoint over HTTP. -->
+<!doctype html>
+<html lang="zh">
+<head>
+  <meta charset="utf-8" />
+  <title>demo · feature A</title>
+  <style>
+    body { font-family: system-ui, sans-serif; max-width: 640px; margin: 40px auto; }
+    button { padding: 10px 18px; font-size: 15px; cursor: pointer; }
+    pre { background: #111; color: #6f6; padding: 12px; border-radius: 6px; }
+  </style>
+</head>
+<body>
+  <h1>feature A — 下单页</h1>
+  <p>点按钮 → 调 feature B 的 <code>/api/place-order</code>（FE→BE HTTP）。</p>
+  <button id="place">下单 (place order)</button>
+  <pre id="out">// 结果会显示在这里</pre>
+
+  <script>
+    // correlation id threads the whole journey so the tracer can stitch the hops.
+    function cid() { return "cid-" + Date.now() + "-" + Math.floor(Math.random()*1e4); }
+    const out = document.getElementById("out");
+    document.getElementById("place").addEventListener("click", async () => {
+      const c = cid();
+      const order_id = "o-" + Math.floor(Math.random()*1e6);
+      // feature A -> feature B over HTTP (bare fetch: knife2 can confirm this one)
+      const res = await fetch("/api/place-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "X-Correlation-Id": c },
+        body: JSON.stringify({ order_id })
+      });
+      out.textContent = JSON.stringify(await res.json(), null, 2);
+    });
+  </script>
+</body>
+</html>

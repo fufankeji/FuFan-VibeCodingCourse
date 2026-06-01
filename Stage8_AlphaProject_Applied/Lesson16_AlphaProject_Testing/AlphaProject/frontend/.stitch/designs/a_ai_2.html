@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Morning Report - Alpha Terminal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@500&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-secondary-fixed": "#2a1700",
+                        "secondary": "#ffb95f",
+                        "on-tertiary-fixed": "#311400",
+                        "on-primary-fixed": "#001a42",
+                        "bull": "#EF4444",
+                        "secondary-fixed-dim": "#ffb95f",
+                        "primary-fixed-dim": "#adc6ff",
+                        "surface-container-high": "#272a31",
+                        "on-primary-fixed-variant": "#004395",
+                        "surface-variant": "#32353c",
+                        "secondary-fixed": "#ffddb8",
+                        "tertiary-fixed": "#ffdcc6",
+                        "primary-container": "#4d8eff",
+                        "error": "#ffb4ab",
+                        "primary": "#adc6ff",
+                        "secondary-container": "#ee9800",
+                        "on-secondary": "#472a00",
+                        "inverse-primary": "#005ac2",
+                        "anomaly": "#FACC15",
+                        "on-error": "#690005",
+                        "background": "#10131a",
+                        "surface-card": "#18181B",
+                        "surface-container": "#1d2027",
+                        "surface-base": "#09090B",
+                        "surface-container-highest": "#32353c",
+                        "on-background": "#e1e2ec",
+                        "surface": "#10131a",
+                        "inverse-surface": "#e1e2ec",
+                        "on-surface-variant": "#c2c6d6",
+                        "on-surface": "#e1e2ec",
+                        "surface-tint": "#adc6ff",
+                        "on-error-container": "#ffdad6",
+                        "on-primary": "#002e6a",
+                        "surface-bright": "#363941",
+                        "surface-border": "#27272A",
+                        "surface-container-low": "#191b23",
+                        "tertiary-fixed-dim": "#ffb786",
+                        "inverse-on-surface": "#2e3038",
+                        "on-tertiary-container": "#461f00",
+                        "on-primary-container": "#00285d",
+                        "error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#723600",
+                        "on-secondary-container": "#5b3800",
+                        "breakthrough": "#6366F1",
+                        "bear": "#22C55E",
+                        "on-secondary-fixed-variant": "#653e00",
+                        "primary-fixed": "#d8e2ff",
+                        "tertiary": "#ffb786",
+                        "surface-container-lowest": "#0b0e15",
+                        "tertiary-container": "#df7412",
+                        "on-tertiary": "#502400",
+                        "surface-dim": "#10131a",
+                        "outline-variant": "#424754",
+                        "outline": "#8c909f"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "table-cell-py": "0.25rem",
+                        "grid-gutter": "0.75rem",
+                        "stack-gap": "0.5rem",
+                        "table-cell-px": "0.5rem",
+                        "container-margin": "1rem"
+                    },
+                    "fontFamily": {
+                        "mono-label": ["JetBrains Mono"],
+                        "table-header": ["Inter"],
+                        "table-data": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "ai-commentary": ["Inter"],
+                        "display-price": ["Inter"],
+                        "caption": ["Inter"]
+                    },
+                    "fontSize": {
+                        "mono-label": ["11px", { "lineHeight": "12px", "fontWeight": "500" }],
+                        "table-header": ["12px", { "lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "500" }],
+                        "table-data": ["13px", { "lineHeight": "18px", "fontWeight": "400" }],
+                        "headline-sm": ["16px", { "lineHeight": "24px", "fontWeight": "600" }],
+                        "ai-commentary": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+                        "display-price": ["36px", { "lineHeight": "40px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "caption": ["11px", { "lineHeight": "14px", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        body { background-color: #09090B; color: #e1e2ec; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+        .material-symbols-outlined.fill { font-variation-settings: 'FILL' 1; }
+        /* Scrollbar styling for a cleaner look */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #27272A; border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: #424754; }
+    </style>
+</head>
+<body class="bg-surface-base font-table-data text-table-data text-on-surface antialiased">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-grid-gutter h-12 bg-surface dark:bg-surface border-b border-surface-border dark:border-surface-border">
+<div class="flex items-center gap-6">
+<div class="font-headline-sm text-headline-sm font-bold text-primary dark:text-primary tracking-tight">ALPHA MONITOR</div>
+<div class="hidden md:flex gap-4">
+<a class="font-headline-sm text-headline-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors px-2 py-1 cursor-pointer active:opacity-80" href="#">Market Data</a>
+<a class="font-headline-sm text-headline-sm text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high transition-colors px-2 py-1 cursor-pointer active:opacity-80" href="#">Strategy Builder</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">account_circle</span>
+</div>
+</nav>
+<!-- SideNavBar -->
+<aside class="hidden md:flex flex-col fixed left-0 top-12 h-[calc(100vh-3rem)] w-64 z-40 bg-surface-container-low dark:bg-surface-container-low border-r border-surface-border dark:border-surface-border transition-all duration-150 ease-in-out">
+<div class="p-4 border-b border-surface-border">
+<div class="font-headline-sm text-headline-sm text-on-surface dark:text-on-surface mb-1">Alpha Terminal</div>
+<div class="font-mono-label text-mono-label text-on-surface-variant">Market Engine v2.4</div>
+</div>
+<div class="flex-1 overflow-y-auto py-2">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 bg-surface-container-highest dark:bg-surface-container-highest text-primary dark:text-primary border-l-4 border-primary cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined fill">description</span>
+<span>Morning Report</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined">notifications_active</span>
+<span>Alert Logs</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+</div>
+<div class="p-2 border-t border-surface-border">
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined">help</span>
+<span>Support</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-on-surface-variant dark:text-on-surface-variant hover:bg-surface-container-high dark:hover:bg-surface-container-high cursor-pointer font-mono-label text-mono-label" href="#">
+<span class="material-symbols-outlined">logout</span>
+<span>Sign Out</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="pt-12 md:pl-64 h-screen flex flex-col md:flex-row overflow-hidden">
+<!-- Left: Archive List (30 days) -->
+<section class="w-full md:w-80 flex-shrink-0 border-r border-surface-border bg-surface flex flex-col h-full overflow-hidden hidden md:flex">
+<div class="p-4 border-b border-surface-border bg-surface-card sticky top-0 z-10">
+<h2 class="font-headline-sm text-headline-sm text-on-surface mb-2">Archive</h2>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-2 top-1/2 -translate-y-1/2 text-outline text-[18px]">search</span>
+<input class="w-full bg-surface-container border border-surface-border rounded pl-8 pr-3 py-1.5 font-table-data text-table-data text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors" placeholder="Search reports..." type="text"/>
+</div>
+</div>
+<div class="flex-1 overflow-y-auto p-2 space-y-1">
+<!-- Active Item -->
+<div class="p-3 bg-surface-container-highest border border-surface-border rounded cursor-pointer group">
+<div class="flex justify-between items-start mb-1">
+<span class="font-table-header text-table-header text-primary">Today</span>
+<span class="font-mono-label text-mono-label text-on-surface-variant">Oct 24</span>
+</div>
+<div class="font-caption text-caption text-on-surface-variant truncate">Pre-market tech rally analysis...</div>
+</div>
+<!-- Inactive Items -->
+<div class="p-3 hover:bg-surface-container-high rounded cursor-pointer group border border-transparent hover:border-surface-border transition-colors">
+<div class="flex justify-between items-start mb-1">
+<span class="font-table-header text-table-header text-on-surface group-hover:text-primary transition-colors">Yesterday</span>
+<span class="font-mono-label text-mono-label text-outline">Oct 23</span>
+</div>
+<div class="font-caption text-caption text-outline truncate">Fed commentary breakdown &amp; impacts...</div>
+</div>
+<div class="p-3 hover:bg-surface-container-high rounded cursor-pointer group border border-transparent hover:border-surface-border transition-colors">
+<div class="flex justify-between items-start mb-1">
+<span class="font-table-header text-table-header text-on-surface group-hover:text-primary transition-colors">Monday</span>
+<span class="font-mono-label text-mono-label text-outline">Oct 21</span>
+</div>
+<div class="font-caption text-caption text-outline truncate">Weekly open volatility check...</div>
+</div>
+<!-- ... more items generated via JS in a real app ... -->
+<div class="p-3 hover:bg-surface-container-high rounded cursor-pointer group border border-transparent hover:border-surface-border transition-colors">
+<div class="flex justify-between items-start mb-1">
+<span class="font-table-header text-table-header text-on-surface group-hover:text-primary transition-colors">Last Friday</span>
+<span class="font-mono-label text-mono-label text-outline">Oct 18</span>
+</div>
+<div class="font-caption text-caption text-outline truncate">Options expiration recap...</div>
+</div>
+</div>
+</section>
+<!-- Right: Active Report Content -->
+<section class="flex-1 h-full overflow-y-auto bg-surface-base p-4 md:p-8">
+<div class="max-w-4xl mx-auto space-y-6">
+<!-- Report Header -->
+<header class="mb-8">
+<div class="flex items-center gap-2 mb-2">
+<span class="bg-primary/10 text-primary px-2 py-0.5 rounded font-mono-label text-mono-label border border-primary/20">LIVE REPORT</span>
+<span class="font-mono-label text-mono-label text-outline">Generated: 08:15 AM EST</span>
+</div>
+<h1 class="font-display-price text-display-price text-on-surface mb-2">Morning Brief: Oct 24</h1>
+<p class="font-ai-commentary text-ai-commentary text-on-surface-variant max-w-2xl">AI-synthesized pre-market overview combining global index performance, watchlist sentiment, and critical overnight news catalysts.</p>
+</header>
+<!-- 1. Market Overview -->
+<div class="bg-surface-card border border-surface-border rounded-lg overflow-hidden">
+<div class="px-4 py-3 border-b border-surface-border bg-surface-container-low flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">public</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Global Market Overview</h2>
+</div>
+<div class="p-4 grid grid-cols-1 md:grid-cols-3 gap-4">
+<div class="p-3 bg-surface rounded border border-surface-border flex justify-between items-center">
+<div>
+<div class="font-mono-label text-mono-label text-outline mb-1">S&amp;P 500 (F)</div>
+<div class="font-table-header text-table-header text-on-surface">4,285.50</div>
+</div>
+<div class="text-bull font-mono-label text-mono-label bg-bull/10 px-1.5 py-0.5 rounded">+0.45%</div>
+</div>
+<div class="p-3 bg-surface rounded border border-surface-border flex justify-between items-center">
+<div>
+<div class="font-mono-label text-mono-label text-outline mb-1">CSI 300 (Close)</div>
+<div class="font-table-header text-table-header text-on-surface">3,542.10</div>
+</div>
+<div class="text-bear font-mono-label text-mono-label bg-bear/10 px-1.5 py-0.5 rounded">-1.20%</div>
+</div>
+<div class="p-3 bg-surface rounded border border-surface-border flex justify-between items-center">
+<div>
+<div class="font-mono-label text-mono-label text-outline mb-1">VIX</div>
+<div class="font-table-header text-table-header text-on-surface">18.40</div>
+</div>
+<div class="text-bear font-mono-label text-mono-label bg-bear/10 px-1.5 py-0.5 rounded">-2.10%</div>
+</div>
+</div>
+<div class="px-4 pb-4 font-ai-commentary text-ai-commentary text-on-surface-variant">
+<p class="mb-2">Asian markets closed mixed with A-shares seeing late-session selling pressure amid renewed property sector concerns. European indices opened higher, tracking positive US futures.</p>
+<p>Expectations for the US open point to a mild gap up, largely driven by tech sector strength following favorable overnight earnings whispers.</p>
+</div>
+</div>
+<!-- 2. Watchlist Insight -->
+<div class="bg-surface-card border border-surface-border rounded-lg overflow-hidden relative">
+<!-- AI Glow Effect -->
+<div class="absolute inset-0 border-l-2 border-breakthrough pointer-events-none"></div>
+<div class="px-4 py-3 border-b border-surface-border bg-surface-container-low flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-breakthrough text-[20px]">smart_toy</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Watchlist AI Insight</h2>
+</div>
+<span class="font-mono-label text-mono-label text-outline">Top 3 Anomalies</span>
+</div>
+<div class="divide-y divide-surface-border">
+<div class="p-4 flex flex-col md:flex-row gap-4 items-start md:items-center">
+<div class="w-24 shrink-0">
+<span class="font-table-header text-table-header text-on-surface bg-surface-container px-2 py-1 rounded border border-surface-border">NVDA</span>
+</div>
+<div class="flex-1 font-ai-commentary text-ai-commentary text-on-surface-variant">
+                                Unusually high pre-market options flow detected leaning heavily bullish. <span class="text-on-surface font-medium">Likely related to unconfirmed supply chain reports.</span>
+</div>
+</div>
+<div class="p-4 flex flex-col md:flex-row gap-4 items-start md:items-center">
+<div class="w-24 shrink-0">
+<span class="font-table-header text-table-header text-on-surface bg-surface-container px-2 py-1 rounded border border-surface-border">TSLA</span>
+</div>
+<div class="flex-1 font-ai-commentary text-ai-commentary text-on-surface-variant">
+                                Sentiment score dropped 15% overnight following negative European sales data leak. Watch for technical support break at $210.
+                            </div>
+</div>
+<div class="p-4 flex flex-col md:flex-row gap-4 items-start md:items-center">
+<div class="w-24 shrink-0">
+<span class="font-table-header text-table-header text-on-surface bg-surface-container px-2 py-1 rounded border border-surface-border">AAPL</span>
+</div>
+<div class="flex-1 font-ai-commentary text-ai-commentary text-on-surface-variant">
+                                Quiet pre-market volume. AI models suggest maintaining current allocation pending upcoming product announcement later this week.
+                            </div>
+</div>
+</div>
+</div>
+<!-- 3 & 4 Grid: News & Calendar -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- 3. CLS News -->
+<div class="bg-surface-card border border-surface-border rounded-lg overflow-hidden">
+<div class="px-4 py-3 border-b border-surface-border bg-surface-container-low flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-[20px]">newspaper</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Overnight Catalysts</h2>
+</div>
+<ul class="divide-y divide-surface-border">
+<li class="p-3 hover:bg-surface-container-low transition-colors">
+<div class="font-caption text-caption text-outline mb-1">02:30 AM • Reuters</div>
+<div class="font-table-data text-table-data text-on-surface">ECB signals potential pause in rate hikes at next meeting.</div>
+</li>
+<li class="p-3 hover:bg-surface-container-low transition-colors">
+<div class="font-caption text-caption text-outline mb-1">11:45 PM • Bloomberg</div>
+<div class="font-table-data text-table-data text-on-surface">Tech consortium announces new AI chip standard.</div>
+</li>
+<li class="p-3 hover:bg-surface-container-low transition-colors">
+<div class="font-caption text-caption text-outline mb-1">10:20 PM • CLS</div>
+<div class="font-table-data text-table-data text-on-surface">PBOC injects 50B CNY via reverse repos to maintain liquidity.</div>
+</li>
+</ul>
+</div>
+<!-- 4. Today's Calendar -->
+<div class="bg-surface-card border border-surface-border rounded-lg overflow-hidden">
+<div class="px-4 py-3 border-b border-surface-border bg-surface-container-low flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-[20px]">calendar_month</span>
+<h2 class="font-headline-sm text-headline-sm text-on-surface">Today's Docket</h2>
+</div>
+<div class="p-4 space-y-4">
+<div>
+<div class="font-mono-label text-mono-label text-outline mb-2 uppercase tracking-wider">Earnings (Pre-Market)</div>
+<div class="flex gap-2">
+<span class="font-caption text-caption text-on-surface bg-surface-container px-2 py-1 rounded border border-surface-border">JPM</span>
+<span class="font-caption text-caption text-on-surface bg-surface-container px-2 py-1 rounded border border-surface-border">WFC</span>
+<span class="font-caption text-caption text-on-surface bg-surface-container px-2 py-1 rounded border border-surface-border">C</span>
+</div>
+</div>
+<div>
+<div class="font-mono-label text-mono-label text-outline mb-2 uppercase tracking-wider">Macro Data</div>
+<div class="space-y-2">
+<div class="flex justify-between items-center text-sm">
+<span class="font-table-data text-table-data text-on-surface">Initial Jobless Claims</span>
+<span class="font-mono-label text-mono-label text-outline">08:30 AM</span>
+</div>
+<div class="flex justify-between items-center text-sm">
+<span class="font-table-data text-table-data text-on-surface">Existing Home Sales</span>
+<span class="font-mono-label text-mono-label text-outline">10:00 AM</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer Disclaimer -->
+<footer class="mt-8 pt-6 border-t border-surface-border text-center pb-8">
+<p class="font-caption text-caption text-outline max-w-3xl mx-auto">
+                        Disclaimer: This report is partially generated by AI models analyzing market data and news. It is intended for informational purposes only and does not constitute financial advice. Always perform independent verification before executing trades. System limits apply.
+                    </p>
+</footer>
+</div>
+</section>
+</main>
+</body></html>

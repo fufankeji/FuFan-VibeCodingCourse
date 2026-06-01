@@ -1,0 +1,66 @@
+# ─────────────────────────────────────────────
+# 凭证（与 .worktreeinclude 对齐，禁止入 git）
+# ─────────────────────────────────────────────
+.env
+.env.local
+.env.development
+.credentials.yaml
+
+# MCP config 含 API Key
+.mcp.json
+
+# ─────────────────────────────────────────────
+# Python
+# ─────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+.pytest_cache/
+.coverage
+.coverage.*
+htmlcov/
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+
+# ─────────────────────────────────────────────
+# Node / Vite / Frontend
+# ─────────────────────────────────────────────
+node_modules/
+dist/
+dist-ssr/
+build/
+*.local
+.vite/
+.turbo/
+
+# ─────────────────────────────────────────────
+# IDE / OS
+# ─────────────────────────────────────────────
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# ─────────────────────────────────────────────
+# Git worktrees（Superpowers using-git-worktrees fallback）
+# ─────────────────────────────────────────────
+.worktrees/
+
+# ─────────────────────────────────────────────
+# 运行时产物
+# ─────────────────────────────────────────────
+backend/data/
+*.db
+*.db-journal
+*.sqlite
+*.sqlite3
+logs/
+*.log

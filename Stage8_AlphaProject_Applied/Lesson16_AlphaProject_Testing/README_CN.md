@@ -28,9 +28,18 @@ AlphaProject 综合项目实战收官讲。中篇把平台端到端搭起来后�
 - **分层测试**：`backend-testing`、`frontend-testing`、`fullstack-slice-testing`、`full-chain-testing`
 - **特性工作流**：`run-feature`
 
-## 实战项目
+## 项目产出 —— [`AlphaProject/`](./AlphaProject/)
 
-*（直播完成后添加 —— 含测试的最终平台快照）*
+AlphaProject 最终快照 —— 6 大功能由 Claude Code 全程端到端构建的后端、前端、测试全部就位。
+
+- **[`backend/`](./AlphaProject/backend/)**：Python 服务 —— `app/`（FastAPI 应用）、`tests/`（覆盖异动检测、调度器、模型、API 的大量 pytest 用例）、`pyproject.toml`、`uv.lock`
+- **[`frontend/`](./AlphaProject/frontend/)**：Vite + TypeScript 应用 —— `src/`、`vite.config.ts`、`vitest.setup.ts`、pnpm/npm 锁文件
+- **[`specs/001-watchlist-crud/`](./AlphaProject/specs/001-watchlist-crud/) → [`006-morning-briefing/`](./AlphaProject/specs/006-morning-briefing/)**：从中篇延续的 6 个功能包（spec / plan / tasks）
+- **[`.specify/`](./AlphaProject/.specify/)**：Spec-Kit 安装目录（memory、workflows、templates、scripts）
+- **[`.claude/skills/`](./AlphaProject/.claude/skills/)**：三讲贯穿的完整技能集 —— 调研、PRD、架构、设计注入、Spec-Kit 全家桶、测试分层
+- **[`docs/screenshots/`](./AlphaProject/docs/screenshots/)** + **[`scripts/`](./AlphaProject/scripts/)**：项目文档资料与辅助脚本
+- **`.mcp.json`**：muyu-search MCP 接入配置 —— `MUYU_API_KEY` 已抹除，使用前请填入自己的 key
+- **`.env.example`** + **`.gitignore`** + **`CLAUDE.md`** + **`README.md`**：项目引导文件（真实 `.env` 已排除）
 
 ## 关于 `.excalidraw` 文件
 

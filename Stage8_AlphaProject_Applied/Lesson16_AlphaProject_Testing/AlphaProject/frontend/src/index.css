@@ -1,0 +1,150 @@
+@import "tailwindcss";
+
+/* ──────────────────────────────────────────────────────────
+   Design tokens (sourced from DESIGN.md precision_terminal +
+   alpha_terminal_platform/code.html embedded tailwind config)
+   FD-1 视觉规范唯一真理来源 + FD-7 暗色默认主主题
+   ────────────────────────────────────────────────────────── */
+@theme {
+  /* ── surfaces (FD-7 Level 0/1/2/3) ─────────────────────── */
+  --color-surface-base: #09090b;
+  --color-surface: #10131a;
+  --color-surface-dim: #10131a;
+  --color-surface-bright: #363941;
+  --color-surface-card: #18181b;
+  --color-surface-container: #1d2027;
+  --color-surface-container-low: #191b23;
+  --color-surface-container-lowest: #0b0e15;
+  --color-surface-container-high: #272a31;
+  --color-surface-container-highest: #32353c;
+  --color-surface-variant: #32353c;
+  --color-surface-tint: #adc6ff;
+  --color-surface-border: #27272a;
+  --color-surface-1: #18181b;           /* alias = surface-card */
+  --color-surface-1-border: #27272a;    /* alias = surface-border */
+  --color-surface-2: #27272a;
+  --color-background: #10131a;
+
+  /* ── primary / secondary / tertiary palette (Material-style) ── */
+  --color-primary: #adc6ff;
+  --color-primary-container: #4d8eff;
+  --color-primary-fixed: #d8e2ff;
+  --color-primary-fixed-dim: #adc6ff;
+  --color-on-primary: #002e6a;
+  --color-on-primary-container: #00285d;
+  --color-on-primary-fixed: #001a42;
+  --color-on-primary-fixed-variant: #004395;
+  --color-inverse-primary: #005ac2;
+
+  --color-secondary: #ffb95f;
+  --color-secondary-container: #ee9800;
+  --color-secondary-fixed: #ffddb8;
+  --color-secondary-fixed-dim: #ffb95f;
+  --color-on-secondary: #472a00;
+  --color-on-secondary-container: #5b3800;
+  --color-on-secondary-fixed: #2a1700;
+  --color-on-secondary-fixed-variant: #653e00;
+
+  --color-tertiary: #ffb786;
+  --color-tertiary-container: #df7412;
+  --color-tertiary-fixed: #ffdcc6;
+  --color-tertiary-fixed-dim: #ffb786;
+  --color-on-tertiary: #502400;
+  --color-on-tertiary-container: #461f00;
+  --color-on-tertiary-fixed: #311400;
+  --color-on-tertiary-fixed-variant: #723600;
+
+  /* ── sentiment (FD-3 A-share: red=bull, green=bear) ───── */
+  --color-bull: #ef4444;
+  --color-bear: #22c55e;
+
+  /* ── functional ─────────────────────────────────────── */
+  --color-breakthrough: #6366f1;
+  --color-anomaly: #facc15;
+  --color-warning: #f59e0b;
+
+  /* ── error ──────────────────────────────────────────── */
+  --color-error: #ffb4ab;
+  --color-error-container: #93000a;
+  --color-on-error: #690005;
+  --color-on-error-container: #ffdad6;
+
+  /* ── text on surfaces ───────────────────────────────── */
+  --color-on-surface: #e1e2ec;
+  --color-on-surface-variant: #c2c6d6;
+  --color-on-background: #e1e2ec;
+  --color-inverse-surface: #e1e2ec;
+  --color-inverse-on-surface: #2e3038;
+  --color-foreground: #e1e2ec;          /* alias for legacy refs */
+  --color-foreground-muted: #c2c6d6;
+  --color-foreground-subtle: #8c909f;
+
+  /* ── outline ────────────────────────────────────────── */
+  --color-outline: #8c909f;
+  --color-outline-variant: #424754;
+
+  /* ── radii ──────────────────────────────────────────── */
+  --radius: 0.125rem;
+  --radius-sm: 0.125rem;
+  --radius-md: 0.25rem;
+  --radius-lg: 0.25rem;
+  --radius-xl: 0.5rem;
+  --radius-full: 0.75rem;
+
+  /* ── spacing primitives (Stitch alpha_terminal_platform) ── */
+  --spacing-table-cell-py: 0.25rem;
+  --spacing-table-cell-px: 0.5rem;
+  --spacing-grid-gutter: 0.75rem;
+  --spacing-stack-gap: 0.5rem;
+  --spacing-container-margin: 1rem;
+
+  /* ── typography family ──────────────────────────────── */
+  --font-sans: "Inter", ui-sans-serif, system-ui, "PingFang SC",
+               "Hiragino Sans GB", "Microsoft YaHei", sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-mono-label: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-table-header: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-table-data: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-headline-sm: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-ai-commentary: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display-price: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-caption: "Inter", ui-sans-serif, system-ui, sans-serif;
+
+  /* ── type scale (Stitch fontSize map) ───────────────── */
+  --text-mono-label: 11px;
+  --text-mono-label--line-height: 12px;
+  --text-mono-label--font-weight: 500;
+  --text-table-header: 12px;
+  --text-table-header--line-height: 16px;
+  --text-table-header--letter-spacing: 0.05em;
+  --text-table-header--font-weight: 500;
+  --text-table-data: 13px;
+  --text-table-data--line-height: 18px;
+  --text-table-data--font-weight: 400;
+  --text-headline-sm: 16px;
+  --text-headline-sm--line-height: 24px;
+  --text-headline-sm--font-weight: 600;
+  --text-ai-commentary: 14px;
+  --text-ai-commentary--line-height: 20px;
+  --text-ai-commentary--font-weight: 400;
+  --text-display-price: 36px;
+  --text-display-price--line-height: 40px;
+  --text-display-price--letter-spacing: -0.02em;
+  --text-display-price--font-weight: 700;
+  --text-caption: 11px;
+  --text-caption--line-height: 14px;
+  --text-caption--font-weight: 400;
+}
+
+/* Stitch global body baseline + utility shims */
+body {
+  background-color: var(--color-surface-base);
+  color: var(--color-on-surface);
+}
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+.table-row-hover:hover {
+  background-color: var(--color-surface-container-highest);
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}

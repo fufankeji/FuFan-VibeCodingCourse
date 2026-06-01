@@ -28,9 +28,18 @@ Seven Claude Code skills covering the testing strategy and feature workflow — 
 - **Layered testing**: `backend-testing`, `frontend-testing`, `fullstack-slice-testing`, `full-chain-testing`
 - **Feature workflow**: `run-feature`
 
-## Project Assets
+## Project Output — [`AlphaProject/`](./AlphaProject/)
 
-*(To be added after the live session — final platform snapshot with tests)*
+The final AlphaProject snapshot — backend, frontend, and tests for all six features built end-to-end with Claude Code.
+
+- **[`backend/`](./AlphaProject/backend/)**: Python service — `app/` (FastAPI app), `tests/` (extensive pytest suites covering anomaly detection, scheduler, models, APIs), `pyproject.toml`, `uv.lock`
+- **[`frontend/`](./AlphaProject/frontend/)**: Vite + TypeScript app — `src/`, `vite.config.ts`, `vitest.setup.ts`, pnpm/npm lockfiles
+- **[`specs/001-watchlist-crud/`](./AlphaProject/specs/001-watchlist-crud/) → [`006-morning-briefing/`](./AlphaProject/specs/006-morning-briefing/)**: six feature bundles (spec / plan / tasks), carried through from Part 2
+- **[`.specify/`](./AlphaProject/.specify/)**: Spec-Kit installation (memory, workflows, templates, scripts)
+- **[`.claude/skills/`](./AlphaProject/.claude/skills/)**: full skill set used across the three parts — research, PRD, architecture, design injection, Spec-Kit family, testing layers
+- **[`docs/screenshots/`](./AlphaProject/docs/screenshots/)** + **[`scripts/`](./AlphaProject/scripts/)**: project documentation assets and helper scripts
+- **`.mcp.json`**: muyu-search MCP wiring — `MUYU_API_KEY` is redacted, fill in your own key before use
+- **`.env.example`** + **`.gitignore`** + **`CLAUDE.md`** + **`README.md`**: project bootstrap files (real `.env` is excluded)
 
 ## About `.excalidraw` Files
 
